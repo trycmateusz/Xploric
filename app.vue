@@ -1,5 +1,7 @@
 <template>
   <div>
-    <AnExample siema="witam" />
+    <nuxt-layout>
+      <nuxt-page />
+    </nuxt-layout>
   </div>
 </template>

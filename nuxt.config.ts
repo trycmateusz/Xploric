@@ -8,6 +8,7 @@ export default defineNuxtConfig({
       autoImports: ['defineStore', 'acceptHMRUpdate', 'storeToRefs']
     }]
   ],
+  pages: true,
   routeRules: {},
   imports: {
     dirs: ['stores']
