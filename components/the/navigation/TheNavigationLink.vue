@@ -1,10 +1,11 @@
 <template>
   <li
-    class="flex border-b border-black-lighter text-center transition-opacity last:border-b-0 hover:opacity-70"
+    class="flex border-b border-black-lighter text-center"
   >
     <nuxt-link
       :to="link.to"
-      class="w-full p-4 text-white-main"
+      :tabindex="anchorTabindex"
+      class="w-full p-4 text-white-main transition-opacity focus:opacity-70 hover:opacity-70"
     >
       {{ link.text }}
     </nuxt-link>
@@ -12,9 +13,10 @@
 </template>
 
 <script setup lang="ts">
-import type { NavigationLink } from '~/types/Navigation'
+import type { Link } from '~/types/Link'
 defineProps<{
-  link: NavigationLink
+  link: Link
+  anchorTabindex: string
 }>()
 </script>
 

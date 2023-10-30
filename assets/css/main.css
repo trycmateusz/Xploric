@@ -3,6 +3,15 @@
 @tailwind utilities;
 @tailwind variants;
 
+@font-face {
+  font-family: 'Violet Sans';
+  src: url('~/assets/fonts/VioletSans-Regular.woff')
+}
+
+html {
+  font-family: 'Violet Sans';
+}
+
 .wrapper {
   @apply max-w-[768px] ml-auto mr-auto mt-0 mb-0 w-full
 }

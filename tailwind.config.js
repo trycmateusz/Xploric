@@ -11,7 +11,9 @@ module.exports = {
   ],
 
   theme: {
-    fontFamily: {},
+    fontFamily: {
+      'violet-sans': ['Violet Sans', 'sans-serif'],
+    },
     screens: {
       sm: '576px',
       md: '768px',
