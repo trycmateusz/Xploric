@@ -1,26 +1,20 @@
 <template>
-  <div class="wrapper p-4 bg-black-main min-h-[100vh] text-white-main">
+  <div class="wrapper p-4 pt-8 min-h-[100vh] text-white-main">
+    <h1 class="text-5xl mb-8 text-white-main">
+      Explore and save new music tracks with Xploric.
+    </h1>
     <ul class="flex flex-col gap-4">
-      <MainMenuLink
+      <TheMenuLink
         v-for="link in mainMenuLinks"
         :key="link.text"
         :link="link"
-      >
-        <template #client-assets>
-          <img
-            class="absolute top-1/2 left-1/2 min-h-[90%] min-w-[120%] -translate-y-1/2 -translate-x-1/2"
-            :src="getAbsolutePath(`~/assets/img/${link.text}.svg`)"
-            alt=""
-          >
-        </template>
-      </MainMenuLink>
+      />
     </ul>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { MainMenuLink } from '~/types/MainMenu'
-const { getAbsolutePath } = useImages()
 const mainMenuLinks: MainMenuLink[] = [
   {
     to: '/',

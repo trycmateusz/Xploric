@@ -1,7 +1,7 @@
 <template>
   <nav class="sticky w-full top-0 border-b bg-black-main border-black-lighter z-50">
     <div class="relative wrapper">
-      <div class="flex justify-between relative bg-black-main z-50">
+      <div class="flex justify-between gap-4 relative bg-black-main z-50">
         <div class="flex">
           <nuxt-link class="text-white-main p-4 pr-2" to="/">
             Xploric
@@ -27,7 +27,10 @@
             @click="userLinksExpanded = !userLinksExpanded"
           >
             <img src="~/assets/img/user.svg" alt="">
-            Username
+            <span class="relative w-fit  overflow-hidden">
+              Username
+              <div class="absolute right-0 top-0 h-full w-1/6 bg-gradient-to-r from-transparent to-black-main xs:hidden" />
+            </span>
             <img
               src="~/assets/img/arrow-down.svg"
               alt=""
@@ -71,6 +74,7 @@
 
 <script setup lang="ts">
 import type { Link } from '~/types/Link'
+const router = useRouter()
 const linksExpanded = ref(false)
 const userLinksExpanded = ref(false)
 const links: Link[] = [
@@ -101,7 +105,7 @@ const userLinks: Link[] = [
     text: 'Register'
   },
   {
-    to: '/',
+    to: '/my-account',
     text: 'My Account'
   },
   {
@@ -121,11 +125,15 @@ watch(linksExpanded, () => {
     userLinksExpanded.value = false
   }
 })
+router.beforeEach(() => {
+  userLinksExpanded.value = false
+  linksExpanded.value = false
+})
 </script>
 
 <style scoped>
 .burger-bar {
-  @apply w-8 h-[2px] bg-white-main
+  @apply w-7 h-[2px] bg-white-main
 }
 .link-list {
   @apply absolute bg-black-main border-t border-black-lighter z-40 transition-transform duration-300

@@ -12,7 +12,7 @@ module.exports = {
 
   theme: {
     fontFamily: {
-      'violet-sans': ['Violet Sans', 'sans-serif'],
+      'violet-sans': ['Violet Sans', 'sans-serif']
     },
     screens: {
       sm: '576px',
@@ -22,6 +22,9 @@ module.exports = {
       '2xl': '1400px'
     },
     extend: {
+      screens: {
+        xs: '350px'
+      },
       colors: {
         'black-main': '#151516',
         'black-darker': '#111212',
@@ -35,7 +38,7 @@ module.exports = {
         'light-green-main': '#2ad24f',
         'tomato-main': '#d2482a',
         'red-main': 'c02d2d'
-      },
+      }
     }
   },
   plugins: []
