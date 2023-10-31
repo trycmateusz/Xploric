@@ -26,8 +26,3 @@ html {
     font-size: 112.5%;
   }
 }
-@media (min-width: 992px){
-  html {
-    font-size: 118.75%;
-  }
-}

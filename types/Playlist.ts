@@ -3,7 +3,7 @@ export interface Playlist {
   userId: string
   title: string
   description: string
-  coverImgUrl: string
+  coverImgUrl: string | null
   listenCounter: number
   updatedAt: Date
   comments: string[]

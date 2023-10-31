@@ -9,8 +9,20 @@ export const usePlaylistStore = defineStore('PlaylistStore', () => {
       playlists.value = [...fetchedPlaylists]
     }
   }
+  const getPlaylistLengthText = computed(() => {
+    return (playlist: Playlist) => {
+      if (playlist.songs.length === 0) {
+        return 'no songs'
+      } else if (playlist.songs.length === 1) {
+        return '1 song'
+      } else {
+        return `${playlist.songs.length} songs`
+      }
+    }
+  })
   return {
     playlists,
-    fetchPlaylists
+    fetchPlaylists,
+    getPlaylistLengthText
   }
 })
