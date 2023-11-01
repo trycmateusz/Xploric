@@ -105,7 +105,7 @@ const userLinks: Link[] = [
     text: 'Register'
   },
   {
-    to: '/my-account',
+    to: '/my-profile',
     text: 'My Account'
   },
   {

@@ -2,20 +2,24 @@
   <div>
     <div class="min-h-[30vh] max-h-[500px] bg-center bg-cover bg-[url('~/crowd.jpg')]" />
     <div class="wrapper p-4 text-white">
-      <div class="flex items-center gap-5 mb-8">
-        <h1 class="text-3xl text-light-blue-lighter leading-none">
+      <div class="flex items-center gap-5 mb-8 text-3xl">
+        <h1 class="text-light-blue-lighter">
           Hello, username
         </h1>
         <ClientOnly>
-          <button @click="() => console.log('edit your profile')">
-            <img src="~/assets/img/edit-blue.svg" alt="Edit your profile">
+          <button class="h-[1.2em]" @click="() => console.log('edit your profile')">
+            <img
+              class="h-full"
+              src="~/assets/img/edit-blue.svg"
+              alt="Edit your profile"
+            >
           </button>
         </ClientOnly>
       </div>
       <h2 class="text-xl mb-4">
         Your playlists
       </h2>
-      <PlaylistList :playlists="playlistStore.playlists" />
+      <PlaylistList :playlists="playlists" />
       <nuxt-link to="/" class="block mt-5 text-center text-light-blue-lighter text-xl">
         create a new playlist
       </nuxt-link>
@@ -41,8 +45,11 @@
 </template>
 
 <script setup lang="ts">
-const playlistStore = usePlaylistStore()
-await playlistStore.fetchPlaylists()
+import type { Playlist } from '~/types/Playlist'
+defineProps<{
+  ownProfile: boolean
+  playlists: Playlist[]
+}>()
 </script>
 
 <style scoped>
