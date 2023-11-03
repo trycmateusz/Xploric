@@ -5,3 +5,7 @@
     </nuxt-layout>
   </div>
 </template>
+
+<script setup>
+
+</script>

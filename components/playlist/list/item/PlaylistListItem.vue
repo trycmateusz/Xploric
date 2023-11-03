@@ -8,7 +8,6 @@
       <img
         v-if="playlist.coverImgUrl"
         v-show="coverLoaded"
-        ref="cover"
         :src="playlist.coverImgUrl"
         :alt="`${playlist.title} image cover`"
         class="w-full rounded-xl aspect-square object-cover xs:w-[7rem] "
@@ -42,14 +41,9 @@ const playlistStore = usePlaylistStore()
 defineProps<{
   playlist: Playlist
 }>()
-const cover = ref<HTMLImageElement | undefined>(undefined)
 const coverLoaded = ref(false)
-watch(cover, () => {
-  if (cover.value) {
-    coverLoaded.value = true
-  }
-}, {
-  immediate: true
+onMounted(() => {
+  coverLoaded.value = true
 })
 </script>
 

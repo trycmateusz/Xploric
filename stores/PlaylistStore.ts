@@ -1,4 +1,5 @@
 import type { Playlist } from '~/types/Playlist'
+import type { User } from '~/types/User'
 import { fetchCollection } from '~/services/fetch'
 
 export const usePlaylistStore = defineStore('PlaylistStore', () => {
@@ -20,9 +21,15 @@ export const usePlaylistStore = defineStore('PlaylistStore', () => {
       }
     }
   })
+  const getUsersPlaylists = computed(() => {
+    return (user: User) => {
+      return playlists.value.filter(playlist => playlist.userId === user.id)
+    }
+  })
   return {
     playlists,
     fetchPlaylists,
-    getPlaylistLengthText
+    getPlaylistLengthText,
+    getUsersPlaylists
   }
 })

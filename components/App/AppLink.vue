@@ -1,16 +1,18 @@
 <template>
-  <button
-    class="max-w-max py-[0.7rem] px-[3rem] text-xl rounded-full break-words focus:outline-offset-8 main-transition"
+  <nuxt-link
+    :to="to"
+    class="max-w-max py-[0.7rem] px-[3rem] text-xl rounded-full break-words focus:outline-offset-8 main-focus-hover"
     :class="[styling]"
   >
     {{ text }}
-  </button>
+  </nuxt-link>
 </template>
 
 <script setup lang="ts">
 defineProps<{
   styling: 'primary' | 'secondary' | 'tertiary'
   text: string
+  to: string
 }>()
 </script>
 

@@ -12,9 +12,9 @@ export const fetchCollection = async <Resource>(resourcePlural: string): Promise
   }
 }
 
-export const fetchOne = async<Resource>(resourcePlural: string, id: string, idKey: string): Promise<Resource | undefined> => {
+export const fetchOne = async<Resource>(resourcePlural: string, id: string): Promise<Resource | undefined> => {
   const runtimeConfig = useRuntimeConfig()
-  const url = `${runtimeConfig.public.baseApiUrl}/${resourcePlural}.json?orderBy="${idKey}"&equalTo="${id}"`
+  const url = `${runtimeConfig.public.baseApiUrl}/${resourcePlural}.json?orderBy="id"&equalTo="${id}"`
   const { data, error } = await useFetch<Resource>(url)
   if (error.value) {
     console.log(`Error while fetching a resource from: ${resourcePlural}`, error.value)

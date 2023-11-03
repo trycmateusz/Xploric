@@ -14,7 +14,14 @@ export default defineNuxtConfig({
     }]
   ],
   pages: true,
-  routeRules: {},
+  routeRules: {
+    '/my-profile': {
+      ssr: false
+    },
+    '/my-profile/edit': {
+      ssr: false
+    }
+  },
   imports: {
     dirs: ['stores']
   },

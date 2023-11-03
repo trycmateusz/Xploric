@@ -3,14 +3,14 @@
     <div class="relative wrapper">
       <div class="flex justify-between gap-4 relative bg-black-main z-50">
         <div class="flex">
-          <nuxt-link class="text-white-main p-4 pr-2" to="/">
+          <nuxt-link class="text-white-main p-4 pr-2 main-transition" to="/">
             Xploric
           </nuxt-link>
           <button
             aria-label="Toggle main navigation links"
             :aria-controls="burgerAriaControls"
             :aria-expanded="linksExpanded"
-            class="burger flex flex-col justify-center gap-1 p-4"
+            class="burger flex flex-col justify-center gap-1 pr-0 p-4 main-transition xs:pr-4"
             @click="linksExpanded = !linksExpanded"
           >
             <div class="burger-bar" />
@@ -21,15 +21,14 @@
 
         <ClientOnly>
           <button
-            class="flex justify-center items-center gap-2 px-4 py-2 text-white-main"
+            class="flex items-center justify-center gap-2 pr-4 py-2 text-white-main main-transition xs:pl-4"
             :aria-controls="userAriaControls"
             :aria-expanded="userLinksExpanded"
             @click="userLinksExpanded = !userLinksExpanded"
           >
             <img src="~/assets/img/user.svg" alt="">
-            <span class="relative w-fit  overflow-hidden">
-              Username
-              <div class="absolute right-0 top-0 h-full w-1/6 bg-gradient-to-r from-transparent to-black-main xs:hidden" />
+            <span v-if="userStore.auth" class="relative flex-shrink whitespace-nowrap text-ellipsis overflow-hidden">
+              {{ userStore.auth.username }}
             </span>
             <img
               src="~/assets/img/arrow-down.svg"
@@ -51,6 +50,14 @@
           :key="link.text"
           :anchor-tabindex="linksExpanded ? '0' : '-1'"
           :link="link"
+        />
+        <TheNavigationLink
+          v-if="userStore.auth"
+          :link="{
+            text: 'My Playlists',
+            to: '/'
+          }"
+          :anchor-tabindex="linksExpanded ? '0' : '-1'"
         />
       </ul>
       <ClientOnly>
@@ -75,6 +82,7 @@
 <script setup lang="ts">
 import type { Link } from '~/types/Link'
 const router = useRouter()
+const userStore = useUserStore()
 const linksExpanded = ref(false)
 const userLinksExpanded = ref(false)
 const links: Link[] = [
@@ -89,30 +97,34 @@ const links: Link[] = [
   {
     to: '/',
     text: 'Review someone\'s playlist'
-  },
-  {
-    to: '/',
-    text: 'My playlists'
   }
 ]
-const userLinks: Link[] = [
-  {
-    to: '/',
-    text: 'Login'
-  },
-  {
-    to: '/',
-    text: 'Register'
-  },
-  {
-    to: '/my-profile',
-    text: 'My Account'
-  },
-  {
-    to: '/',
-    text: 'Logout'
+
+const userLinks = computed<Link[]>(() => {
+  if (userStore.auth) {
+    return [
+      {
+        to: '/my-profile',
+        text: 'My Account'
+      },
+      {
+        to: '/',
+        text: 'Logout'
+      }
+    ]
+  } else {
+    return [
+      {
+        to: '/',
+        text: 'Login'
+      },
+      {
+        to: '/',
+        text: 'Register'
+      }
+    ]
   }
-]
+})
 const burgerAriaControls = 'main-navigation-links'
 const userAriaControls = 'main-navigation-user-links'
 watch(userLinksExpanded, () => {
