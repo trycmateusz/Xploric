@@ -18,10 +18,16 @@ export const useUserStore = defineStore('UserStore', () => {
       }
     }
   }
+  const getUser = computed(() => {
+    return (userId: string) => {
+      return users.value.find(user => user.id === userId)
+    }
+  })
   return {
     users,
     auth,
     setAuth,
-    fetchUser
+    fetchUser,
+    getUser
   }
 })

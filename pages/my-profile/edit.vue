@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <main>
     <button
       class="background relative w-full main-transition focus:outline-none"
       aria-label="Change profile's background image"
@@ -69,7 +69,7 @@
         />
       </div>
     </div>
-  </div>
+  </main>
 </template>
 
 <script setup lang="ts">

@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper p-4 pt-8 min-h-[100vh] text-white-main">
+  <main class="wrapper p-4 pt-8 min-h-[100vh] text-white-main">
     <h1 class="text-5xl mb-8 text-white-main">
       Explore and save new music tracks with Xploric.
     </h1>
@@ -10,11 +10,12 @@
         :link="link"
       />
     </ul>
-  </div>
+  </main>
 </template>
 
 <script setup lang="ts">
 import type { MainMenuLink } from '~/types/MainMenu'
+const userStore = useUserStore()
 const mainMenuLinks: MainMenuLink[] = [
   {
     to: '/',
@@ -35,6 +36,8 @@ const mainMenuLinks: MainMenuLink[] = [
     colorClass: 'text-tomato-main'
   }
 ]
+userStore.fetchUser('user1')
+userStore.setAuth(userStore.users[0])
 </script>
 
 <style scoped>

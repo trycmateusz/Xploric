@@ -5,7 +5,7 @@ export interface Playlist {
   description: string
   coverImgUrl: string | null
   listenCounter: number
-  updatedAt: Date
+  updatedAt: number
   comments: string[]
   songs: string[]
 }

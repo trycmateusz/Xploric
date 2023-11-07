@@ -3,7 +3,7 @@
     <ProfilePageBackground :bg-url="user.profileBgUrl" />
     <div class="wrapper p-4 text-white">
       <div class="flex items-center gap-5 mb-8 text-3xl">
-        <h1 class="text-light-blue-lighter">
+        <h1 class="text-light-blue-lighter w-fit">
           {{ welcomeHeading }}
         </h1>
         <ClientOnly>
@@ -13,7 +13,7 @@
             to="/my-profile/edit"
           >
             <img
-              class="h-full"
+              class="h-full aspect-square"
               src="~/assets/img/edit-blue.svg"
               alt="Edit your profile"
             >

@@ -26,6 +26,13 @@ export const fetchOne = async<Resource>(resourcePlural: string, id: string): Pro
   }
 }
 
+export const fetchMany = async<Resource>(resourcePlural: string, ids: string[]): Promise<Resource[] | undefined> => {
+  const runtimeConfig = useRuntimeConfig()
+  const getUrl = (id: string) => {
+    return `${runtimeConfig.public.baseApiUrl}/${resourcePlural}.json?orderBy="id"&equalTo="${id}"`
+  }
+}
+
 export const fetchOnCondition = async <Resource>(resourcePlural: string, key: string, value: string): Promise<Resource[] | undefined> => {
   const runtimeConfig = useRuntimeConfig()
   const url = `${runtimeConfig.public.baseApiUrl}/${resourcePlural}.json?orderBy="${key}"&equalTo="${value}"`

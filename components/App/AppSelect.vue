@@ -6,7 +6,7 @@
     <select
       :id="name"
       :disabled="isDisabled"
-      class="p-4 min-w-fit w-1/2 bg-black-lighter border border-black-main main-transition disabled:opacity-25 disabled:cursor-not-allowed"
+      class="p-4 min-w-fit w-1/2 bg-black-lighter border border-black-main main-transition cursor-pointer disabled:opacity-25 disabled:cursor-not-allowed"
       :name="name"
       @change="emitValueChange"
     >

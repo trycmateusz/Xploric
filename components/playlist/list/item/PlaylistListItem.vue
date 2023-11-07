@@ -1,5 +1,5 @@
 <template>
-  <div
+  <li
     class="flex flex-col gap-4 p-4 rounded-2xl bg-black-lighter xs:flex-row"
     tabindex="-1"
     @click="() => console.log('playlist clicked')"
@@ -26,13 +26,14 @@
       <span class="text-gray-main">
         {{ playlistStore.getPlaylistLengthText(playlist) }}
       </span>
-      <AppButton
+      <AppLink
+        :to="`playlist/${playlist.id}`"
         text="Check"
         styling="primary"
         class="mt-auto ml-auto"
       />
     </div>
-  </div>
+  </li>
 </template>
 
 <script setup lang="ts">
