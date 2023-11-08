@@ -37,7 +37,7 @@ module.exports = {
         'blue-main': '#183157',
         'light-green-main': '#2ad24f',
         'tomato-main': '#d2482a',
-        'red-main': 'c02d2d'
+        'red-main': '#c02d2d'
       }
     }
   },

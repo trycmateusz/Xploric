@@ -52,9 +52,12 @@
       >
         add some more!
       </nuxt-link>
-      <h2 class="text-2xl">
+      <h2 class="block text-2xl mb-4">
         Other's comments!
       </h2>
+      <CommentList
+        :comments="commentStore.getPlaylistsComments(playlist.id)"
+      />
     </main>
   </div>
 </template>

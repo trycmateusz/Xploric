@@ -31,6 +31,23 @@ export const fetchMany = async<Resource>(resourcePlural: string, ids: string[]):
   const getUrl = (id: string) => {
     return `${runtimeConfig.public.baseApiUrl}/${resourcePlural}.json?orderBy="id"&equalTo="${id}"`
   }
+  const fetches = ids.map(id => async (): Promise<Resource[]> => {
+    return await $fetch<Resource[]>(getUrl(id))
+  })
+  const { data, error } = await useAsyncData(`many-${resourcePlural}-${Math.random() * 10}`, async () => {
+    // map below is required to unwrap resources from objects. flat() doesn't work unfortunately, but assigning the resource to it's index in an object works well
+    const resources = (await Promise.all(fetches.map(fetch => fetch()))).map((resource, index) => resource[index])
+    return {
+      resources
+    }
+  })
+  if (error.value) {
+    console.log(`Error while fetching many resources from: ${resourcePlural}`, error.value)
+    return undefined
+  }
+  if (data.value) {
+    return data.value.resources
+  }
 }
 
 export const fetchOnCondition = async <Resource>(resourcePlural: string, key: string, value: string): Promise<Resource[] | undefined> => {
