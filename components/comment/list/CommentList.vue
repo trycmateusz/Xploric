@@ -1,5 +1,7 @@
 <template>
-  <ul class="flex flex-col gap-8 items-end">
+  <ul
+    class="flex flex-col w-full gap-8 items-end"
+  >
     <CommentListItem
       v-for="comment in comments"
       :key="comment.id"

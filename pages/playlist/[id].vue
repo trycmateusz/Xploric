@@ -47,7 +47,7 @@
         :songs="songStore.getPlaylistsSongs(playlist.id)"
       />
       <nuxt-link
-        class="inline-block mt-4 mb-8 text-light-blue-lighter text-center"
+        class="w-max mt-4 mb-8 mx-auto text-light-blue-lighter text-center"
         to="/"
       >
         add some more!
@@ -57,7 +57,23 @@
       </h2>
       <CommentList
         :comments="commentStore.getPlaylistsComments(playlist.id)"
+        :for-responses="false"
       />
+      <h2 class="block text-2xl mt-8 mb-4">
+        Write a comment yourself!
+      </h2>
+      <form class="flex flex-col" @submit.prevent>
+        <textarea
+          id="comment"
+          name="comment"
+          class="bg-black-lighter text-white-main min-h-[10rem] rounded-xl p-4 resize-none overflow-y-auto main-transition"
+        />
+        <AppButton
+          text="Submit"
+          styling="primary"
+          class="mt-4 ml-auto"
+        />
+      </form>
     </main>
   </div>
 </template>
@@ -80,11 +96,10 @@ const user = computed(() => {
   }
 })
 await playlistStore.fetchPlaylist(playlistId)
-// fetching songs later!!!!
 if (playlist.value) {
-  await userStore.fetchUser(playlist.value.userId)
   await commentStore.fetchManyComments(playlist.value.comments)
 }
+// fetching songs later!!!!
 onMounted(() => {
   coverLoaded.value = true
 })

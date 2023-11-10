@@ -26,6 +26,8 @@ export const fetchOne = async<Resource>(resourcePlural: string, id: string): Pro
   }
 }
 
+let globalFetchManyPromiseAllIndex = 0
+
 export const fetchMany = async<Resource>(resourcePlural: string, ids: string[]): Promise<Resource[] | undefined> => {
   const runtimeConfig = useRuntimeConfig()
   const getUrl = (id: string) => {
@@ -34,19 +36,17 @@ export const fetchMany = async<Resource>(resourcePlural: string, ids: string[]):
   const fetches = ids.map(id => async (): Promise<Resource[]> => {
     return await $fetch<Resource[]>(getUrl(id))
   })
-  const { data, error } = await useAsyncData(`many-${resourcePlural}-${Math.random() * 10}`, async () => {
-    // map below is required to unwrap resources from objects. flat() doesn't work unfortunately, but assigning the resource to it's index in an object works well
-    const resources = (await Promise.all(fetches.map(fetch => fetch()))).map((resource, index) => resource[index])
-    return {
-      resources
-    }
-  })
-  if (error.value) {
-    console.log(`Error while fetching many resources from: ${resourcePlural}`, error.value)
-    return undefined
-  }
-  if (data.value) {
-    return data.value.resources
+  // map below is required to unwrap resources from objects. flat() doesn't work unfortunately, but assigning the resource to it's index in an object works well
+  const resources = (await Promise.all(fetches.map(fetch => fetch())))
+  const resourcesMapped = resources.map((resource) => {
+    const resourceUnwrapped = resource[globalFetchManyPromiseAllIndex]
+    globalFetchManyPromiseAllIndex++
+    return resourceUnwrapped
+  }).filter(resource => resource)
+  if (resources && resources.length > 0) {
+    return resourcesMapped
+  } else {
+    console.log(`Error while fetching many ${resourcePlural}.`)
   }
 }
 

@@ -12,4 +12,5 @@ export interface Comment {
   timestamp: number
   userId: string
   playlistId: string
+  replyOpen: boolean
 }

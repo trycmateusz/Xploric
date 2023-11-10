@@ -2,7 +2,7 @@
   <button class="vote-btn">
     <img
       :src="imgSrc"
-      :alt="`Upvote ${username}'s comment: ${text}`"
+      :alt="`${vote} ${username}'s comment`"
     >
   </button>
 </template>

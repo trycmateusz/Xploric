@@ -20,7 +20,8 @@
   --blue-main: #183157,
   --light-green-main: #2ad24f,
   --tomato-main: #d2482a,
-  --red-main: #c02d2d
+  --red-main: #c02d2d,
+  --nav-height: 3.5rem
 }
 
 html {
@@ -32,7 +33,7 @@ html {
     @apply max-w-[768px] ml-auto mr-auto mt-0 mb-0 w-full
   }
   .main-transition {
-    @apply hover:opacity-70 focus:opacity-70 transition-opacity focus:outline-offset-8
+    @apply hover:opacity-70 focus:opacity-70 transition-opacity
   }
 }
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-[100svh] bg-black-main overflow-hidden">
+  <div class="min-h-[100svh] bg-black-main">
     <TheNavigation />
     <slot />
   </div>

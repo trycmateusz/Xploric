@@ -1,5 +1,5 @@
 <template>
-  <li class="flex flex-col gap-4 items-end">
+  <li class="flex flex-col w-full gap-4 items-end">
     <span class="block p-4 bg-black-lighter rounded-xl w-fit">
       {{ comment.text }}
     </span>
@@ -30,11 +30,14 @@
         v-if="user"
         class="flex-shrink flex items-center gap-2"
       >
-        <button class="h-[1.5em]">
+        <button
+          class="h-[1.5em]"
+          @click="commentStore.closeAllRepliesButOne(comment)"
+        >
           <img
             class="h-full"
             src="~/assets/img/reply.svg"
-            :alt="`Reply to ${user.username}'s comment: ${comment.text}`"
+            :alt="`Reply to ${user.username}'s comment`"
           >
         </button>
         <nuxt-link class="flex gap-2 items-center" to="/">
@@ -45,7 +48,14 @@
     </div>
     <CommentList
       v-if="comment.responses && comment.responses.length > 0"
+      class="mt-4 pr-8 border-r-2 border-black-lighter"
+      :for-responses="true"
       :comments="commentStore.getResponses(comment.responses)"
+    />
+    <CommentListItemResponse
+      v-if="user && comment.replyOpen"
+      :username="user.username"
+      @close="commentStore.closeOneReply(comment)"
     />
   </li>
 </template>
@@ -78,11 +88,6 @@ const isDownvoted = computed(() => {
     }
   }
   return false
-})
-onMounted(async () => {
-  if (props.comment.responses && props.comment.responses.length > 0) {
-    await commentStore.fetchManyComments(props.comment.responses)
-  }
 })
 </script>
 

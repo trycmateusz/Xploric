@@ -1,5 +1,5 @@
 <template>
-  <div class="sticky top-0 border-b border-black-lighter">
+  <div class="sticky w-full top-[var(--nav-height)] border-b border-black-lighter bg-black-main">
     <div class="wrapper">
       <button class="p-4 text-base" @click="router.back()">
         <img

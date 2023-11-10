@@ -1,7 +1,7 @@
 <template>
   <div>
     <ProfilePageBackground :bg-url="user.profileBgUrl" />
-    <div class="wrapper p-4 text-white">
+    <div class="flex flex-col wrapper p-4 text-white">
       <div class="flex items-center gap-5 mb-8 text-3xl">
         <h1 class="text-light-blue-lighter w-fit">
           {{ welcomeHeading }}
@@ -27,7 +27,7 @@
       <nuxt-link
         v-if="ownProfile && usersPlaylists.length > 0"
         to="/"
-        class="block mt-10 text-center text-light-blue-lighter text-xl"
+        class="inline-block mx-auto mt-10 text-center text-light-blue-lighter text-xl"
       >
         create a new playlist
       </nuxt-link>
