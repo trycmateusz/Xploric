@@ -16,9 +16,13 @@
           alt="Playlist placeholder image"
         >
         <div class="relative flex flex-col justify-between gap-8">
-          <button class="main-transition absolute top-0 right-0 w-[2rem] sm:w-[2.5rem]">
+          <button :aria-expanded="playlistOptionsOpen" aria-controls="playlist-options" class="main-transition absolute top-0 right-0 w-[2rem] sm:w-[2.5rem]">
             <img class="w-full" src="~/assets/img/more-options.svg" :alt="`Show options for playlist '${playlist.title}'`">
           </button>
+          <AppOptions
+            id="playlist-options"
+            :options="playlistOptions"
+          />
           <div class="mr-[2rem] sm:mr-[2.5rem]">
             <h1 class="text-2xl ">
               {{ playlist.title }}
@@ -80,6 +84,7 @@
 
 <script setup lang="ts">
 import { convertToDate } from '~/helpers'
+import type { AppOptionLink, AppOptionButton } from '~/types/App'
 const playlistStore = usePlaylistStore()
 const userStore = useUserStore()
 const songStore = useSongStore()
@@ -87,6 +92,7 @@ const commentStore = useCommentStore()
 const route = useRoute()
 const playlistId = route.params.id.toString()
 const coverLoaded = ref(false)
+const playlistOptionsOpen = ref(false)
 const playlist = computed(() => {
   return playlistStore.getPlaylist(playlistId)
 })
@@ -95,6 +101,31 @@ const user = computed(() => {
     return userStore.getUser(playlist.value.userId)
   }
 })
+const playlistOptions = computed<(AppOptionLink | AppOptionButton)[]>() => {
+  if (userStore.auth) {
+    return [
+      {
+        text: 'Share',
+        id: Math.random(),
+        onClick: 'siema'
+      },
+      {
+        text: 'Remove',
+        id: Math.random(),
+        red: true,
+        onClick: 'siema'
+      }
+    ]
+  } else {
+    return [
+      {
+        text: 'Share',
+        id: Math.random(),
+        onClick: 'siema'
+      }
+    ]
+  }
+}
 await playlistStore.fetchPlaylist(playlistId)
 if (playlist.value) {
   await commentStore.fetchManyComments(playlist.value.comments)
