@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col gap-2">
-    <label class="text-xl" :for="name">
+    <label class="inline-block w-max text-xl" :for="name">
       {{ label }}
     </label>
     <input

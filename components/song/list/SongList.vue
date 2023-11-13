@@ -4,6 +4,7 @@
       v-for="song in songs"
       :key="song.id"
       :song="song"
+      :playlist-user-id="playlistUserId"
     />
   </ul>
 </template>
@@ -12,6 +13,7 @@
 import type { SpotifyApiSong } from '~/types/Song'
 defineProps<{
   songs: SpotifyApiSong[]
+  playlistUserId: string
 }>()
 </script>
 

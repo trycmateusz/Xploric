@@ -15,14 +15,30 @@
       </span>
     </div>
     <div class="flex gap-4 justify-between xs:flex-col xs:ml-auto">
-      <button
-        class="w-[2rem] main-transition"
-      >
-        <img
-          src="~/assets/img/more-options.svg"
-          :alt="`Show more options for song '${song.name}'`"
+      <div class="relative">
+        <button
+          :id="optionsTogglerId"
+          :aria-expanded="optionsOpen"
+          :aria-controls="optionsId"
+          class="w-[2rem] main-transition"
+          @click="optionsOpen = !optionsOpen"
         >
-      </button>
+          <img
+            class="pointer-events-none"
+            src="~/assets/img/more-options.svg"
+            :alt="`Show more options for song '${song.name}'`"
+          >
+        </button>
+        <AppOptions
+          v-if="optionsOpen"
+          :id="optionsId"
+          :options="userStore.auth?.id === playlistUserId ? [...userOptions, ...defaultOptions] : defaultOptions"
+          :toggler-id="optionsTogglerId"
+          class="top-1/2 left-1/2 sm:left-auto sm:right-1/2"
+          @close="optionsOpen = false"
+        />
+      </div>
+
       <button
         class="w-[2rem] main-transition"
       >
@@ -37,11 +53,39 @@
 
 <script setup lang="ts">
 import type { SpotifyApiSong } from '~/types/Song'
-defineProps<{
+import type { AppOptionLink, AppOptionButton } from '~/types/App'
+const props = defineProps<{
   song: SpotifyApiSong
+  playlistUserId: string
 }>()
 const artistStore = useArtistStore()
+const userStore = useUserStore()
+const optionsTogglerId = `song-${props.song.id}-options-toggler`
+const optionsId = `song-${props.song.id}-options`
+const optionsOpen = ref(false)
 const coverLoaded = ref(false)
+// @ts-ignore
+
+const defaultOptions: (AppOptionButton | AppOptionLink)[] = [
+  {
+    text: 'Share',
+    id: Math.random().toString(),
+    onClick: () => console.log('share')
+  }
+]
+const userOptions: (AppOptionButton | AppOptionLink)[] = [
+  {
+    text: 'Remove',
+    id: Math.random().toString(),
+    onClick: () => console.log('remove'),
+    destructive: true
+  },
+  {
+    text: 'Move',
+    id: Math.random().toString(),
+    onClick: () => console.log('move')
+  }
+]
 onMounted(() => {
   coverLoaded.value = true
 })

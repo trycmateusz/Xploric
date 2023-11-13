@@ -26,8 +26,8 @@
       <PlaylistList :playlists="usersPlaylists" />
       <nuxt-link
         v-if="ownProfile && usersPlaylists.length > 0"
-        to="/"
-        class="inline-block mx-auto mt-10 text-center text-light-blue-lighter text-xl"
+        to="/playlist/create"
+        class="inline-block mx-auto mt-10 text-center text-light-blue-lighter text-xl main-transition"
       >
         create a new playlist
       </nuxt-link>

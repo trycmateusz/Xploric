@@ -1,7 +1,7 @@
 export interface AppOption {
   id: string
   text: string
-  red?: boolean
+  destructive?: boolean
 }
 
 export interface AppOptionLink extends AppOption {

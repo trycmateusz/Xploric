@@ -1,5 +1,5 @@
 <template>
-  <button class="vote-btn">
+  <button class="vote-btn main-transition">
     <img
       :src="imgSrc"
       :alt="`${vote} ${username}'s comment`"

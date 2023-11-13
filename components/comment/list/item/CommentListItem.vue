@@ -30,8 +30,11 @@
         v-if="user"
         class="flex-shrink flex items-center gap-2"
       >
+        <button v-if="userStore.auth?.id === comment.userId" class="main-transition">
+          <img src="~/assets/img/bin.svg" alt="Remove comment">
+        </button>
         <button
-          class="h-[1.5em]"
+          class="h-[1.5em] main-transition"
           @click="commentStore.closeAllRepliesButOne(comment)"
         >
           <img
@@ -40,7 +43,7 @@
             :alt="`Reply to ${user.username}'s comment`"
           >
         </button>
-        <nuxt-link class="flex gap-2 items-center" to="/">
+        <nuxt-link class="flex gap-2 items-center main-transition" :to="`/user/${user.id}`">
           <img class="h-[1.5em]" src="~/assets/img/user.svg" alt="">
           {{ user.username }}
         </nuxt-link>
