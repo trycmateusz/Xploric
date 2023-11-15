@@ -1,21 +1,12 @@
 <template>
   <main>
-    <button
-      class="background relative w-full main-transition focus:outline-none"
-      aria-label="Change profile's background image"
-      @click="() => console.log('change image')"
-    >
-      <img
-        class="absolute h-1/3 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 z-10"
-        src="~/assets/img/edit-white.svg"
-        alt=""
-      >
+    <AppEditImage>
       <ProfilePageBackground
         v-if="user"
         class="opacity-50"
         :bg-url="user.profileBgUrl"
       />
-    </button>
+    </AppEditImage>
     <div class="wrapper p-4 text-white-main">
       <h1 class="text-3xl mb-10 text-light-blue-lighter">
         Editing your profile

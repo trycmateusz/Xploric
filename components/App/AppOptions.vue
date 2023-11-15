@@ -9,7 +9,7 @@
       <nuxt-link
         v-if="'to' in option"
         :to="option.to"
-        class="py-4"
+        class="block py-4"
       >
         {{ option.text }}
       </nuxt-link>

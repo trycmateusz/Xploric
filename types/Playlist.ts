@@ -9,3 +9,9 @@ export interface Playlist {
   comments: string[]
   songs: string[]
 }
+
+export interface PlaylistForm {
+  image: string | null
+  title: string
+  description: string
+}
