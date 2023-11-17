@@ -18,13 +18,13 @@ import type { MainMenuLink } from '~/types/MainMenu'
 const userStore = useUserStore()
 const mainMenuLinks: MainMenuLink[] = [
   {
-    to: '/',
+    to: '/xplore',
     text: 'Discover',
     highlight: 'new music',
     colorClass: 'text-light-blue-main'
   },
   {
-    to: '/',
+    to: '/xplore',
     text: 'Explore',
     highlight: 'all genres',
     colorClass: 'text-light-green-main'

@@ -1,7 +1,7 @@
 <template>
   <div class="sticky w-full top-[var(--nav-height)] border-b border-black-lighter bg-black-main">
     <div class="wrapper">
-      <button class="p-4 text-base" @click="router.back()">
+      <button class="p-4 text-base" @click="customClose ? emit('close') : router.back()">
         <img
           class="h-[1.5em]"
           src="~/assets/img/arrow-left.svg"
@@ -13,6 +13,12 @@
 
 <script setup lang="ts">
 const router = useRouter()
+defineProps<{
+  customClose?: boolean
+}>()
+const emit = defineEmits<{
+  (e: 'close'): void
+}>()
 </script>
 
 <style scoped>

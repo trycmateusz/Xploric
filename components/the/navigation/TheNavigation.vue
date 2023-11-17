@@ -95,7 +95,7 @@ const links: Link[] = [
     text: 'Explore genres'
   },
   {
-    to: '/',
+    to: '/my-profile',
     text: 'Review someone\'s playlist'
   }
 ]

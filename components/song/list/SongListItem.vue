@@ -2,7 +2,7 @@
   <li class="flex flex-col gap-4 p-4 bg-black-lighter rounded-xl xs:flex-row">
     <img
       v-if="coverLoaded"
-      :src="song.cover_img_url"
+      :src="song.album.cover"
       :alt="`${song.name}'s cover`"
       class="rounded-lg xs:w-[7rem]"
     >
@@ -11,7 +11,7 @@
         {{ song.name }}
       </span>
       <span class="block text-gray-main">
-        {{ artistStore.getNamesOfArtistsFormatted(artistStore.getNamesOfArtists(song.artists)) }}
+        {{ song.artist.name }}
       </span>
     </div>
     <div class="flex gap-4 justify-between xs:flex-col xs:ml-auto">
@@ -34,7 +34,7 @@
           :id="optionsId"
           :options="userStore.auth?.id === playlistUserId ? [...userOptions, ...defaultOptions] : defaultOptions"
           :toggler-id="optionsTogglerId"
-          class="top-1/2 left-1/2 sm:left-auto sm:right-1/2"
+          class="top-1/2 left-1/2 xs:left-auto xs:right-1/2"
           @close="optionsOpen = false"
         />
       </div>
@@ -52,13 +52,12 @@
 </template>
 
 <script setup lang="ts">
-import type { SpotifyApiSong } from '~/types/Song'
+import type { DeezerApiSong } from '~/types/Song'
 import type { AppOptionLink, AppOptionButton } from '~/types/App'
 const props = defineProps<{
-  song: SpotifyApiSong
+  song: DeezerApiSong
   playlistUserId: string
 }>()
-const artistStore = useArtistStore()
 const userStore = useUserStore()
 const optionsTogglerId = `song-${props.song.id}-options-toggler`
 const optionsId = `song-${props.song.id}-options`

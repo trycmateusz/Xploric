@@ -1,11 +1,20 @@
-export interface SpotifyApiSong {
+export interface DeezerApiSongAlbum {
+  id: string
+  cover: string
+}
+
+export interface DeezerApiSongArtist {
   id: string
   name: string
-  artists: string[]
+}
+
+export interface DeezerApiSong {
+  id: string
+  name: string
+  artist: DeezerApiSongArtist
   playlists: string[]
-  album: string
+  album: DeezerApiSongAlbum
   genre: string
   duration_ms: number
-  cover_img_url: string
-  preview_url: string
+  preview: string
 }

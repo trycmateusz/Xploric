@@ -1,21 +1,21 @@
 <template>
-  <ul ref="optionsList" class="absolute rounded-xl border border-black-lighter overflow-hidden">
+  <ul ref="optionsList" class="absolute rounded-xl border border-black-lighter overflow-hidden z-30">
     <li
       v-for="option in options"
       :key="option.id"
-      class="bg-black-main border-b border-black-lighter main-transition text-center last:border-b-0 "
+      class="bg-black-main border-b border-black-lighter text-center last:border-b-0 "
       :class="{ 'text-red-main': option.destructive }"
     >
       <nuxt-link
         v-if="'to' in option"
         :to="option.to"
-        class="block py-4"
+        class="block w-full p-4 main-transition focus:-outline-offset-4"
       >
         {{ option.text }}
       </nuxt-link>
       <button
         v-if="'onClick' in option"
-        class="p-4"
+        class="w-full p-4 main-transition focus:-outline-offset-4"
         @click="handleOnClick(option)"
       >
         {{ option.text }}

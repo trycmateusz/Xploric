@@ -5,7 +5,8 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   runtimeConfig: {
     public: {
-      baseApiUrl: process.env.BASE_API_URL
+      baseApiUrl: process.env.BASE_API_URL,
+      deezerBaseUrl: process.env.DEEZER_BASE_URL
     }
   },
   modules: [

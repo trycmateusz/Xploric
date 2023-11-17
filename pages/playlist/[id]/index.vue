@@ -66,7 +66,7 @@
         :playlist-user-id="playlist.userId"
       />
       <nuxt-link
-        class="w-max mt-4 mb-8 mx-auto text-light-blue-lighter text-center"
+        class="w-max mt-4 mb-8 mx-auto text-light-blue-lighter text-center main-transition"
         to="/"
       >
         add some more!
