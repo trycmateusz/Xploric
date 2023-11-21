@@ -10,7 +10,7 @@ export interface DeezerApiSongArtist {
 
 export interface DeezerApiSong {
   id: string
-  name: string
+  title: string
   artist: DeezerApiSongArtist
   playlists: string[]
   album: DeezerApiSongAlbum

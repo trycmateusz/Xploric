@@ -7,6 +7,9 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  middleware: ['deezer-access-token']
+})
 const songStore = useSongStore()
 await songStore.fetchRandomSong()
 </script>

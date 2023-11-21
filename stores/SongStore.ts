@@ -12,7 +12,7 @@ const example: DeezerApiSong = {
   },
   playlists: ['playlist1'],
   id: 'song1',
-  name: 'The Way You\'d Love Her',
+  title: 'The Way You\'d Love Her',
   genre: 'indie',
   duration_ms: 30000,
   preview: 'https://firebasestorage.googleapis.com/v0/b/xploric-326b5.appspot.com/o/song_audio.mp3?alt=media&token=158e2b9a-8697-4fb8-8b1c-f8efa56baf81'
@@ -31,6 +31,13 @@ export const useSongStore = defineStore('SongStore', () => {
     const characters = 'abcdefghijklmnopqrstuvwxyz123456789+*()'
     const randomCharacter = characters.charAt(Math.floor(Math.random() * characters.length))
     const fetchedSong = await fetchRandom<DeezerApiSong>('track', randomCharacter)
+    if (fetchedSong) {
+      console.log(fetchedSong)
+      const isSet = songs.value.find(song => song.id === fetchedSong.id)
+      if (!isSet) {
+        console.log('siema mordeczko')
+      }
+    }
   }
   return {
     songs,
