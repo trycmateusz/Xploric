@@ -6,7 +6,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       baseApiUrl: process.env.BASE_API_URL,
-      deezerBaseUrl: process.env.DEEZER_BASE_URL
+      spotifyClientId: process.env.SPOTIFY_CLIENT_ID,
+      spotifyBaseUrl: process.env.SPOTIFY_BASE_URL
     }
   },
   modules: [
@@ -20,6 +21,9 @@ export default defineNuxtConfig({
       ssr: false
     },
     '/my-profile/edit': {
+      ssr: false
+    },
+    '/xplore': {
       ssr: false
     }
   },

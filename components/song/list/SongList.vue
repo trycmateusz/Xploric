@@ -20,3 +20,4 @@ defineProps<{
 <style scoped>
 
 </style>
+~/types/Spotify

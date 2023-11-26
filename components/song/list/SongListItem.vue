@@ -2,7 +2,7 @@
   <li class="flex flex-col gap-4 p-4 bg-black-lighter rounded-xl xs:flex-row">
     <img
       v-if="coverLoaded"
-      :src="song.album.cover"
+      :src="song.album.covers[0].url"
       :alt="`${song.name}'s cover`"
       class="rounded-lg xs:w-[7rem]"
     >
@@ -11,7 +11,7 @@
         {{ song.name }}
       </span>
       <span class="block text-gray-main">
-        {{ song.artist.name }}
+        {{ song.artists[0].name }}
       </span>
     </div>
     <div class="flex gap-4 justify-between xs:flex-col xs:ml-auto">
@@ -52,10 +52,10 @@
 </template>
 
 <script setup lang="ts">
-import type { DeezerApiSong } from '~/types/Song'
+import type { SpotifyApiSong } from '~/types/Spotify'
 import type { AppOptionLink, AppOptionButton } from '~/types/App'
 const props = defineProps<{
-  song: DeezerApiSong
+  song: SpotifyApiSong
   playlistUserId: string
 }>()
 const userStore = useUserStore()
@@ -93,3 +93,4 @@ onMounted(() => {
 <style scoped>
 
 </style>
+~/types/Spotify

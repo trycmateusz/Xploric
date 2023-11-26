@@ -3,8 +3,7 @@ export const fetchRandom = async <Resource>(resourceType: string, randomCharacte
     data: Resource[]
   }
   const runtimeConfig = useRuntimeConfig()
-  const query = `?q=${resourceType}:"%${randomCharacter}%"`
-  const url = `${runtimeConfig.public.deezerBaseUrl}/search${query}`
+  const url = `${runtimeConfig.public.spotifyBaseUrl}/search?q=${randomCharacter}&type=${resourceType}`
   const { data, error } = await useFetch<ResourceData>(url)
   if (error.value) {
     console.log(`Error when fetching a random ${resourceType} from the API, ${error.value}`)

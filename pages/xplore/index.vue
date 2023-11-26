@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 definePageMeta({
-  middleware: ['deezer-access-token']
+  middleware: ['spotify-connect']
 })
 const songStore = useSongStore()
 await songStore.fetchRandomSong()
