@@ -1,17 +1,21 @@
 <template>
   <div>
-    <main class="p-4">
-      123
+    <main>
+      <MusicPlayer
+        v-if="song"
+        :song="song"
+        :from-playlist="false"
+      />
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-  middleware: ['spotify-connect']
-})
+import type { SpotifyApiSong } from '~/types/Spotify'
 const songStore = useSongStore()
-await songStore.fetchRandomSong()
+const song = computed<SpotifyApiSong | undefined>(() => {
+  return songStore.songs[songStore.songs.length - 1]
+})
 </script>
 
 <style scoped>

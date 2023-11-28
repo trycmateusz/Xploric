@@ -5,6 +5,7 @@ interface SpotiyfyApiSongAlbumCover {
 export interface SpotifyApiSongAlbum {
   id: string
   covers: SpotiyfyApiSongAlbumCover[]
+  name: string
 }
 
 export interface SpotifyApiSongArtist {

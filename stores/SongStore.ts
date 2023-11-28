@@ -4,6 +4,7 @@ import { fetchRandom } from '~/services/fetchSpotify'
 const example: SpotifyApiSong = {
   album: {
     id: 'another-one',
+    name: 'Another One',
     covers: [
       {
         url: 'https://firebasestorage.googleapis.com/v0/b/xploric-326b5.appspot.com/o/song_cover.png?alt=media&token=113f71f7-2654-42b5-ad0d-9f6c3c03a9a8'
@@ -38,10 +39,9 @@ export const useSongStore = defineStore('SongStore', () => {
     const randomCharacter = characters.charAt(Math.floor(Math.random() * characters.length))
     const fetchedSong = await fetchRandom<SpotifyApiSong>('track', randomCharacter)
     if (fetchedSong) {
-      console.log(fetchedSong)
       const isSet = songs.value.find(song => song.id === fetchedSong.id)
       if (!isSet) {
-        console.log('siema mordeczko')
+        console.log('random song fetched')
       }
     }
   }

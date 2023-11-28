@@ -33,7 +33,7 @@ export default defineNuxtRouteMiddleware(async (from) => {
         }
       } else {
         const spotifyAuthUrl = `https://accounts.spotify.com/authorize?client_id=${runtimeConfig.public.spotifyClientId}&redirect_uri=${redirectUri}&response_type=code`
-        const userAccepted = confirm('This website use\'s Deezer\'s Api to fetch songs, albums, artists etc. If you don\'t want to login, please use these credentials: xploric.example@gmail.com Xp!or3r!')
+        const userAccepted = confirm('This website use\'s Deezer\'s Api to fetch songs, albums, artists etc.')
         if (userAccepted) {
           return navigateTo(spotifyAuthUrl, {
             external: true
