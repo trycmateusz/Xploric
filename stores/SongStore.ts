@@ -1,5 +1,6 @@
 import type { SpotifyApiSong } from '~/types/Spotify'
 import { fetchRandom } from '~/services/fetchSpotify'
+import { getDurationMinutesAndSecondsInProperFormat } from '~/helpers'
 
 const example: SpotifyApiSong = {
   album: {
@@ -29,6 +30,22 @@ export const useSongStore = defineStore('SongStore', () => {
   const songs = ref<SpotifyApiSong[]>([
     { ...example }
   ])
+  const current = ref<SpotifyApiSong>({
+    ...example
+  })
+  const currentPlaying = ref(false)
+  const currentPlayingIntervalId = ref<NodeJS.Timeout | null>(null)
+  const currentListenedDuration = ref(0)
+  const getCurrentListenedDurationText = computed(() => {
+    if (current.value) {
+      return getDurationMinutesAndSecondsInProperFormat(currentListenedDuration.value)
+    }
+  })
+  const getCurrentFullDurationText = computed(() => {
+    if (current.value) {
+      return getDurationMinutesAndSecondsInProperFormat(current.value.duration_ms)
+    }
+  })
   const getPlaylistsSongs = computed(() => {
     return (playlistId: string) => {
       return songs.value.filter(song => song.playlists.includes(playlistId))
@@ -45,9 +62,75 @@ export const useSongStore = defineStore('SongStore', () => {
       }
     }
   }
+  const pauseOrPlayCurrent = () => {
+    currentPlaying.value = !currentPlaying.value
+  }
+  const playCurrent = () => {
+    currentPlayingIntervalId.value = setInterval(() => {
+      currentListenedDuration.value += 1000
+    }, 1000)
+  }
+  const pauseCurrent = () => {
+    if (currentPlayingIntervalId.value) {
+      clearInterval(currentPlayingIntervalId.value)
+      currentPlayingIntervalId.value = null
+    }
+  }
+  const goForwardFiveSeconds = () => {
+    if (current.value) {
+      if (currentListenedDuration.value + 5000 > current.value.duration_ms) {
+        currentListenedDuration.value = current.value.duration_ms
+      } else {
+        currentListenedDuration.value += 5000
+      }
+    }
+  }
+  const goBackFiveSeconds = () => {
+    if (currentListenedDuration.value - 5000 < 0) {
+      currentListenedDuration.value = 0
+    } else {
+      currentListenedDuration.value -= 5000
+    }
+  }
+  const playPreviousSongOrRewindToBeginning = (isFromPlaylist: boolean) => {
+    if (!isFromPlaylist || (isFromPlaylist && currentListenedDuration.value < 5000)) {
+      currentListenedDuration.value = 0
+    } else {
+      console.log('play previous')
+    }
+  }
+  const playNextSong = () => {
+    console.log('play next')
+  }
+  watch(currentListenedDuration, () => {
+    if (current.value) {
+      if (currentListenedDuration.value >= current.value.duration_ms) {
+        currentPlaying.value = false
+        currentListenedDuration.value = 0
+        pauseCurrent()
+      }
+    }
+  })
+  watch(currentPlaying, () => {
+    if (currentPlaying.value) {
+      playCurrent()
+    } else {
+      pauseCurrent()
+    }
+  })
   return {
     songs,
+    current,
+    currentPlaying,
+    currentListenedDuration,
+    getCurrentFullDurationText,
+    getCurrentListenedDurationText,
     getPlaylistsSongs,
-    fetchRandomSong
+    fetchRandomSong,
+    pauseOrPlayCurrent,
+    goForwardFiveSeconds,
+    goBackFiveSeconds,
+    playPreviousSongOrRewindToBeginning,
+    playNextSong
   }
 })

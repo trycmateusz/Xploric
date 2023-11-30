@@ -9,11 +9,11 @@ export const convertToDate = (timestamp: number): string => {
 }
 
 export const getDurationSeconds = (duration: number): number => {
-  return duration / 1000 % 60
+  return Math.floor(duration / 1000 % 60)
 }
 
 export const getDurationMinutes = (duration: number): number => {
-  return duration % 1000 % 60
+  return Math.floor(duration / 1000 / 60)
 }
 
 export const getDurationMinutesAndSecondsInProperFormat = (duration: number): string => {
