@@ -1,17 +1,17 @@
 <template>
   <div class="text-xl ">
     <span>
-      {{ songStore.getCurrentListenedDurationText }}
+      {{ currentAudioStore.getCurrentListenedDurationText }}
     </span>
     /
     <span>
-      {{ songStore.getCurrentFullDurationText }}
+      {{ currentAudioStore.getCurrentFullDurationText }}
     </span>
   </div>
 </template>
 
 <script setup lang="ts">
-const songStore = useSongStore()
+const currentAudioStore = useCurrentAudioStore()
 </script>
 
 <style scoped>

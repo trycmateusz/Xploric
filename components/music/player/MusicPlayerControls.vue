@@ -1,29 +1,42 @@
 <template>
   <div class="flex justify-center gap-4">
-    <button @click="songStore.playPreviousSongOrRewindToBeginning(fromPlaylist)">
+    <button @click="currentAudioStore.playPreviousSongOrRewindToBeginning(fromPlaylist)">
       <img src="~/assets/img/previous-song.svg" alt="Play pervious song on the playlist or rewind to the beginning">
     </button>
-    <button @click="songStore.goBackFiveSeconds()">
+    <button @click="currentAudioStore.goBackFiveSeconds()">
       <img src="~/assets/img/back-5-seconds.svg" alt="Rewind 5 seconds">
     </button>
-    <button class="flex justify-center items-center w-8" @click="songStore.pauseOrPlayCurrent()">
+    <button
+      v-if="!currentAudioStore.currentPlaying"
+      class="flex justify-center items-center w-8"
+      @click="currentAudioStore.playCurrent()"
+    >
       <img
-        :src="songStore.currentPlaying ? getAbsolutePath('~/assets/img/pause.svg') : getAbsolutePath('~/assets/img/play.svg')"
-        :alt="songStore.currentPlaying ? 'Pause song' : 'Play song'"
+        src="~/assets/img/play.svg"
+        alt="Play song"
       >
     </button>
-    <button @click="songStore.goForwardFiveSeconds()">
+    <button
+      v-else
+      class="flex justify-center items-center w-8"
+      @click="currentAudioStore.pauseCurrent()"
+    >
+      <img
+        src="~/assets/img/pause.svg"
+        alt="Pause song"
+      >
+    </button>
+    <button @click="currentAudioStore.goForwardFiveSeconds()">
       <img src="~/assets/img/forward-5-seconds.svg" alt="Go forward 5 seconds">
     </button>
-    <button @click="songStore.playNextSong()">
+    <button @click="currentAudioStore.playNextSong()">
       <img src="~/assets/img/next-song.svg" alt="Play next song on the playlist">
     </button>
   </div>
 </template>
 
 <script setup lang="ts">
-const songStore = useSongStore()
-const { getAbsolutePath } = useImages()
+const currentAudioStore = useCurrentAudioStore()
 defineProps<{
   fromPlaylist: boolean
 }>()
