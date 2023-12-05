@@ -36,6 +36,9 @@ html {
   .main-transition {
     @apply hover:opacity-70 focus:opacity-70 transition-opacity
   }
+  .body-fixed {
+    @apply w-full overflow-hidden
+  }
 }
 
 

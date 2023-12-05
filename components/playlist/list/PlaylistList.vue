@@ -4,6 +4,8 @@
       v-for="playlist in playlists"
       :key="playlist.id"
       :playlist="playlist"
+      :for-saving="forSaving"
+      @save="emit('save', playlist)"
     />
   </ul>
   <span v-else class="flex flex-col text-lg text-gray-main">
@@ -18,6 +20,10 @@
 import type { Playlist } from '~/types/Playlist'
 defineProps<{
   playlists: Playlist[]
+  forSaving: boolean
+}>()
+const emit = defineEmits<{
+  (e: 'save', playlist: Playlist): void
 }>()
 </script>
 

@@ -9,7 +9,7 @@
       <nuxt-link
         v-if="'to' in option"
         :to="option.to"
-        class="block w-full p-4 main-transition focus:-outline-offset-4"
+        class="block w-full p-4 main-transition leading-none focus:-outline-offset-4"
       >
         {{ option.text }}
       </nuxt-link>

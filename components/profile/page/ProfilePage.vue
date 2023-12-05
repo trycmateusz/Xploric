@@ -23,7 +23,7 @@
       <h2 class="text-xl mb-4">
         {{ playlistHeading }}
       </h2>
-      <PlaylistList :playlists="usersPlaylists" />
+      <PlaylistList :for-saving="false" :playlists="usersPlaylists" />
       <nuxt-link
         v-if="ownProfile && usersPlaylists.length > 0"
         to="/playlist/create"

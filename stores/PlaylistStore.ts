@@ -1,27 +1,31 @@
 import type { Playlist } from '~/types/Playlist'
 import type { User } from '~/types/User'
-import { fetchCollection, fetchOne } from '~/services/fetch'
+import { fetchCollection, fetchOne, fetchMany } from '~/services/fetch'
 
 export const usePlaylistStore = defineStore('PlaylistStore', () => {
   const playlists = ref<Playlist[]>([])
+  const setOne = (fetchedPlaylist: Playlist) => {
+    const isSet = playlists.value.find(playlist => playlist.id === fetchedPlaylist.id)
+    if (!isSet) {
+      playlists.value.push({ ...fetchedPlaylist })
+    }
+  }
   const fetchPlaylists = async () => {
     const fetchedPlaylists = await fetchCollection<Playlist>('playlists')
     if (fetchedPlaylists) {
-      fetchedPlaylists.forEach((fetchedPlaylist) => {
-        const isSet = playlists.value.find(playlist => playlist.id === fetchedPlaylist.id)
-        if (!isSet) {
-          playlists.value.push({ ...fetchedPlaylist })
-        }
-      })
+      fetchedPlaylists.forEach(fetchedPlaylist => setOne(fetchedPlaylist))
     }
   }
   const fetchPlaylist = async (id: string) => {
     const fetchedPlaylist = await fetchOne<Playlist>('playlists', id)
     if (fetchedPlaylist) {
-      const isSet = playlists.value.find(playlist => playlist.id === fetchedPlaylist.id)
-      if (!isSet) {
-        playlists.value.push({ ...fetchedPlaylist })
-      }
+      setOne(fetchedPlaylist)
+    }
+  }
+  const fetchManyPlaylists = async (ids: string[]) => {
+    const fetchedPlaylists = await fetchMany<Playlist>('playlists', ids)
+    if (fetchedPlaylists) {
+      fetchedPlaylists.forEach(fetchedPlaylist => setOne(fetchedPlaylist))
     }
   }
   const getPlaylist = computed(() => {
@@ -49,6 +53,7 @@ export const usePlaylistStore = defineStore('PlaylistStore', () => {
     playlists,
     fetchPlaylists,
     fetchPlaylist,
+    fetchManyPlaylists,
     getPlaylist,
     getPlaylistLengthText,
     getUsersPlaylists

@@ -67,7 +67,7 @@
       />
       <nuxt-link
         class="w-max mt-4 mb-8 mx-auto text-light-blue-lighter text-center main-transition"
-        to="/"
+        to="/xplore"
       >
         add some more!
       </nuxt-link>
@@ -88,7 +88,7 @@
           class="bg-black-lighter text-white-main min-h-[10rem] rounded-xl p-4 resize-none overflow-y-auto main-transition"
         />
         <AppButton
-          text="Submit"
+          text="Comment"
           styling="primary"
           class="mt-4 ml-auto"
         />
@@ -121,7 +121,7 @@ const user = computed(() => {
 
 const defaultOptions: (AppOptionLink | AppOptionButton)[] = [
   {
-    text: 'Share',
+    text: 'Copy link',
     id: Math.random().toString(),
     onClick: () => console.log('share')
   }

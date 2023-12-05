@@ -67,9 +67,9 @@ const coverLoaded = ref(false)
 
 const defaultOptions: (AppOptionButton | AppOptionLink)[] = [
   {
-    text: 'Share',
+    text: 'Copy link',
     id: Math.random().toString(),
-    onClick: () => console.log('share')
+    onClick: () => console.log('Copy link')
   }
 ]
 const userOptions: (AppOptionButton | AppOptionLink)[] = [
