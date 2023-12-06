@@ -13,7 +13,7 @@ Here's a list of all the different things you can do on this site:
 - creating playlists to save music
 - editing playlists (as well as managing its songs ect.)
 - ability to comment other's playlist
-- defining your 'publicity' options to determine if you want other user's to be able to look through your profile
+- defining your 'publicity' options to determine if you want other users to be able to look through your profile
 
 ### Music
 
@@ -23,7 +23,7 @@ Here's a list of all the different things you can do on this site:
 - looking through other people's playlists
 - getting served a random person's playlist
 
-Additionally, I plan on to cooperate with a backend developer to properly retrieve access tokens from Spotify.
+Additionally, I plan on cooperating with a backend developer to properly retrieve access tokens from Spotify.
 
 Live: not out yet
 
