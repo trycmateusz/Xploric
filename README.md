@@ -25,7 +25,7 @@ Here's a list of all the different things you can do on this site:
 
 Additionally, I plan on cooperating with a backend developer to properly retrieve access tokens from Spotify.
 
-Live: xploric.vercel.app[xploric.vercel.app] (WIP)
+Live: https://xploric.vercel.app (WIP)
 
 ## Techstack
 - Nuxt 3
