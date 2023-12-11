@@ -1,4 +1,4 @@
-import type { Artist } from '~/types/Artist'
+import type { Artist } from '~/stores/types/Artist'
 
 const example: Artist = {
   id: 'mac-demarco',

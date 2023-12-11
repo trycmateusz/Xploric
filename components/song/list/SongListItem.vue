@@ -39,14 +39,15 @@
         />
       </div>
 
-      <button
+      <nuxt-link
         class="w-[2rem] main-transition"
+        :to="`/player/${song.id}`"
       >
         <img
           src="~/assets/img/play-circle.svg"
           :alt="`Play song ${song.name}`"
         >
-      </button>
+      </nuxt-link>
     </div>
   </li>
 </template>
@@ -94,3 +95,4 @@ onMounted(() => {
 
 </style>
 ~/types/Spotify
+~/stores/types/Spotify~/stores/types/App

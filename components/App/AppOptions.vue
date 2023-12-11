@@ -56,3 +56,4 @@ onUnmounted(() => {
 
 <style scoped>
 </style>
+~/stores/types/App

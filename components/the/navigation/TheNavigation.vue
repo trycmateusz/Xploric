@@ -151,3 +151,4 @@ router.beforeEach(() => {
   @apply absolute bg-black-main border-t border-black-lighter z-40 transition-transform duration-300
 }
 </style>
+~/stores/types/Link

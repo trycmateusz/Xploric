@@ -30,3 +30,4 @@ const emit = defineEmits<{
 <style scoped>
 
 </style>
+~/stores/types/Playlist

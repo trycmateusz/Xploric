@@ -1,4 +1,4 @@
-import type { SpotifyApiSong } from '~/types/Spotify'
+import type { SpotifyApiSong } from '~/stores/types/Spotify'
 import { fetchRandom } from '~/services/fetchSpotify'
 
 const example: SpotifyApiSong = {
@@ -34,6 +34,11 @@ export const useSongStore = defineStore('SongStore', () => {
       return songs.value.filter(song => song.playlists.includes(playlistId))
     }
   })
+  const getSong = computed(() => {
+    return (songId: string) => {
+      return songs.value.find(song => song.id === songId)
+    }
+  })
   const fetchRandomSong = async () => {
     const characters = 'abcdefghijklmnopqrstuvwxyz123456789+*()'
     const randomCharacter = characters.charAt(Math.floor(Math.random() * characters.length))
@@ -49,6 +54,7 @@ export const useSongStore = defineStore('SongStore', () => {
   return {
     songs,
     getPlaylistsSongs,
+    getSong,
     fetchRandomSong
   }
 })

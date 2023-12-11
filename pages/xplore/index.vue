@@ -4,14 +4,17 @@
       v-if="song"
       :song="song"
       :from-playlist="false"
-      @save-song="isBeingSaved = true, makeBodyFixed"
+      class="min-h-[Calc(100svh_-_var(--nav-height))]"
+      @save-song="isBeingSaved = true"
+      @set-audio="(tag) => currentAudioStore.setCurrentAudio(tag)"
+      @audio-data-loaded="currentAudioStore.currentAudioLoaded = true"
     />
     <teleport to="body">
       <div
         v-if="isBeingSaved && userStore.auth"
-        class="fixed top-[var(--nav-height)] w-full h-full p-4 min-h-[100svh_-_Calc(var(--nav-height))] bg-black-main z-40"
+        class="fixed top-[var(--nav-height)] w-full min-h-[Calc(100svh_-_var(--nav-height))] bg-black-main z-40 overflow-y-auto"
       >
-        <div class="wrapper flex flex-col">
+        <div class="wrapper flex flex-col p-4">
           <PlaylistList
             :for-saving="true"
             :playlists="playlistStore.getUsersPlaylists(userStore.auth)"
@@ -19,7 +22,7 @@
           />
           <div class="mt-10 mb-4 text-lg text-white-main text-center">
             or
-            <nuxt-link class="main-transition text-light-blue-lighter" to="/playlist/create">
+            <nuxt-link class="main-transition text-light-blue-lighter" :to="{ path:'/playlist/create', query: { saving: song?.id } }">
               add to a new one
             </nuxt-link>
           </div>
@@ -38,11 +41,14 @@
 <script setup lang="ts">
 import type { SpotifyApiSong } from '~/types/Spotify'
 import type { Playlist } from '~/types/Playlist'
+definePageMeta({
+  layout: 'without-current-player'
+})
 const songStore = useSongStore()
 const playlistStore = usePlaylistStore()
 const userStore = useUserStore()
 const currentAudioStore = useCurrentAudioStore()
-const { makeBodyFixed } = useFixedBody()
+const { makeBodyFixed, removeFixedFromBody } = useFixedBody()
 const isBeingSaved = ref(false)
 const song = computed<SpotifyApiSong | undefined>(() => {
   return songStore.songs[songStore.songs.length - 1]
@@ -51,18 +57,26 @@ const saveToPlaylist = (playlist: Playlist) => {
   isBeingSaved.value = false
   console.log('saving', playlist)
 }
+currentAudioStore.setExample()
 if (userStore.auth) {
   await playlistStore.fetchManyPlaylists(userStore.auth.playlists)
 }
 watch(isBeingSaved, () => {
   if (isBeingSaved.value) {
     currentAudioStore.pauseCurrent()
+    makeBodyFixed()
   } else {
     currentAudioStore.playCurrent()
+    removeFixedFromBody()
   }
+})
+onUnmounted(() => {
+  removeFixedFromBody()
+  currentAudioStore.setCurrent(null)
 })
 </script>
 
 <style scoped>
 
 </style>
+~/stores/types/Spotify~/stores/types/Playlist

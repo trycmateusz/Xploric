@@ -22,8 +22,16 @@
           :model-value="formData.description"
         />
         <div class="flex flex-col gap-4 mt-4 items-end xs:flex-row xs:justify-end">
-          <AppButton text="Discard" styling="secondary" @click="router.back()" />
-          <AppButton text="Create" styling="primary" />
+          <AppButton
+            text="Discard"
+            styling="secondary"
+            @click="router.back()"
+          />
+          <AppButton
+            text="Create"
+            styling="primary"
+            @click="goBack"
+          />
         </div>
       </form>
     </main>
@@ -33,13 +41,21 @@
 <script setup lang="ts">
 import type { PlaylistForm } from '~/types/Playlist'
 const router = useRouter()
+const route = useRoute()
+const isSongBeingSaved = route.query.saving
 const formData = ref<PlaylistForm>({
   image: null,
   title: '',
   description: ''
 })
+const goBack = () => {
+  if (isSongBeingSaved) {
+    router.push('/xplore')
+  }
+}
 </script>
 
 <style scoped>
 
 </style>
+~/stores/types/Playlist

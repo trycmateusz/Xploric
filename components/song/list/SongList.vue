@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import type { SpotifyApiSong } from '~/types/Song'
+import type { SpotifyApiSong } from '~/types/Spotify'
 defineProps<{
   songs: SpotifyApiSong[]
   playlistUserId: string
@@ -21,3 +21,4 @@ defineProps<{
 
 </style>
 ~/types/Spotify
+~/stores/types/Spotify

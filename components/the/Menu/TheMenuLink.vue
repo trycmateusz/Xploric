@@ -32,3 +32,4 @@ const { getAbsolutePath } = useImages()
 <style scoped>
 
 </style>
+~/stores/types/MainMenu

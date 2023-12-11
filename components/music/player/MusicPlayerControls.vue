@@ -6,26 +6,7 @@
     <button @click="currentAudioStore.goBackFiveSeconds()">
       <img src="~/assets/img/back-5-seconds.svg" alt="Rewind 5 seconds">
     </button>
-    <button
-      v-if="!currentAudioStore.currentPlaying"
-      class="flex justify-center items-center w-8"
-      @click="currentAudioStore.playCurrent()"
-    >
-      <img
-        src="~/assets/img/play.svg"
-        alt="Play song"
-      >
-    </button>
-    <button
-      v-else
-      class="flex justify-center items-center w-8"
-      @click="currentAudioStore.pauseCurrent()"
-    >
-      <img
-        src="~/assets/img/pause.svg"
-        alt="Pause song"
-      >
-    </button>
+    <MusicPlayerControlsPlayPause class="w-8" />
     <button @click="currentAudioStore.goForwardFiveSeconds()">
       <img src="~/assets/img/forward-5-seconds.svg" alt="Go forward 5 seconds">
     </button>

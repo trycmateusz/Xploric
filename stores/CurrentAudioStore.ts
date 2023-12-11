@@ -1,4 +1,4 @@
-import type { SpotifyApiSong } from '~/types/Spotify'
+import type { SpotifyApiSong } from '~/stores/types/Spotify'
 import { getDurationMinutesAndSecondsInProperFormatFromSeconds } from '~/helpers'
 
 const example: SpotifyApiSong = {
@@ -26,16 +26,17 @@ const example: SpotifyApiSong = {
 }
 
 export const useCurrentAudioStore = defineStore('CurrentAudioStore', () => {
-  const current = ref<SpotifyApiSong>({
-    ...example
-  })
+  const maxProgressValue = 200
+  const current = ref<SpotifyApiSong | null>(null)
   const currentAudio = ref<HTMLAudioElement | undefined>(undefined)
   const currentAudioLoaded = ref(false)
   const currentAudioTime = ref(0)
   const currentPlaying = ref(false)
   const getCurrentListenedDurationText = computed(() => {
-    if (currentAudio.value && currentAudioLoaded.value) {
+    if (currentAudio.value) {
       return getDurationMinutesAndSecondsInProperFormatFromSeconds(currentAudioTime.value)
+    } else {
+      return '0:00'
     }
   })
   const getCurrentFullDurationText = computed(() => {
@@ -43,11 +44,31 @@ export const useCurrentAudioStore = defineStore('CurrentAudioStore', () => {
       return getDurationMinutesAndSecondsInProperFormatFromSeconds(current.value.duration_ms / 1000)
     }
   })
-  const setCurrentAudio = (tag: HTMLAudioElement) => {
-    currentAudio.value = tag
+  const getCurrentProgress = computed(() => {
+    if (current.value) {
+      return Math.floor(currentAudioTime.value / (current.value.duration_ms / 1000) * maxProgressValue)
+    }
+  })
+  const setExample = () => {
+    current.value = { ...example }
+  }
+  const setCurrent = (song: SpotifyApiSong | null) => {
+    if (song) {
+      current.value = { ...song }
+    } else {
+      current.value = null
+    }
   }
   const setCurrentTime = (time: number) => {
     currentAudioTime.value = time
+  }
+  const setCurrentAudio = (tag: HTMLAudioElement) => {
+    currentAudio.value = tag
+  }
+  const setCurrentAudioTime = (time: number) => {
+    if (currentAudio.value) {
+      currentAudio.value.currentTime = time
+    }
   }
   const playCurrent = () => {
     if (currentAudio.value) {
@@ -64,6 +85,7 @@ export const useCurrentAudioStore = defineStore('CurrentAudioStore', () => {
   const endCurrent = () => {
     if (currentAudio.value) {
       currentAudio.value.currentTime = 0
+      currentAudioTime.value = 0
       currentAudio.value.pause()
       currentPlaying.value = false
     }
@@ -98,16 +120,27 @@ export const useCurrentAudioStore = defineStore('CurrentAudioStore', () => {
   const playNextSong = () => {
     console.log('play next')
   }
+  watch(current, () => {
+    currentPlaying.value = false
+    currentAudio.value = undefined
+    currentAudioTime.value = 0
+    currentAudioLoaded.value = false
+  })
   return {
+    maxProgressValue,
     current,
     currentPlaying,
     currentAudio,
     currentAudioTime,
     currentAudioLoaded,
+    getCurrentProgress,
     getCurrentFullDurationText,
     getCurrentListenedDurationText,
-    setCurrentAudio,
+    setExample,
+    setCurrent,
     setCurrentTime,
+    setCurrentAudio,
+    setCurrentAudioTime,
     pauseCurrent,
     playCurrent,
     endCurrent,

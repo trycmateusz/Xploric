@@ -2,16 +2,11 @@
   <div class="min-h-[100svh] bg-black-main">
     <TheNavigation />
     <slot />
-    <TheCurrentPlayer
-      v-if="currentAudioStore.current"
-      :current="currentAudioStore.current"
-    />
   </div>
 </template>
 
 <script setup lang="ts">
 const userStore = useUserStore()
-const currentAudioStore = useCurrentAudioStore()
 await userStore.fetchUser('user1')
 userStore.setAuth(userStore.users[0])
 </script>

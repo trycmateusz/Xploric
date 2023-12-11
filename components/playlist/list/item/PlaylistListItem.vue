@@ -62,3 +62,4 @@ onMounted(() => {
 <style lang="scss" scoped>
 
 </style>
+~/stores/types/Playlist

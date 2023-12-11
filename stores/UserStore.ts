@@ -1,4 +1,4 @@
-import type { User } from '~/types/User'
+import type { User } from '~/stores/types/User'
 import { fetchOne } from '~/services/fetch'
 
 export const useUserStore = defineStore('UserStore', () => {

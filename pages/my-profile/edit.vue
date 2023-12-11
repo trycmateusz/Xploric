@@ -96,3 +96,4 @@ watch(formData, () => {
 <style scoped lang="scss">
 
 </style>
+~/stores/types/Form~/stores/types/User~/stores/types/User

@@ -20,3 +20,4 @@ defineProps<{
 <style scoped>
 
 </style>
+~/stores/types/Comment

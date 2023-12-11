@@ -1,4 +1,4 @@
-import type { SpotifyApiAccessToken } from '~/types/Spotify'
+import type { SpotifyApiAccessToken } from '~/stores/types/Spotify'
 
 export default defineNuxtRouteMiddleware(async (from) => {
   const runtimeConfig = useRuntimeConfig()

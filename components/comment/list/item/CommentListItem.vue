@@ -116,3 +116,4 @@ $black-svg-to-red-main: invert(16%) sepia(38%) saturate(7469%) hue-rotate(351deg
   }
 }
 </style>
+~/stores/types/Comment
