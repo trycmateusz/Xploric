@@ -55,7 +55,10 @@
       </audio>
       <MusicPlayerDuration />
       <MusicPlayerProgress class="mb-4" :on-whole-wrapper="false" />
-      <MusicPlayerControls :from-playlist="fromPlaylist" />
+      <MusicPlayerControls
+        :from-playlist="fromPlaylist"
+        :without-play="false"
+      />
     </div>
     <div v-if="!fromPlaylist" class="flex justify-between mt-8">
       <div class="flex-shrink grid items-center grid-cols-2 gap-2">

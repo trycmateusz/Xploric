@@ -6,7 +6,7 @@
     <button @click="currentAudioStore.goBackFiveSeconds()">
       <img src="~/assets/img/back-5-seconds.svg" alt="Rewind 5 seconds">
     </button>
-    <MusicPlayerControlsPlayPause class="w-8" />
+    <MusicPlayerControlsPlayPause v-if="!withoutPlay" class="w-8" />
     <button @click="currentAudioStore.goForwardFiveSeconds()">
       <img src="~/assets/img/forward-5-seconds.svg" alt="Go forward 5 seconds">
     </button>
@@ -20,6 +20,7 @@
 const currentAudioStore = useCurrentAudioStore()
 defineProps<{
   fromPlaylist: boolean
+  withoutPlay: boolean
 }>()
 </script>
 

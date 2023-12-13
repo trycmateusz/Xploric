@@ -53,20 +53,19 @@ const isBeingSaved = ref(false)
 const song = computed<SpotifyApiSong | undefined>(() => {
   return songStore.songs[songStore.songs.length - 1]
 })
+currentAudioStore.setCurrent(null)
+currentAudioStore.setExample()
 const saveToPlaylist = (playlist: Playlist) => {
   isBeingSaved.value = false
   console.log('saving', playlist)
 }
-currentAudioStore.setExample()
 if (userStore.auth) {
   await playlistStore.fetchManyPlaylists(userStore.auth.playlists)
 }
 watch(isBeingSaved, () => {
   if (isBeingSaved.value) {
-    currentAudioStore.pauseCurrent()
     makeBodyFixed()
   } else {
-    currentAudioStore.playCurrent()
     removeFixedFromBody()
   }
 })

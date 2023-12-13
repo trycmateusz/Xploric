@@ -135,6 +135,7 @@ export const useCurrentAudioStore = defineStore('CurrentAudioStore', () => {
     console.log('play next')
   }
   watch(current, () => {
+    pauseCurrent()
     currentPlaying.value = false
     currentAudio.value = undefined
     currentAudioTime.value = 0
