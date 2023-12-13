@@ -11,13 +11,12 @@
         {{ link.highlight }}
       </span>
     </nuxt-link>
-    <ClientOnly>
-      <img
-        class="absolute top-1/2 left-1/2 min-h-[90%] min-w-[120%] -translate-y-1/2 -translate-x-1/2"
-        :src="getAbsolutePath(`~/assets/img/${link.text}.svg`)"
-        alt=""
-      >
-    </ClientOnly>
+
+    <img
+      class="absolute top-1/2 left-1/2 min-h-[90%] min-w-[120%] -translate-y-1/2 -translate-x-1/2"
+      :src="getAbsolutePath(`~/assets/img/${link.text}.svg`)"
+      alt=""
+    >
   </li>
 </template>
 

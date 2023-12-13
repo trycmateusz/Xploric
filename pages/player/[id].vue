@@ -7,7 +7,7 @@
         :song="song"
         class="h-max"
         :from-playlist="true"
-        @set-audio="(tag) => currentAudioStore.setCurrentAudio(tag)"
+        @set-audio="(tag) => setCurrentAudioIfDifferent(tag)"
         @audio-data-loaded="currentAudioStore.currentAudioLoaded = true"
       />
     </div>
@@ -26,6 +26,13 @@ const song = computed(() => {
   return songStore.getSong(songId)
 })
 currentAudioStore.setExample()
+const setCurrentAudioIfDifferent = (tag: HTMLAudioElement) => {
+  if (!currentAudioStore.currentAudio) {
+    currentAudioStore.setCurrentAudio(tag)
+  } else if (currentAudioStore.current?.id !== songId) {
+    currentAudioStore.setCurrentAudio(tag)
+  }
+}
 </script>
 
 <style scoped>

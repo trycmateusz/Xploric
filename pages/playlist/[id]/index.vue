@@ -162,4 +162,3 @@ onMounted(() => {
 <style scoped>
 
 </style>
-~/stores/types/App

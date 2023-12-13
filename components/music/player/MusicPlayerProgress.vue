@@ -4,7 +4,7 @@
       id="songPlayed"
       ref="progress"
       aria-label="Current song progress"
-      class="w-full h-6 overflow-hidden align-middle appearance-none"
+      class="w-full h-6 overflow-hidden align-middle appearance-none cursor-pointer"
       :max="currentAudioStore.maxProgressValue"
       :value="currentAudioStore.getCurrentProgress"
       @click="setProgress"
@@ -20,7 +20,7 @@ const progress = ref<HTMLProgressElement | undefined>(undefined)
 const currentAudioStore = useCurrentAudioStore()
 const wholeWrapperClasses = computed(() => {
   if (props.onWholeWrapper) {
-    return ['rounded-none']
+    return ['on-whole-wrapper']
   }
 })
 const setProgress = (e: MouseEvent) => {
@@ -38,5 +38,13 @@ const setProgress = (e: MouseEvent) => {
 ::-webkit-progress-value {
   background-color: var(--white-main);
   border-radius: 0 100vw 100vw 0;
+}
+.on-whole-wrapper {
+  @apply rounded-none
+}
+@media (min-width: 768px) {
+  .on-whole-wrapper {
+    @apply mx-4 rounded-full
+  }
 }
 </style>

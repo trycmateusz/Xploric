@@ -19,25 +19,23 @@
           </button>
         </div>
 
-        <ClientOnly>
-          <button
-            class="flex items-center justify-center gap-2 pr-4 py-2 text-white-main main-transition xs:pl-4"
-            :aria-controls="userAriaControls"
-            :aria-expanded="userLinksExpanded"
-            @click="userLinksExpanded = !userLinksExpanded"
+        <button
+          class="flex items-center justify-center gap-2 pr-4 py-2 text-white-main main-transition xs:pl-4"
+          :aria-controls="userAriaControls"
+          :aria-expanded="userLinksExpanded"
+          @click="userLinksExpanded = !userLinksExpanded"
+        >
+          <img src="~/assets/img/user.svg" alt="">
+          <span v-if="userStore.auth" class="relative flex-shrink whitespace-nowrap text-ellipsis overflow-hidden">
+            {{ userStore.auth.username }}
+          </span>
+          <img
+            src="~/assets/img/arrow-down.svg"
+            alt=""
+            class="h-1/3 transition-transform"
+            :class="{ 'rotate-180': userLinksExpanded }"
           >
-            <img src="~/assets/img/user.svg" alt="">
-            <span v-if="userStore.auth" class="relative flex-shrink whitespace-nowrap text-ellipsis overflow-hidden">
-              {{ userStore.auth.username }}
-            </span>
-            <img
-              src="~/assets/img/arrow-down.svg"
-              alt=""
-              class="h-1/3 transition-transform"
-              :class="{ 'rotate-180': userLinksExpanded }"
-            >
-          </button>
-        </ClientOnly>
+        </button>
       </div>
       <ul
         :id="burgerAriaControls"
@@ -60,21 +58,20 @@
           :anchor-tabindex="linksExpanded ? '0' : '-1'"
         />
       </ul>
-      <ClientOnly>
-        <ul
-          :id="userAriaControls"
-          :aria-hidden="!userLinksExpanded"
-          class="link-list right-0 border-l md:border-r"
-          :class="{ '-translate-y-full': !userLinksExpanded }"
-        >
-          <TheNavigationLink
-            v-for="link in userLinks"
-            :key="link.text"
-            :link="link"
-            :anchor-tabindex="userLinksExpanded ? '0' : '-1'"
-          />
-        </ul>
-      </ClientOnly>
+
+      <ul
+        :id="userAriaControls"
+        :aria-hidden="!userLinksExpanded"
+        class="link-list right-0 border-l md:border-r"
+        :class="{ '-translate-y-full': !userLinksExpanded }"
+      >
+        <TheNavigationLink
+          v-for="link in userLinks"
+          :key="link.text"
+          :link="link"
+          :anchor-tabindex="userLinksExpanded ? '0' : '-1'"
+        />
+      </ul>
     </div>
   </nav>
 </template>

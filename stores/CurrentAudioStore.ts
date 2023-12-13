@@ -1,4 +1,4 @@
-import type { SpotifyApiSong } from '~/stores/types/Spotify'
+import type { SpotifyApiSong } from '~/types/Spotify'
 import { getDurationMinutesAndSecondsInProperFormatFromSeconds } from '~/helpers'
 
 const example: SpotifyApiSong = {
@@ -26,7 +26,8 @@ const example: SpotifyApiSong = {
 }
 
 export const useCurrentAudioStore = defineStore('CurrentAudioStore', () => {
-  const maxProgressValue = 200
+  const maxProgressValue = 500
+  const volume = ref(0.1)
   const current = ref<SpotifyApiSong | null>(null)
   const currentAudio = ref<HTMLAudioElement | undefined>(undefined)
   const currentAudioLoaded = ref(false)
@@ -50,7 +51,9 @@ export const useCurrentAudioStore = defineStore('CurrentAudioStore', () => {
     }
   })
   const setExample = () => {
-    current.value = { ...example }
+    if (!current.value) {
+      current.value = { ...example }
+    }
   }
   const setCurrent = (song: SpotifyApiSong | null) => {
     if (song) {
@@ -63,7 +66,18 @@ export const useCurrentAudioStore = defineStore('CurrentAudioStore', () => {
     currentAudioTime.value = time
   }
   const setCurrentAudio = (tag: HTMLAudioElement) => {
-    currentAudio.value = tag
+    currentAudio.value = tag.cloneNode(true) as HTMLAudioElement
+    currentAudio.value.volume = volume.value
+    currentAudio.value.addEventListener('timeupdate', () => {
+      if (currentAudio.value) {
+        setCurrentTime(currentAudio.value.currentTime)
+        if (current.value) {
+          if (currentAudio.value.currentTime >= current.value.duration_ms / 1000) {
+            endCurrent()
+          }
+        }
+      }
+    })
   }
   const setCurrentAudioTime = (time: number) => {
     if (currentAudio.value) {

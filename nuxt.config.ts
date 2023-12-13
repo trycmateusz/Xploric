@@ -25,6 +25,12 @@ export default defineNuxtConfig({
     },
     '/xplore': {
       ssr: false
+    },
+    '/playlist/**': {
+      ssr: false
+    },
+    '/player/**': {
+      ssr: false
     }
   },
   imports: {

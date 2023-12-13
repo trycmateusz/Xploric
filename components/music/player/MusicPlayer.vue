@@ -47,7 +47,6 @@
         controls
         preload="metadata"
         :src="song.preview_url"
-        @timeupdate="handleAudioPlaying"
         @loadeddata="emit('audio-data-loaded')"
       >
         <a :href="song.preview_url">
@@ -97,7 +96,6 @@
 <script setup lang="ts">
 import debounce from 'lodash/debounce'
 import type { SpotifyApiSong } from '~/types/Spotify'
-const currentAudioStore = useCurrentAudioStore()
 defineProps<{
   song: SpotifyApiSong
   fromPlaylist: boolean
@@ -141,19 +139,6 @@ const distanceTransform = computed(() => {
     return ''
   }
 })
-const checkIfEnded = () => {
-  if (currentAudioStore.currentAudio && currentAudioStore.current) {
-    if (currentAudioStore.currentAudio.currentTime >= currentAudioStore.current.duration_ms / 1000) {
-      currentAudioStore.endCurrent()
-    }
-  }
-}
-const handleAudioPlaying = () => {
-  if (currentAudioStore.currentAudio) {
-    currentAudioStore.setCurrentTime(currentAudioStore.currentAudio.currentTime)
-    checkIfEnded()
-  }
-}
 const followTouch = (e: PointerEvent) => {
   if (isCoverHeld.value) {
     xPointerPosition.value = e.clientX
@@ -176,7 +161,6 @@ const stopFollowingTouch = () => {
 }
 onMounted(() => {
   if (audio.value) {
-    audio.value.volume = 0.1
     emit('set-audio', audio.value)
   }
 })

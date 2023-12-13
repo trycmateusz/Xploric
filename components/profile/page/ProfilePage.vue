@@ -6,19 +6,17 @@
         <h1 class="text-light-blue-lighter w-fit">
           {{ welcomeHeading }}
         </h1>
-        <ClientOnly>
-          <nuxt-link
-            v-if="ownProfile"
-            class="h-[1.2em] hover:opacity-70 focus:opacity-70 transition-opacity"
-            to="/my-profile/edit"
+        <nuxt-link
+          v-if="ownProfile"
+          class="h-[1.2em] hover:opacity-70 focus:opacity-70 transition-opacity"
+          to="/my-profile/edit"
+        >
+          <img
+            class="h-full aspect-square"
+            src="~/assets/img/edit-blue.svg"
+            alt="Edit your profile"
           >
-            <img
-              class="h-full aspect-square"
-              src="~/assets/img/edit-blue.svg"
-              alt="Edit your profile"
-            >
-          </nuxt-link>
-        </ClientOnly>
+        </nuxt-link>
       </div>
       <h2 class="text-xl mb-4">
         {{ playlistHeading }}
