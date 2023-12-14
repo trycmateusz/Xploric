@@ -26,19 +26,23 @@
   }
 }
 
+@layer utilities {
+  .wrapper {
+    @apply max-w-[768px] ml-auto mr-auto mt-0 mb-0 w-full
+  }
+  .main-transition {
+    @apply hover:opacity-70 focus:opacity-70 transition-opacity
+  }
+  .body-fixed {
+    @apply w-full overflow-hidden
+  }
+}
+
 html {
   font-family: 'Violet Sans';
 }
 
-.wrapper {
-  @apply max-w-[768px] ml-auto mr-auto mt-0 mb-0 w-full
-}
-.main-transition {
-  @apply hover:opacity-70 focus:opacity-70 transition-opacity
-}
-.body-fixed {
-  @apply w-full overflow-hidden
-}
+
 
 @media (min-width: 576px) {
   html {

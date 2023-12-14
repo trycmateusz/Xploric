@@ -42,7 +42,8 @@
 import type { SpotifyApiSong } from '~/types/Spotify'
 import type { Playlist } from '~/types/Playlist'
 definePageMeta({
-  layout: 'without-current-player'
+  layout: 'without-current-player',
+  middleware: ['spotify-connect']
 })
 const songStore = useSongStore()
 const playlistStore = usePlaylistStore()
@@ -78,4 +79,3 @@ onUnmounted(() => {
 <style scoped>
 
 </style>
-~/stores/types/Spotify~/stores/types/Playlist

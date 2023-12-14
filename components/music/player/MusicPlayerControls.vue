@@ -25,5 +25,7 @@ defineProps<{
 </script>
 
 <style scoped>
-
+button {
+  @apply main-transition
+}
 </style>

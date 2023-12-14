@@ -7,9 +7,9 @@
           <MusicPlayerControlsPlayPause class="absolute w-full h-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 aspect-square main-transition" />
         </div>
         <div
-          class="flex flex-grow flex-col justify-between main-transition"
+          class="flex flex-grow flex-col justify-between"
         >
-          <nuxt-link :to="`/player/${current.id}`" class="flex flex-col">
+          <nuxt-link :to="`/player/${current.id}`" class="flex flex-col main-transition">
             <span class="text-lg leading-none">
               {{ current.name }}
             </span>
