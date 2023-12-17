@@ -26,13 +26,13 @@ export const generatePkceCodeVerifier = (length: number) => {
   return values.reduce((acc, x) => acc + possible[x % possible.length], '')
 }
 
-export const hashUsingSha256 = async (plain: string): Promise<ArrayBuffer> => {
+export const sha256 = (plain: string): Promise<ArrayBuffer> => {
   const encoder = new TextEncoder()
   const data = encoder.encode(plain)
-  return await window.crypto.subtle.digest('SHA-256', data)
+  return window.crypto.subtle.digest('SHA-256', data)
 }
 
-export const encodeToBase64 = (input: ArrayBuffer) => {
+export const base64UrlEncode = (input: ArrayBuffer) => {
   return btoa(String.fromCharCode(...new Uint8Array(input)))
     .replace(/=/g, '')
     .replace(/\+/g, '-')

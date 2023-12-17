@@ -100,6 +100,9 @@
 <script setup lang="ts">
 import { convertToDate } from '~/helpers'
 import type { AppOptionLink, AppOptionButton } from '~/types/App'
+definePageMeta({
+  middleware: ['spotify-connect']
+})
 const playlistStore = usePlaylistStore()
 const userStore = useUserStore()
 const songStore = useSongStore()

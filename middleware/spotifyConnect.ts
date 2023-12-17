@@ -1,9 +1,9 @@
 import type { SpotifyApiAccessToken } from '~/types/Spotify'
-import { generatePkceCodeVerifier, hashUsingSha256, encodeToBase64 } from '~/helpers'
+import { generatePkceCodeVerifier, sha256, base64UrlEncode } from '~/helpers'
 
 export default defineNuxtRouteMiddleware(async () => {
-  console.log(window.location)
   const runtimeConfig = useRuntimeConfig()
+  const redirectUriToVerify = 'http://localhost:3000/xplore'
   let redirectUri: string
   if (process.env.NODE_ENV === 'development') {
     redirectUri = 'http://localhost:3000/xplore'
@@ -11,35 +11,36 @@ export default defineNuxtRouteMiddleware(async () => {
     redirectUri = 'https://xploric.vercel.app/xplore'
   }
   const accessTokenCookie = document.cookie.split(';').find(row => row.startsWith('access_token'))
+  console.log(accessTokenCookie)
   if (!accessTokenCookie) {
     const urlParams = new URLSearchParams(window.location.search)
     const responseCode = urlParams.get('code')
     if (!responseCode) {
       const codeVerifier = generatePkceCodeVerifier(64)
-      const hashed = await hashUsingSha256(codeVerifier)
-      const codeChallenge = encodeToBase64(hashed)
+      const hashed = await sha256(codeVerifier)
+      const codeChallenge = base64UrlEncode(hashed)
       document.cookie = `code_verifier=${codeVerifier}`
       const redirectParams = {
         response_type: 'code',
+        scope: 'user-read-private user-read-email',
         client_id: runtimeConfig.public.spotifyClientId,
         code_challenge_method: 'S256',
         code_challenge: codeChallenge,
-        redirect_uri: redirectUri
+        redirect_uri: redirectUriToVerify
       }
       const authUrl = new URL('https://accounts.spotify.com/authorize')
       authUrl.search = new URLSearchParams(redirectParams).toString()
       const userAccepted = confirm('This website use\'s Spotify\'s Api to fetch songs, albums, artists etc. Do you understand?')
       if (userAccepted) {
-        return navigateTo(authUrl, {
-          external: true
-        })
+        window.location.href = authUrl.toString()
       } else {
         return abortNavigation()
       }
     } else {
-      const codeVerifier = document.cookie.split(';').find(row => row.startsWith('code_verifier'))
+      const codeVerifier = document.cookie.split(';').find(row => row.startsWith('code_verifier'))?.split('=')[1]
       if (responseCode && codeVerifier) {
-        const tokenBody = await useFetch<SpotifyApiAccessToken>('https://accounts.spotify.com/api/token', {
+        const token = await useFetch<SpotifyApiAccessToken>('https://accounts.spotify.com/api/token', {
+          method: 'post',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
           },
@@ -51,8 +52,12 @@ export default defineNuxtRouteMiddleware(async () => {
             code_verifier: codeVerifier
           })
         })
-        if (tokenBody) {
-          console.log(tokenBody)
+        if (token.error.value) {
+          console.log('Error when fetching access token', token.error.value)
+        }
+        if (token.data.value) {
+          console.log(+token.data.value.expires_in * 1000)
+          document.cookie = `access_token=${token.data.value.access_token};expires=${+token.data.value.expires_in * 1000}`
         }
       }
     }

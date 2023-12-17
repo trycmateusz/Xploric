@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 definePageMeta({
-  middleware: ['auth']
+  middleware: ['auth', 'spotify-connect']
 })
 </script>
 
