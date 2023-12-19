@@ -1,8 +1,8 @@
 <template>
   <main>
     <MusicPlayer
-      v-if="song"
-      :song="song"
+      v-if="currentAudioStore.current"
+      :song="currentAudioStore.current"
       :from-playlist="false"
       class="min-h-[Calc(100svh_-_var(--nav-height))]"
       @save-song="isBeingSaved = true"
@@ -22,7 +22,7 @@
           />
           <div class="mt-10 mb-4 text-lg text-white-main text-center">
             or
-            <nuxt-link class="main-transition text-light-blue-lighter" :to="{ path:'/playlist/create', query: { saving: song?.id } }">
+            <nuxt-link class="main-transition text-light-blue-lighter" :to="{ path:'/playlist/create', query: { saving: currentAudioStore.current?.id } }">
               add to a new one
             </nuxt-link>
           </div>
@@ -39,7 +39,6 @@
 </template>
 
 <script setup lang="ts">
-import type { SpotifyApiSong } from '~/types/Spotify'
 import type { Playlist } from '~/types/Playlist'
 definePageMeta({
   layout: 'without-current-player',
@@ -51,11 +50,6 @@ const userStore = useUserStore()
 const currentAudioStore = useCurrentAudioStore()
 const { makeBodyFixed, removeFixedFromBody } = useFixedBody()
 const isBeingSaved = ref(false)
-const song = computed<SpotifyApiSong | undefined>(() => {
-  return songStore.songs[songStore.songs.length - 1]
-})
-currentAudioStore.setCurrent(null)
-currentAudioStore.setExample()
 const saveToPlaylist = (playlist: Playlist) => {
   isBeingSaved.value = false
   console.log('saving', playlist)
@@ -63,6 +57,7 @@ const saveToPlaylist = (playlist: Playlist) => {
 if (userStore.auth) {
   await playlistStore.fetchManyPlaylists(userStore.auth.playlists)
 }
+await songStore.fetchRandomSong(true)
 watch(isBeingSaved, () => {
   if (isBeingSaved.value) {
     makeBodyFixed()

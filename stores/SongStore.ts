@@ -1,15 +1,17 @@
-import type { SpotifyApiSong } from '~/stores/types/Spotify'
+import cloneDeep from 'lodash/cloneDeep'
+import type { SpotifyApiSong } from '~/types/Spotify'
 import { fetchRandom } from '~/services/fetchSpotify'
 
 const example: SpotifyApiSong = {
   album: {
     id: 'another-one',
     name: 'Another One',
-    covers: [
+    images: [
       {
         url: 'https://firebasestorage.googleapis.com/v0/b/xploric-326b5.appspot.com/o/song_cover.png?alt=media&token=113f71f7-2654-42b5-ad0d-9f6c3c03a9a8'
       }
-    ]
+    ],
+    album_type: 'single'
   },
   artists: [
     {
@@ -26,6 +28,7 @@ const example: SpotifyApiSong = {
 }
 
 export const useSongStore = defineStore('SongStore', () => {
+  const currentAudioStore = useCurrentAudioStore()
   const songs = ref<SpotifyApiSong[]>([
     { ...example }
   ])
@@ -39,18 +42,23 @@ export const useSongStore = defineStore('SongStore', () => {
       return songs.value.find(song => song.id === songId)
     }
   })
-  const fetchRandomSong = async () => {
-    const characters = 'abcdefghijklmnopqrstuvwxyz123456789+*()'
+  const setOne = (song: SpotifyApiSong) => {
+    songs.value.push(cloneDeep(song))
+  }
+  const fetchRandomSong = async (setToCurrent: boolean) => {
+    const characters = 'abcdefghijklmnopqrstuvwxyz123456789'
     const randomCharacter = characters.charAt(Math.floor(Math.random() * characters.length))
-    const fetchedSong = await fetchRandom<SpotifyApiSong>('track', randomCharacter)
+    const fetchedSong = await fetchRandom<SpotifyApiSong>('track', 'tracks', randomCharacter)
     if (fetchedSong) {
       const isSet = songs.value.find(song => song.id === fetchedSong.id)
       if (!isSet) {
-        console.log('random song fetched')
+        setOne(fetchedSong)
+        if (setToCurrent) {
+          currentAudioStore.setCurrent(fetchedSong)
+        }
       }
     }
   }
-
   return {
     songs,
     getPlaylistsSongs,

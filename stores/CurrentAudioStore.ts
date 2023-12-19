@@ -1,3 +1,4 @@
+import cloneDeep from 'lodash/cloneDeep'
 import type { SpotifyApiSong } from '~/types/Spotify'
 import { getDurationMinutesAndSecondsInProperFormatFromSeconds } from '~/helpers'
 
@@ -5,11 +6,12 @@ const example: SpotifyApiSong = {
   album: {
     id: 'another-one',
     name: 'Another One',
-    covers: [
+    images: [
       {
         url: 'https://firebasestorage.googleapis.com/v0/b/xploric-326b5.appspot.com/o/song_cover.png?alt=media&token=113f71f7-2654-42b5-ad0d-9f6c3c03a9a8'
       }
-    ]
+    ],
+    album_type: 'single'
   },
   artists: [
     {
@@ -57,7 +59,11 @@ export const useCurrentAudioStore = defineStore('CurrentAudioStore', () => {
   }
   const setCurrent = (song: SpotifyApiSong | null) => {
     if (song) {
-      current.value = { ...song }
+      const maxDuration = song.duration_ms > 30000 ? 30000 : song.duration_ms
+      current.value = cloneDeep({
+        ...song,
+        duration_ms: maxDuration
+      })
     } else {
       current.value = null
     }

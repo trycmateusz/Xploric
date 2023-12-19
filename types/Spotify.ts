@@ -4,8 +4,9 @@ interface SpotiyfyApiSongAlbumCover {
 
 export interface SpotifyApiSongAlbum {
   id: string
-  covers: SpotiyfyApiSongAlbumCover[]
+  images: SpotiyfyApiSongAlbumCover[]
   name: string
+  album_type: 'single' | string
 }
 
 export interface SpotifyApiSongArtist {
@@ -28,3 +29,7 @@ export interface SpotifyApiAccessToken {
   access_token: string
   expires_in: string
 }
+
+const PossibleSpotifySearchResponseKeys = ['tracks', 'artists', 'albums', 'playlists', 'shows', 'episodes', 'audiobooks'] as const
+
+export type SpotifySearchResponseKey = typeof PossibleSpotifySearchResponseKeys[number]

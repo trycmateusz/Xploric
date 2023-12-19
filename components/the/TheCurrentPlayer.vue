@@ -3,7 +3,7 @@
     <div class="wrapper md:pb-4">
       <div class="flex gap-4 p-4">
         <div class="relative max-w-[25%] w-24 aspect-square">
-          <img class="absolute top-0 left-0 opacity-50" :src="current.album.covers[0].url" alt="">
+          <img class="absolute top-0 left-0 opacity-50" :src="current.album.images[0].url" alt="">
           <MusicPlayerControlsPlayPause class="absolute w-full h-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 aspect-square main-transition" />
         </div>
         <div

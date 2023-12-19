@@ -8,10 +8,13 @@
       <span class="text-2xl">
         {{ song.name }}
       </span>
-      <span class="flex gap-2 items-center">
+      <span
+        class="flex gap-2 items-center"
+        :class="{ 'opacity-70': song.album.album_type === 'single' }"
+      >
         <img src="~/assets/img/album-light.svg" class="h-[1em]" alt="">
         <span>
-          {{ song.album.name }}
+          {{ albumText }}
         </span>
       </span>
       <span class="flex gap-2 items-center text-gray-main">
@@ -26,7 +29,7 @@
         ref="cover"
         class="w-full absolute touch-none z-10"
         :style="distanceTransform"
-        :src="song.album.covers[0].url"
+        :src="song.album.images[0].url"
         :alt="`Cover from album ${song.album.name}`"
         @touchstart.passive="(e: TouchEvent) => {
           if(!fromPlaylist){
@@ -39,7 +42,7 @@
           }
         }"
       >
-      <img class="absolute top-1/2 left-1/2 max-w-none h-[130%] opacity-20 aspect-square blur-[50px] -translate-x-1/2 -translate-y-1/2 pointer-events-none" :src="song.album.covers[0].url" alt="">
+      <img class="absolute top-1/2 left-1/2 max-w-none h-[130%] opacity-20 aspect-square blur-[50px] -translate-x-1/2 -translate-y-1/2 pointer-events-none" :src="song.album.images[0].url" alt="">
     </div>
     <div v-if="song.preview_url" class="mt-8">
       <audio
@@ -99,7 +102,7 @@
 <script setup lang="ts">
 import debounce from 'lodash/debounce'
 import type { SpotifyApiSong } from '~/types/Spotify'
-defineProps<{
+const props = defineProps<{
   song: SpotifyApiSong
   fromPlaylist: boolean
 }>()
@@ -140,6 +143,13 @@ const distanceTransform = computed(() => {
     return `transform: translate(${-xDistance.value}px, 0) rotate(${-coverImageRotate.value}deg);`
   } else {
     return ''
+  }
+})
+const albumText = computed(() => {
+  if (props.song.album.album_type === 'single') {
+    return 'A Single, not an album'
+  } else {
+    return props.song.album.name
   }
 })
 const followTouch = (e: PointerEvent) => {

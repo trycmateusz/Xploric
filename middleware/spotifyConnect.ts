@@ -1,5 +1,6 @@
 import type { SpotifyApiAccessToken } from '~/types/Spotify'
 import { generatePkceCodeVerifier, sha256, base64UrlEncode } from '~/helpers'
+import { getCookie, getCookieValue } from '~/helpers/cookie'
 
 export default defineNuxtRouteMiddleware(async () => {
   const runtimeConfig = useRuntimeConfig()
@@ -10,8 +11,7 @@ export default defineNuxtRouteMiddleware(async () => {
   } else {
     redirectUri = 'https://xploric.vercel.app/xplore'
   }
-  const accessTokenCookie = document.cookie.split(';').find(row => row.startsWith('access_token'))
-  console.log(accessTokenCookie)
+  const accessTokenCookie = getCookie('access_token')
   if (!accessTokenCookie) {
     const urlParams = new URLSearchParams(window.location.search)
     const responseCode = urlParams.get('code')
@@ -22,7 +22,6 @@ export default defineNuxtRouteMiddleware(async () => {
       document.cookie = `code_verifier=${codeVerifier}`
       const redirectParams = {
         response_type: 'code',
-        scope: 'user-read-private user-read-email',
         client_id: runtimeConfig.public.spotifyClientId,
         code_challenge_method: 'S256',
         code_challenge: codeChallenge,
@@ -37,7 +36,7 @@ export default defineNuxtRouteMiddleware(async () => {
         return abortNavigation()
       }
     } else {
-      const codeVerifier = document.cookie.split(';').find(row => row.startsWith('code_verifier'))?.split('=')[1]
+      const codeVerifier = getCookieValue('code_verifier')
       if (responseCode && codeVerifier) {
         const token = await useFetch<SpotifyApiAccessToken>('https://accounts.spotify.com/api/token', {
           method: 'post',
@@ -48,6 +47,7 @@ export default defineNuxtRouteMiddleware(async () => {
             client_id: runtimeConfig.public.spotifyClientId,
             grant_type: 'authorization_code',
             code: responseCode,
+            scope: 'user-read-private',
             redirect_uri: redirectUri,
             code_verifier: codeVerifier
           })
@@ -56,8 +56,8 @@ export default defineNuxtRouteMiddleware(async () => {
           console.log('Error when fetching access token', token.error.value)
         }
         if (token.data.value) {
-          console.log(+token.data.value.expires_in * 1000)
-          document.cookie = `access_token=${token.data.value.access_token};expires=${+token.data.value.expires_in * 1000}`
+          const expires = new Date(Date.now() + (+token.data.value.expires_in * 1000))
+          document.cookie = `access_token=${token.data.value.access_token}; expires=${expires}`
         }
       }
     }

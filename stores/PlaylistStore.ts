@@ -1,5 +1,5 @@
-import type { Playlist } from '~/stores/types/Playlist'
-import type { User } from '~/stores/types/User'
+import type { Playlist } from '~/types/Playlist'
+import type { User } from '~/types/User'
 import { fetchCollection, fetchOne, fetchMany } from '~/services/fetch'
 
 export const usePlaylistStore = defineStore('PlaylistStore', () => {

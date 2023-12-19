@@ -2,7 +2,7 @@
   <li class="flex flex-col gap-4 p-4 bg-black-lighter rounded-xl xs:flex-row">
     <img
       v-if="coverLoaded"
-      :src="song.album.covers[0].url"
+      :src="song.album.images[0].url"
       :alt="`${song.name}'s cover`"
       class="rounded-lg xs:w-[7rem]"
     >
