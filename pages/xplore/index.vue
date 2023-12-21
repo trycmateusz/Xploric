@@ -58,6 +58,7 @@ if (userStore.auth) {
   await playlistStore.fetchManyPlaylists(userStore.auth.playlists)
 }
 await songStore.fetchRandomSong(true)
+currentAudioStore.playCurrent()
 watch(isBeingSaved, () => {
   if (isBeingSaved.value) {
     makeBodyFixed()

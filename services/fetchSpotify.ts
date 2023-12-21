@@ -1,5 +1,6 @@
 import { getCookieValue } from '~/helpers/cookie'
-import type { SpotifySearchResponseKey } from '~/types/Spotify'
+import { getRandomIndex } from '~/helpers'
+import type { SpotifySearchResponseKey, SpotifyApiSong } from '~/types/Spotify'
 
 export const fetchRandom = async <Resource>(resourceType: string, resourcePlural: SpotifySearchResponseKey, randomCharacter: string): Promise<Resource | undefined> => {
   interface ResourceDataItems {
@@ -25,7 +26,12 @@ export const fetchRandom = async <Resource>(resourceType: string, resourcePlural
     return undefined
   }
   if (data.value && resourcePlural in data.value) {
-    const randomIndex = Math.floor(Math.random() * data.value[resourcePlural].items.length)
-    return data.value[resourcePlural].items[randomIndex]
+    const resources = data.value[resourcePlural].items
+    const randomIndex = getRandomIndex(data.value[resourcePlural].items)
+    const randomResource = resources[randomIndex]
+    if ('preview_url' in randomResource) {
+      console.log('123')
+    }
+    return randomResource
   }
 }

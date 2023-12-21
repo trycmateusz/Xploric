@@ -20,6 +20,10 @@ export const getDurationMinutesAndSecondsInProperFormatFromSeconds = (duration: 
   return `${getDurationMinutes(duration)}:${getDurationSeconds(duration) < 10 ? '0' + getDurationSeconds(duration) : getDurationSeconds(duration)}`
 }
 
+export const getRandomIndex = (items: any[]) => {
+  return Math.floor(Math.random() * items.length)
+}
+
 export const generatePkceCodeVerifier = (length: number) => {
   const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
   const values = crypto.getRandomValues(new Uint8Array(length))
