@@ -1,6 +1,7 @@
 import cloneDeep from 'lodash/cloneDeep'
 import type { SpotifyApiSong } from '~/types/Spotify'
 import { fetchRandom } from '~/services/fetchSpotify'
+import { getRandomIndex } from '~/helpers'
 
 const example: SpotifyApiSong = {
   album: {
@@ -48,13 +49,24 @@ export const useSongStore = defineStore('SongStore', () => {
   const fetchRandomSong = async (setToCurrent: boolean) => {
     const characters = 'abcdefghijklmnopqrstuvwxyz123456789'
     const randomCharacter = characters.charAt(Math.floor(Math.random() * characters.length))
-    const fetchedSong = await fetchRandom<SpotifyApiSong>('track', 'tracks', randomCharacter)
-    if (fetchedSong) {
-      const isSet = songs.value.find(song => song.id === fetchedSong.id)
+    const fetchedSongs = await fetchRandom<SpotifyApiSong>('track', 'tracks', randomCharacter)
+    if (fetchedSongs) {
+      let randomIndex = getRandomIndex(fetchedSongs)
+      let randomSong = fetchedSongs[randomIndex]
+      let valid = false
+      while (!valid) {
+        if (randomSong.preview_url) {
+          valid = true
+        } else {
+          randomIndex = getRandomIndex(fetchedSongs)
+          randomSong = fetchedSongs[randomIndex]
+        }
+      }
+      const isSet = songs.value.find(song => song.id === randomSong.id)
       if (!isSet) {
-        setOne(fetchedSong)
+        setOne(randomSong)
         if (setToCurrent) {
-          currentAudioStore.setCurrent(fetchedSong)
+          currentAudioStore.setCurrent(randomSong)
         }
       }
     }

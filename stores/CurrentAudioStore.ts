@@ -28,7 +28,9 @@ const example: SpotifyApiSong = {
 }
 
 export const useCurrentAudioStore = defineStore('CurrentAudioStore', () => {
+  const ignoredAtFirst = ref(false)
   const maxProgressValue = 500
+  const maxDurationInMs = 30000
   const volume = ref(0.1)
   const current = ref<SpotifyApiSong | null>(null)
   const currentAudio = ref<HTMLAudioElement | undefined>(undefined)
@@ -59,7 +61,7 @@ export const useCurrentAudioStore = defineStore('CurrentAudioStore', () => {
   }
   const setCurrent = (song: SpotifyApiSong | null) => {
     if (song) {
-      const maxDuration = song.duration_ms > 30000 ? 30000 : song.duration_ms
+      const maxDuration = song.duration_ms > maxDurationInMs ? maxDurationInMs : song.duration_ms
       current.value = cloneDeep({
         ...song,
         duration_ms: maxDuration
@@ -77,13 +79,9 @@ export const useCurrentAudioStore = defineStore('CurrentAudioStore', () => {
     currentAudio.value.addEventListener('timeupdate', () => {
       if (currentAudio.value) {
         setCurrentTime(currentAudio.value.currentTime)
-        if (current.value) {
-          if (currentAudio.value.currentTime >= current.value.duration_ms / 1000) {
-            endCurrent()
-          }
-        }
       }
     })
+    currentAudio.value.addEventListener('ended', endCurrent)
   }
   const setCurrentAudioTime = (time: number) => {
     if (currentAudio.value) {
@@ -146,6 +144,15 @@ export const useCurrentAudioStore = defineStore('CurrentAudioStore', () => {
     currentAudio.value = undefined
     currentAudioTime.value = 0
     currentAudioLoaded.value = false
+  }, {
+    deep: true
+  })
+  watch(currentAudio, () => {
+    if (ignoredAtFirst.value) {
+      playCurrent()
+    } else {
+      ignoredAtFirst.value = true
+    }
   })
   return {
     maxProgressValue,

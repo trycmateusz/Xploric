@@ -1,4 +1,4 @@
-import type { Comment } from '~/stores/types/Comment'
+import type { Comment } from '~/types/Comment'
 import { fetchMany } from '~/services/fetch'
 
 export const useCommentStore = defineStore('CommentStore', () => {

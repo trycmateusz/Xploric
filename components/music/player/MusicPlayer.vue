@@ -4,7 +4,7 @@
     ref="musicPlayer"
     class="wrapper p-4 text-white-main overflow-hidden"
   >
-    <div class="flex flex-col items-center text-xl text-center ">
+    <div class="flex flex-col items-center text-xl text-center min-h-[4.8rem]">
       <span class="text-2xl">
         {{ song.name }}
       </span>
@@ -46,17 +46,13 @@
       <img class="absolute top-1/2 left-1/2 max-w-none h-[130%] opacity-40 aspect-square blur-[50px] -translate-x-1/2 -translate-y-1/2 pointer-events-none" :src="song.album.images[0].url" alt="">
     </div>
     <div v-if="song.preview_url" class="mt-8">
-      <audio
-        ref="audio"
-        controls
-        preload="metadata"
-        :src="song.preview_url"
-        @loadeddata="emit('audio-data-loaded')"
-      >
-        <a :href="song.preview_url">
-          Download {{ song.name }}
-        </a>
-      </audio>
+      <MusicPlayerAudio
+        :key="audioRerenderKey"
+        :preview-url="song.preview_url"
+        :song-name="song.name"
+        @set-audio="(tag) => currentAudioStore.setCurrentAudio(tag)"
+        @audio-data-loaded="emit('audio-data-loaded')"
+      />
       <MusicPlayerDuration />
       <MusicPlayerProgress class="mb-4" :on-whole-wrapper="false" />
       <MusicPlayerControls
@@ -66,7 +62,7 @@
     </div>
     <div v-if="!fromPlaylist" class="flex justify-between mt-8">
       <div class="flex-shrink grid items-center grid-cols-2 gap-2">
-        <button>
+        <button @click="songStore.fetchRandomSong(true)">
           <img class="h-full" src="~/assets/img/x.svg" alt="Skip current song">
         </button>
         <button class="relative aspect-square" @click="isFavourited = !isFavourited">
@@ -103,7 +99,9 @@
 <script setup lang="ts">
 import debounce from 'lodash/debounce'
 import type { SpotifyApiSong } from '~/types/Spotify'
-defineProps<{
+const songStore = useSongStore()
+const currentAudioStore = useCurrentAudioStore()
+const props = defineProps<{
   song: SpotifyApiSong
   fromPlaylist: boolean
 }>()
@@ -113,10 +111,10 @@ const emit = defineEmits<{
   (e: 'audio-data-loaded'): void
 }>()
 const rotateMultiplier = 15
+const audioRerenderKey = ref(0)
 const isFavourited = ref(false)
 const isCoverHeld = ref(false)
 const musicPlayer = ref<HTMLDivElement | undefined>(undefined)
-const audio = ref<HTMLAudioElement | undefined>(undefined)
 const cover = ref<HTMLImageElement | undefined>(undefined)
 const xPointerInitialPosition = ref<number | null>(null)
 const xPointerPosition = ref<number | null>(null)
@@ -163,13 +161,14 @@ const stopFollowingTouch = () => {
   if (aboutToSkipOrSave.value === 'save') {
     emit('save-song')
   }
+  if (aboutToSkipOrSave.value === 'skip') {
+    songStore.fetchRandomSong(true)
+  }
   xPointerInitialPosition.value = null
   xPointerPosition.value = null
 }
-onMounted(() => {
-  if (audio.value) {
-    emit('set-audio', audio.value)
-  }
+watch(props, () => {
+  audioRerenderKey.value++
 })
 </script>
 

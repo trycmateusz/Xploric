@@ -6,7 +6,6 @@
       :from-playlist="false"
       class="min-h-[Calc(100svh_-_var(--nav-height))]"
       @save-song="isBeingSaved = true"
-      @set-audio="(tag) => currentAudioStore.setCurrentAudio(tag)"
       @audio-data-loaded="currentAudioStore.currentAudioLoaded = true"
     />
     <teleport to="body">
@@ -58,7 +57,6 @@ if (userStore.auth) {
   await playlistStore.fetchManyPlaylists(userStore.auth.playlists)
 }
 await songStore.fetchRandomSong(true)
-currentAudioStore.playCurrent()
 watch(isBeingSaved, () => {
   if (isBeingSaved.value) {
     makeBodyFixed()
