@@ -57,7 +57,7 @@ import type { SpotifyApiSong } from '~/types/Spotify'
 import type { AppOptionLink, AppOptionButton } from '~/types/App'
 const props = defineProps<{
   song: SpotifyApiSong
-  playlistUserId: string
+  playlistUserId?: string
 }>()
 const userStore = useUserStore()
 const optionsTogglerId = `song-${props.song.id}-options-toggler`
@@ -65,7 +65,6 @@ const optionsId = `song-${props.song.id}-options`
 const optionsOpen = ref(false)
 const coverLoaded = ref(false)
 // @ts-ignore
-
 const defaultOptions: (AppOptionButton | AppOptionLink)[] = [
   {
     text: 'Copy link',
@@ -94,5 +93,3 @@ onMounted(() => {
 <style scoped>
 
 </style>
-~/types/Spotify
-~/stores/types/Spotify~/stores/types/App

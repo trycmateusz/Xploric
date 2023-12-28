@@ -2,32 +2,8 @@ import cloneDeep from 'lodash/cloneDeep'
 import type { SpotifyApiSong } from '~/types/Spotify'
 import { getDurationMinutesAndSecondsInProperFormatFromSeconds } from '~/helpers'
 
-const example: SpotifyApiSong = {
-  album: {
-    id: 'another-one',
-    name: 'Another One',
-    images: [
-      {
-        url: 'https://firebasestorage.googleapis.com/v0/b/xploric-326b5.appspot.com/o/song_cover.png?alt=media&token=113f71f7-2654-42b5-ad0d-9f6c3c03a9a8'
-      }
-    ],
-    album_type: 'single'
-  },
-  artists: [
-    {
-      id: 'mac-demarco',
-      name: 'Mac DeMarco'
-    }
-  ],
-  playlists: ['playlist1'],
-  id: 'song1',
-  name: 'The Way You\'d Love Her',
-  genre: 'indie',
-  duration_ms: 30000,
-  preview_url: 'https://firebasestorage.googleapis.com/v0/b/xploric-326b5.appspot.com/o/song_audio.mp3?alt=media&token=158e2b9a-8697-4fb8-8b1c-f8efa56baf81'
-}
-
 export const useCurrentAudioStore = defineStore('CurrentAudioStore', () => {
+  const songStore = useSongStore()
   const ignoredAtFirst = ref(false)
   const maxProgressValue = 500
   const maxDurationInMs = 30000
@@ -54,18 +30,16 @@ export const useCurrentAudioStore = defineStore('CurrentAudioStore', () => {
       return Math.floor(currentAudioTime.value / (current.value.duration_ms / 1000) * maxProgressValue)
     }
   })
-  const setExample = () => {
-    if (!current.value) {
-      current.value = { ...example }
-    }
-  }
   const setCurrent = (song: SpotifyApiSong | null) => {
     if (song) {
       const maxDuration = song.duration_ms > maxDurationInMs ? maxDurationInMs : song.duration_ms
-      current.value = cloneDeep({
-        ...song,
-        duration_ms: maxDuration
-      })
+      if (!current.value || current.value?.id !== song.id) {
+        current.value = cloneDeep({
+          ...song,
+          duration_ms: maxDuration
+        })
+        songStore.pushToLastTenLatest(song.id)
+      }
     } else {
       current.value = null
     }
@@ -74,6 +48,9 @@ export const useCurrentAudioStore = defineStore('CurrentAudioStore', () => {
     currentAudioTime.value = time
   }
   const setCurrentAudio = (tag: HTMLAudioElement) => {
+    if (currentAudio.value && currentAudio.value.id === tag.id) {
+      return
+    }
     currentAudio.value = tag.cloneNode(true) as HTMLAudioElement
     currentAudio.value.volume = volume.value
     currentAudio.value.addEventListener('timeupdate', () => {
@@ -164,7 +141,6 @@ export const useCurrentAudioStore = defineStore('CurrentAudioStore', () => {
     getCurrentProgress,
     getCurrentFullDurationText,
     getCurrentListenedDurationText,
-    setExample,
     setCurrent,
     setCurrentTime,
     setCurrentAudio,

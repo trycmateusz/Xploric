@@ -1,5 +1,6 @@
 <template>
   <audio
+    :id="songId"
     ref="audio"
     controls
     preload="metadata"
@@ -14,6 +15,7 @@
 
 <script setup lang="ts">
 defineProps<{
+  songId: string
   songName: string
   previewUrl: string
 }>()

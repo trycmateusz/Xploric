@@ -26,7 +26,10 @@ const songId = route.params.id.toString()
 const song = computed(() => {
   return songStore.getSong(songId)
 })
-currentAudioStore.setExample()
+await songStore.fetchOneSong(songId)
+if (song.value) {
+  currentAudioStore.setCurrent(song.value)
+}
 const setCurrentAudioIfDifferent = (tag: HTMLAudioElement) => {
   if (!currentAudioStore.currentAudio) {
     currentAudioStore.setCurrentAudio(tag)

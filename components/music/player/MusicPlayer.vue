@@ -4,24 +4,24 @@
     ref="musicPlayer"
     class="wrapper p-4 text-white-main overflow-hidden"
   >
-    <div class="flex flex-col items-center text-xl text-center min-h-[4.8rem]">
+    <div class="flex flex-col items-center text-xl text-center min-h-[5.5rem]">
       <span class="text-2xl">
         {{ song.name }}
       </span>
+      <span class="flex gap-2 items-center text-lg text-gray-main">
+        <img src="~/assets/img/artist.svg" alt="">
+        <span>
+          {{ song.artists[0].name }}
+        </span>
+      </span>
       <span
         v-if="song.album.album_type !== 'single'"
-        class="flex gap-2 items-center"
+        class="flex gap-2 items-center text-lg"
         :class="{ 'opacity-70': song.album.album_type === 'single' }"
       >
         <img src="~/assets/img/album-light.svg" class="h-[1em]" alt="">
         <span>
           {{ song.album.name }}
-        </span>
-      </span>
-      <span class="flex gap-2 items-center text-gray-main">
-        <img src="~/assets/img/artist.svg" alt="">
-        <span>
-          {{ song.artists[0].name }}
         </span>
       </span>
     </div>
@@ -43,11 +43,16 @@
           }
         }"
       >
-      <img class="absolute top-1/2 left-1/2 max-w-none h-[130%] opacity-40 aspect-square blur-[50px] -translate-x-1/2 -translate-y-1/2 pointer-events-none" :src="song.album.images[0].url" alt="">
+      <img
+        class="absolute top-1/2 left-1/2 max-w-none h-[130%] opacity-25 aspect-square blur-[50px] -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+        :src="song.album.images[0].url"
+        alt=""
+      >
     </div>
     <div v-if="song.preview_url" class="mt-8">
       <MusicPlayerAudio
         :key="audioRerenderKey"
+        :song-id="song.id"
         :preview-url="song.preview_url"
         :song-name="song.name"
         @set-audio="(tag) => currentAudioStore.setCurrentAudio(tag)"
@@ -130,9 +135,9 @@ const coverImageRotate = computed(() => {
 })
 const aboutToSkipOrSave = computed<'skip' | 'save' | undefined>(() => {
   if (xPointerPosition.value && musicPlayer.value) {
-    if (xPointerPosition.value <= document.body.clientWidth * 0.25) {
+    if (xPointerPosition.value <= document.body.clientWidth * 0.15) {
       return 'skip'
-    } else if (xPointerPosition.value >= document.body.clientWidth * 0.75) {
+    } else if (xPointerPosition.value >= document.body.clientWidth * 0.85) {
       return 'save'
     }
   }

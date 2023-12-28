@@ -39,16 +39,15 @@
           v-if="ownProfile"
           class="flex flex-col gap-5"
         >
-          <AppButton
+          <AppLink
+            to="/my-profile/latest"
             text="Check last 10 songs you listened to"
             styling="secondary"
-            @click="() => console.log('10 songs before')"
           />
           <AppLink
             to="/my-profile/edit"
             text="Edit your profile"
             styling="secondary"
-            @click="() => console.log('edit profile')"
           />
         </div>
       </div>

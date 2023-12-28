@@ -2,19 +2,23 @@ import type { SpotifyApiAccessToken } from '~/types/Spotify'
 import { generatePkceCodeVerifier, sha256, base64UrlEncode } from '~/helpers'
 import { getCookie, getCookieValue } from '~/helpers/cookie'
 
-export default defineNuxtRouteMiddleware(async () => {
+export default defineNuxtRouteMiddleware(async (to) => {
   const runtimeConfig = useRuntimeConfig()
-  const redirectUriToVerify = 'http://localhost:3000/xplore'
   let redirectUri: string
   if (process.env.NODE_ENV === 'development') {
-    redirectUri = 'http://localhost:3000/xplore'
+    redirectUri = `http://localhost:3000${to.path}`
   } else {
-    redirectUri = 'https://xploric.vercel.app/xplore'
+    redirectUri = `https://xploric.vercel.app${to.path}`
   }
+  console.log(to.path, redirectUri)
   const accessTokenCookie = getCookie('access_token')
   if (!accessTokenCookie) {
     const urlParams = new URLSearchParams(window.location.search)
     const responseCode = urlParams.get('code')
+    const responseError = urlParams.get('error')
+    if (responseError) {
+      return navigateTo('/')
+    }
     if (!responseCode) {
       const codeVerifier = generatePkceCodeVerifier(64)
       const hashed = await sha256(codeVerifier)
@@ -25,7 +29,7 @@ export default defineNuxtRouteMiddleware(async () => {
         client_id: runtimeConfig.public.spotifyClientId,
         code_challenge_method: 'S256',
         code_challenge: codeChallenge,
-        redirect_uri: redirectUriToVerify
+        redirect_uri: redirectUri
       }
       const authUrl = new URL('https://accounts.spotify.com/authorize')
       authUrl.search = new URLSearchParams(redirectParams).toString()
@@ -38,7 +42,7 @@ export default defineNuxtRouteMiddleware(async () => {
     } else {
       const codeVerifier = getCookieValue('code_verifier')
       if (responseCode && codeVerifier) {
-        const token = await useFetch<SpotifyApiAccessToken>('https://accounts.spotify.com/api/token', {
+        const { data: token, error } = await useFetch<SpotifyApiAccessToken>('https://accounts.spotify.com/api/token', {
           method: 'post',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -52,12 +56,14 @@ export default defineNuxtRouteMiddleware(async () => {
             code_verifier: codeVerifier
           })
         })
-        if (token.error.value) {
-          console.log('Error when fetching access token', token.error.value)
+        if (error.value) {
+          console.log('Error when fetching access token', error.value)
+          return abortNavigation()
         }
-        if (token.data.value) {
-          const expires = new Date(Date.now() + (+token.data.value.expires_in * 1000))
-          document.cookie = `access_token=${token.data.value.access_token}; expires=${expires}`
+        if (token.value) {
+          const expires = new Date(Date.now() + (+token.value.expires_in * 1000))
+          document.cookie = `access_token=${token.value.access_token}; expires=${expires}`
+          return navigateTo(to.path)
         }
       }
     }

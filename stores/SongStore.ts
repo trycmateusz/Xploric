@@ -1,41 +1,16 @@
 import cloneDeep from 'lodash/cloneDeep'
 import type { SpotifyApiSong } from '~/types/Spotify'
-import { fetchRandom } from '~/services/fetchSpotify'
+import type { Playlist } from '~/types/Playlist'
+import { fetchRandom, fetchMany, fetchOne } from '~/services/fetchSpotify'
 import { getRandomIndex } from '~/helpers'
-
-const example: SpotifyApiSong = {
-  album: {
-    id: 'another-one',
-    name: 'Another One',
-    images: [
-      {
-        url: 'https://firebasestorage.googleapis.com/v0/b/xploric-326b5.appspot.com/o/song_cover.png?alt=media&token=113f71f7-2654-42b5-ad0d-9f6c3c03a9a8'
-      }
-    ],
-    album_type: 'single'
-  },
-  artists: [
-    {
-      id: 'mac-demarco',
-      name: 'Mac DeMarco'
-    }
-  ],
-  playlists: ['playlist1'],
-  id: 'song1',
-  name: 'The Way You\'d Love Her',
-  genre: 'indie',
-  duration_ms: 30000,
-  preview_url: 'https://firebasestorage.googleapis.com/v0/b/xploric-326b5.appspot.com/o/song_audio.mp3?alt=media&token=158e2b9a-8697-4fb8-8b1c-f8efa56baf81'
-}
 
 export const useSongStore = defineStore('SongStore', () => {
   const currentAudioStore = useCurrentAudioStore()
-  const songs = ref<SpotifyApiSong[]>([
-    { ...example }
-  ])
+  const songs = ref<SpotifyApiSong[]>([])
+  const lastTenListenedTo = ref<string[]>([])
   const getPlaylistsSongs = computed(() => {
-    return (playlistId: string) => {
-      return songs.value.filter(song => song.playlists.includes(playlistId))
+    return (playlist: Playlist) => {
+      return songs.value.filter(song => playlist.songs.includes(song.id))
     }
   })
   const getSong = computed(() => {
@@ -43,8 +18,17 @@ export const useSongStore = defineStore('SongStore', () => {
       return songs.value.find(song => song.id === songId)
     }
   })
-  const setOne = (song: SpotifyApiSong) => {
-    songs.value.push(cloneDeep(song))
+  const getTenLatest = computed(() => {
+    return songs.value.filter(song => lastTenListenedTo.value.includes(song.id))
+  })
+  const setOneIfNotSetAlready = (fetchedSong: SpotifyApiSong, setToCurrent: boolean) => {
+    const isSet = songs.value.find(song => song.id === fetchedSong.id)
+    if (!isSet) {
+      songs.value.push(cloneDeep(fetchedSong))
+      if (setToCurrent) {
+        currentAudioStore.setCurrent(fetchedSong)
+      }
+    }
   }
   const fetchRandomSong = async (setToCurrent: boolean) => {
     const characters = 'abcdefghijklmnopqrstuvwxyz123456789'
@@ -62,19 +46,45 @@ export const useSongStore = defineStore('SongStore', () => {
           randomSong = fetchedSongs[randomIndex]
         }
       }
-      const isSet = songs.value.find(song => song.id === randomSong.id)
-      if (!isSet) {
-        setOne(randomSong)
-        if (setToCurrent) {
-          currentAudioStore.setCurrent(randomSong)
-        }
+      setOneIfNotSetAlready(randomSong, setToCurrent)
+    }
+  }
+  const fetchOneSong = async (songId: string) => {
+    const fetchedSong = await fetchOne<SpotifyApiSong>('tracks', songId)
+    if (fetchedSong) {
+      setOneIfNotSetAlready(fetchedSong, true)
+    }
+  }
+  const fetchManySongs = async (songIds: string[]) => {
+    if (songIds.length > 0) {
+      const fetchedSongs = await fetchMany<SpotifyApiSong>('tracks', songIds)
+      if (fetchedSongs) {
+        fetchedSongs.filter(song => song).forEach((fetchedSong) => {
+          setOneIfNotSetAlready(fetchedSong, false)
+        })
       }
     }
   }
+  const pushToLastTenLatest = (songId: string) => {
+    const isSetIndex = lastTenListenedTo.value.findIndex(id => id === songId)
+    if (lastTenListenedTo.value.length === 10) {
+      if (isSetIndex !== -1) {
+        lastTenListenedTo.value.splice(isSetIndex, 1)
+      } else {
+        lastTenListenedTo.value.shift()
+      }
+    }
+    lastTenListenedTo.value.push(songId)
+  }
   return {
     songs,
+    lastTenListenedTo,
     getPlaylistsSongs,
     getSong,
-    fetchRandomSong
+    getTenLatest,
+    pushToLastTenLatest,
+    fetchRandomSong,
+    fetchOneSong,
+    fetchManySongs
   }
 })

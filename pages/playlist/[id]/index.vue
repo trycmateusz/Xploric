@@ -62,7 +62,7 @@
         {{ playlist.description }}
       </span>
       <SongList
-        :songs="songStore.getPlaylistsSongs(playlist.id)"
+        :songs="songStore.getPlaylistsSongs(playlist)"
         :playlist-user-id="playlist.userId"
       />
       <nuxt-link
@@ -155,8 +155,8 @@ const userOptions: (AppOptionLink | AppOptionButton)[] = [
 await playlistStore.fetchPlaylist(playlistId)
 if (playlist.value) {
   await commentStore.fetchManyComments(playlist.value.comments)
+  await songStore.fetchManySongs(playlist.value.songs)
 }
-// fetching songs later!!!!
 onMounted(() => {
   coverLoaded.value = true
 })

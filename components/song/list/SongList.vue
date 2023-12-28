@@ -13,12 +13,10 @@
 import type { SpotifyApiSong } from '~/types/Spotify'
 defineProps<{
   songs: SpotifyApiSong[]
-  playlistUserId: string
+  playlistUserId?: string
 }>()
 </script>
 
 <style scoped>
 
 </style>
-~/types/Spotify
-~/stores/types/Spotify
