@@ -17,7 +17,7 @@
 <script setup lang="ts">
 definePageMeta({
   layout: 'without-current-player',
-  middleware: ['spotify-connect']
+  middleware: ['access-token']
 })
 const songStore = useSongStore()
 const currentAudioStore = useCurrentAudioStore()

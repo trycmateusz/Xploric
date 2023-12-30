@@ -41,7 +41,7 @@
 import type { Playlist } from '~/types/Playlist'
 definePageMeta({
   layout: 'without-current-player',
-  middleware: ['spotify-connect']
+  middleware: ['access-token']
 })
 const songStore = useSongStore()
 const playlistStore = usePlaylistStore()

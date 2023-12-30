@@ -101,7 +101,7 @@
 import { convertToDate } from '~/helpers'
 import type { AppOptionLink, AppOptionButton } from '~/types/App'
 definePageMeta({
-  middleware: ['spotify-connect']
+  middleware: ['access-token']
 })
 const playlistStore = usePlaylistStore()
 const userStore = useUserStore()

@@ -11,6 +11,9 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  middleware: ['access-token']
+})
 const songStore = useSongStore()
 </script>
 

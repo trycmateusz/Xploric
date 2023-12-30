@@ -31,6 +31,9 @@ export default defineNuxtConfig({
     },
     '/player/**': {
       ssr: false
+    },
+    '/redirect': {
+      ssr: false
     }
   },
   imports: {

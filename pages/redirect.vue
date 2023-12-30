@@ -1,12 +1,10 @@
 <template>
-  <div>
-    123
-  </div>
+  <div />
 </template>
 
 <script setup lang="ts">
 definePageMeta({
-  middleware: ['auth', 'access-token']
+  middleware: ['redirect-and-get-token']
 })
 </script>
 
