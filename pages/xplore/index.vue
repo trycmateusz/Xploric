@@ -49,9 +49,18 @@ const userStore = useUserStore()
 const currentAudioStore = useCurrentAudioStore()
 const { makeBodyFixed, removeFixedFromBody } = useFixedBody()
 const isBeingSaved = ref(false)
-const saveToPlaylist = (playlist: Playlist) => {
+const saveToPlaylist = async (playlist: Playlist) => {
+  if (currentAudioStore.current) {
+    if (!playlist.songs.includes(currentAudioStore.current.id)) {
+      const updated = await playlistStore.updatePlaylist(playlist.id, {
+        songs: [...playlist.songs, currentAudioStore.current.id]
+      })
+      if (updated) {
+        songStore.fetchRandomSong(true)
+      }
+    }
+  }
   isBeingSaved.value = false
-  console.log('saving', playlist)
 }
 if (userStore.auth) {
   await playlistStore.fetchManyPlaylists(userStore.auth.playlists)

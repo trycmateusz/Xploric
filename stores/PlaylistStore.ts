@@ -1,6 +1,7 @@
 import type { Playlist } from '~/types/Playlist'
 import type { User } from '~/types/User'
 import { fetchCollection, fetchOne, fetchMany } from '~/services/fetch'
+import { updateResource } from '~/services/save'
 
 export const usePlaylistStore = defineStore('PlaylistStore', () => {
   const playlists = ref<Playlist[]>([])
@@ -28,6 +29,22 @@ export const usePlaylistStore = defineStore('PlaylistStore', () => {
       fetchedPlaylists.forEach(fetchedPlaylist => setOne(fetchedPlaylist))
     }
   }
+  const updatePlaylist = async (id: string, data: Partial<Playlist>): Promise<boolean> => {
+    const updatedData = await updateResource<Playlist>('playlists', id, data)
+    if (updatedData) {
+      const playlistIndex = playlists.value.findIndex(playlist => playlist.id === id)
+      if (playlistIndex !== -1) {
+        const playlist = playlists.value[playlistIndex]
+        const updatedPlaylist = {
+          ...playlist,
+          ...updatedData
+        }
+        playlists.value.splice(playlistIndex, 1, updatedPlaylist)
+        return true
+      }
+    }
+    return false
+  }
   const getPlaylist = computed(() => {
     return (id: string) => {
       return playlists.value.find(playlist => playlist.id === id)
@@ -54,6 +71,7 @@ export const usePlaylistStore = defineStore('PlaylistStore', () => {
     fetchPlaylists,
     fetchPlaylist,
     fetchManyPlaylists,
+    updatePlaylist,
     getPlaylist,
     getPlaylistLengthText,
     getUsersPlaylists

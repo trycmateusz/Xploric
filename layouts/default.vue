@@ -12,7 +12,7 @@
 <script setup lang="ts">
 const userStore = useUserStore()
 const currentAudioStore = useCurrentAudioStore()
-await userStore.fetchUser('user1')
+await userStore.fetchUser('0')
 userStore.setAuth(userStore.users[0])
 </script>
 

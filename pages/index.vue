@@ -15,7 +15,6 @@
 
 <script setup lang="ts">
 import type { MainMenuLink } from '~/types/MainMenu'
-const userStore = useUserStore()
 const mainMenuLinks: MainMenuLink[] = [
   {
     to: '/xplore',
@@ -36,8 +35,6 @@ const mainMenuLinks: MainMenuLink[] = [
     colorClass: 'text-tomato-main'
   }
 ]
-userStore.fetchUser('user1')
-userStore.setAuth(userStore.users[0])
 </script>
 
 <style scoped>

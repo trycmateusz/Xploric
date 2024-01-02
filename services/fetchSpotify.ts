@@ -1,15 +1,7 @@
-import { getCookieValue } from '~/helpers/cookie'
+import { getHeaderWithAuthorization } from '~/helpers/header'
 import type { SpotifySearchResponseKey } from '~/types/Spotify'
-
 interface Attributes {
   preview_url: string | null
-}
-
-const getAuthorizationHeader = () => {
-  const accessToken = getCookieValue('access_token')
-  const headers = new Headers()
-  headers.append('Authorization', `Bearer ${accessToken}`)
-  return headers
 }
 
 export const fetchRandom = async <Resource extends Attributes>(resourceType: string, resourcePlural: SpotifySearchResponseKey, randomCharacter: string): Promise<Resource[] | undefined> => {
@@ -22,7 +14,7 @@ export const fetchRandom = async <Resource extends Attributes>(resourceType: str
   const runtimeConfig = useRuntimeConfig()
   const url = `${runtimeConfig.public.spotifyBaseUrl}/search`
   const { data, error } = await useFetch<ResourceData>(url, {
-    headers: getAuthorizationHeader(),
+    headers: getHeaderWithAuthorization(),
     params: {
       q: randomCharacter,
       type: resourceType
@@ -40,14 +32,14 @@ export const fetchOne = async <Resource>(resourcePlural: SpotifySearchResponseKe
   const runtimeConfig = useRuntimeConfig()
   const url = `${runtimeConfig.public.spotifyBaseUrl}/${resourcePlural}/${id}`
   const { data, error } = await useFetch<Resource>(url, {
-    headers: getAuthorizationHeader()
+    headers: getHeaderWithAuthorization()
   })
   if (error.value) {
     console.log(`Error when fetching ${resourcePlural} from the API, ${error.value}`)
     return undefined
   }
   if (data.value) {
-    return data.value
+    return data.value as Resource
   }
 }
 export const fetchMany = async <Resource>(resourcePlural: SpotifySearchResponseKey, ids: string[]): Promise<Resource[] | undefined> => {
@@ -57,7 +49,7 @@ export const fetchMany = async <Resource>(resourcePlural: SpotifySearchResponseK
   const runtimeConfig = useRuntimeConfig()
   const url = `${runtimeConfig.public.spotifyBaseUrl}/${resourcePlural}`
   const { data, error } = await useFetch<ResourceData>(url, {
-    headers: getAuthorizationHeader(),
+    headers: getHeaderWithAuthorization(),
     params: {
       ids: ids.join(',')
     }
