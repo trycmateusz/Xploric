@@ -3,18 +3,20 @@
     <TheNavigationBack />
     <main v-if="playlist" class="flex flex-col wrapper p-4 text-white-main">
       <div class="grid grid-cols-1 gap-4 xs:grid-cols-2">
-        <img
-          v-if="playlist.coverImgUrl && coverLoaded"
-          class="rounded-2xl h-full aspect-square object-cover object-center"
-          :src="playlist.coverImgUrl"
-          :alt="`${playlist.title}'s cover`"
-        >
-        <img
-          v-else
-          class="rounded-2xl w-full border border-black-lighter aspect-square object-cover object-center"
-          src="~/assets/img/playlist-placeholder.svg"
-          alt="Playlist placeholder image"
-        >
+        <div class="bg-black-lighter rounded-2xl aspect-square overflow-hidden">
+          <img
+            v-if="playlist.coverImgUrl && coverLoaded"
+            class="h-full object-cover object-center"
+            :src="playlist.coverImgUrl"
+            :alt="`${playlist.title}'s cover`"
+          >
+          <img
+            v-else
+            class="w-full border-black-lighter object-cover object-center"
+            src="~/assets/img/playlist-placeholder.svg"
+            alt="Playlist placeholder image"
+          >
+        </div>
         <div class="relative flex flex-col justify-between gap-8">
           <button
             :id="playlistOptionsTogglerId"
@@ -79,7 +81,7 @@
         :for-responses="false"
       />
       <h2 class="block text-2xl mt-8 mb-4">
-        Write a comment yourself!
+        Write a comment!
       </h2>
       <form class="flex flex-col" @submit.prevent>
         <textarea
@@ -98,7 +100,7 @@
 </template>
 
 <script setup lang="ts">
-import { convertToDate } from '~/helpers'
+import { convertToDate } from '~/helpers/time'
 import type { AppOptionLink, AppOptionButton } from '~/types/App'
 definePageMeta({
   middleware: ['access-token']
@@ -120,8 +122,6 @@ const user = computed(() => {
     return userStore.getUser(playlist.value.userId)
   }
 })
-// @ts-ignore
-
 const defaultOptions: (AppOptionLink | AppOptionButton)[] = [
   {
     text: 'Copy link',
@@ -154,8 +154,12 @@ const userOptions: (AppOptionLink | AppOptionButton)[] = [
 ]
 await playlistStore.fetchPlaylist(playlistId)
 if (playlist.value) {
-  await commentStore.fetchManyComments(playlist.value.comments)
-  await songStore.fetchManySongs(playlist.value.songs)
+  if (playlist.value.comments) {
+    await commentStore.fetchManyComments(playlist.value.comments)
+  }
+  if (playlist.value.songs) {
+    await songStore.fetchManySongs(playlist.value.songs)
+  }
 }
 onMounted(() => {
   coverLoaded.value = true

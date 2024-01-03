@@ -10,7 +10,7 @@ export const useSongStore = defineStore('SongStore', () => {
   const lastTenListenedTo = ref<string[]>([])
   const getPlaylistsSongs = computed(() => {
     return (playlist: Playlist) => {
-      return songs.value.filter(song => playlist.songs.includes(song.id))
+      return songs.value.filter(song => playlist.songs?.includes(song.id))
     }
   })
   const getSong = computed(() => {

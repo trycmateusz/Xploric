@@ -1,14 +1,16 @@
-import type { Playlist } from '~/types/Playlist'
+import cloneDeep from 'lodash/cloneDeep'
+import type { Playlist, PlaylistForm } from '~/types/Playlist'
 import type { User } from '~/types/User'
 import { fetchCollection, fetchOne, fetchMany } from '~/services/fetch'
-import { updateResource } from '~/services/save'
+import { updateResource, createResource } from '~/services/save'
 
 export const usePlaylistStore = defineStore('PlaylistStore', () => {
   const playlists = ref<Playlist[]>([])
+  const userStore = useUserStore()
   const setOne = (fetchedPlaylist: Playlist) => {
     const isSet = playlists.value.find(playlist => playlist.id === fetchedPlaylist.id)
     if (!isSet) {
-      playlists.value.push({ ...fetchedPlaylist })
+      playlists.value.push(cloneDeep(fetchedPlaylist))
     }
   }
   const fetchPlaylists = async () => {
@@ -29,7 +31,7 @@ export const usePlaylistStore = defineStore('PlaylistStore', () => {
       fetchedPlaylists.forEach(fetchedPlaylist => setOne(fetchedPlaylist))
     }
   }
-  const updatePlaylist = async (id: string, data: Partial<Playlist>): Promise<boolean> => {
+  const updatePlaylist = async (id: string, data: Partial<Playlist>): Promise<Playlist | undefined> => {
     const updatedData = await updateResource<Playlist>('playlists', id, data)
     if (updatedData) {
       const playlistIndex = playlists.value.findIndex(playlist => playlist.id === id)
@@ -40,10 +42,29 @@ export const usePlaylistStore = defineStore('PlaylistStore', () => {
           ...updatedData
         }
         playlists.value.splice(playlistIndex, 1, updatedPlaylist)
-        return true
+        return updatedPlaylist
       }
     }
-    return false
+  }
+  const createPlaylist = async (data: PlaylistForm): Promise<Playlist | undefined> => {
+    if (userStore.auth) {
+      const id = crypto.randomUUID()
+      const playlist: Playlist = {
+        ...data,
+        id,
+        songs: [],
+        comments: [],
+        userId: userStore.auth.id,
+        listenCounter: 0,
+        updatedAt: new Date().getTime()
+      }
+      console.log(playlist)
+      const created = await createResource<Playlist>('playlists', playlist, id)
+      if (created) {
+        setOne(created)
+        return created
+      }
+    }
   }
   const getPlaylist = computed(() => {
     return (id: string) => {
@@ -52,12 +73,14 @@ export const usePlaylistStore = defineStore('PlaylistStore', () => {
   })
   const getPlaylistLengthText = computed(() => {
     return (playlist: Playlist) => {
-      if (playlist.songs.length === 0) {
-        return 'no songs'
-      } else if (playlist.songs.length === 1) {
-        return '1 song'
+      if (playlist.songs) {
+        if (playlist.songs.length === 1) {
+          return '1 song'
+        } else {
+          return `${playlist.songs.length} songs`
+        }
       } else {
-        return `${playlist.songs.length} songs`
+        return 'no songs'
       }
     }
   })
@@ -72,6 +95,7 @@ export const usePlaylistStore = defineStore('PlaylistStore', () => {
     fetchPlaylist,
     fetchManyPlaylists,
     updatePlaylist,
+    createPlaylist,
     getPlaylist,
     getPlaylistLengthText,
     getUsersPlaylists

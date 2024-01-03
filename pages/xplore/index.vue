@@ -51,9 +51,11 @@ const { makeBodyFixed, removeFixedFromBody } = useFixedBody()
 const isBeingSaved = ref(false)
 const saveToPlaylist = async (playlist: Playlist) => {
   if (currentAudioStore.current) {
-    if (!playlist.songs.includes(currentAudioStore.current.id)) {
+    if (!playlist.songs?.includes(currentAudioStore.current.id)) {
+      const songs = playlist.songs || []
       const updated = await playlistStore.updatePlaylist(playlist.id, {
-        songs: [...playlist.songs, currentAudioStore.current.id]
+        songs: [...songs, currentAudioStore.current.id],
+        updatedAt: new Date().getTime()
       })
       if (updated) {
         songStore.fetchRandomSong(true)
@@ -63,7 +65,9 @@ const saveToPlaylist = async (playlist: Playlist) => {
   isBeingSaved.value = false
 }
 if (userStore.auth) {
-  await playlistStore.fetchManyPlaylists(userStore.auth.playlists)
+  if (userStore.auth.playlists) {
+    await playlistStore.fetchManyPlaylists(userStore.auth.playlists)
+  }
 }
 await songStore.fetchRandomSong(true)
 watch(isBeingSaved, () => {

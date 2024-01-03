@@ -53,7 +53,7 @@ const playlist = computed(() => {
   return playlistStore.getPlaylist(playlistId)
 })
 const formData = ref<PlaylistForm>({
-  image: null,
+  coverImgUrl: null,
   title: playlist.value?.title || '',
   description: playlist.value?.description || ''
 })

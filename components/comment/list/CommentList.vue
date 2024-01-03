@@ -1,5 +1,6 @@
 <template>
   <ul
+    v-if="comments.length > 0"
     class="flex flex-col w-full gap-8 items-end"
   >
     <CommentListItem
@@ -8,6 +9,9 @@
       :comment="comment"
     />
   </ul>
+  <span v-else>
+    Noone left a comment for now.
+  </span>
 </template>
 
 <script setup lang="ts">

@@ -2,13 +2,8 @@
   <div>
     <TheNavigationBack />
     <main class="bg-black-main text-white-main">
-      <form class="wrapper flex flex-col gap-4 p-4" @submit.prevent>
-        <button
-          class="w-1/2 flex justify-center aspect-square ml-auto mr-auto main-transition"
-          @click="() => console.log('edit playlist cover')"
-        >
-          <img v-if="!formData.image" src="~/assets/img/playlist-add-placeholder.svg" alt="">
-        </button>
+      <form class="wrapper flex flex-col gap-4 p-4" @submit.prevent="playlistStore.createPlaylist(formData)">
+        <PlaylistEditImage :cover-img-url="formData.coverImgUrl" @set-cover-url="(imgUrl: string) => formData.coverImgUrl = imgUrl" />
         <AppInputWithLabel
           type="text"
           name="title"
@@ -40,11 +35,12 @@
 
 <script setup lang="ts">
 import type { PlaylistForm } from '~/types/Playlist'
+const playlistStore = usePlaylistStore()
 const router = useRouter()
 const route = useRoute()
 const isSongBeingSaved = route.query.saving
 const formData = ref<PlaylistForm>({
-  image: null,
+  coverImgUrl: null,
   title: '',
   description: ''
 })

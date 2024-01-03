@@ -39,7 +39,7 @@ export const fetchOne = async <Resource>(resourcePlural: SpotifySearchResponseKe
     return undefined
   }
   if (data.value) {
-    return data.value as Resource
+    return data.value
   }
 }
 export const fetchMany = async <Resource>(resourcePlural: SpotifySearchResponseKey, ids: string[]): Promise<Resource[] | undefined> => {

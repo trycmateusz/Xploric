@@ -1,6 +1,6 @@
 import cloneDeep from 'lodash/cloneDeep'
 import type { SpotifyApiSong } from '~/types/Spotify'
-import { getDurationMinutesAndSecondsInProperFormatFromSeconds } from '~/helpers'
+import { getDurationMinutesAndSecondsInProperFormatFromSeconds } from '~/helpers/time'
 
 export const useCurrentAudioStore = defineStore('CurrentAudioStore', () => {
   const songStore = useSongStore()

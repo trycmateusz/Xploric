@@ -10,7 +10,7 @@
   </ul>
   <span v-else class="flex flex-col text-lg text-gray-main">
     No playlists found, unfortunately.
-    <nuxt-link to="/" class="text-light-blue-lighter w-max main-transition">
+    <nuxt-link to="/playlist/create" class="text-light-blue-lighter w-max main-transition">
       If you want to create some, click here!
     </nuxt-link>
   </span>

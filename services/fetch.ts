@@ -21,7 +21,7 @@ export const fetchOne = async<Resource>(resourcePlural: string, id: string): Pro
     return undefined
   }
   if (data.value) {
-    return data.value as Resource
+    return data.value
   }
 }
 

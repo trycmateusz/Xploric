@@ -1,17 +1,14 @@
-export interface Playlist {
-  id: string
-  userId: string
+export interface PlaylistForm {
+  coverImgUrl: string | null
   title: string
   description: string
-  coverImgUrl: string | null
-  listenCounter: number
-  updatedAt: number
-  comments: string[]
-  songs: string[]
 }
 
-export interface PlaylistForm {
-  image: string | null
-  title: string
-  description: string
+export interface Playlist extends PlaylistForm {
+  id: string
+  userId: string
+  listenCounter: number
+  updatedAt: number
+  comments: string[] | null
+  songs: string[] | null
 }

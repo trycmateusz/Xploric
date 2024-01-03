@@ -1,4 +1,4 @@
-import { generatePkceCodeVerifier, sha256, base64UrlEncode } from '~/helpers'
+import { generatePkceCodeVerifier, sha256, base64UrlEncode } from '~/helpers/crypto'
 import { getCookie } from '~/helpers/cookie'
 
 export default defineNuxtRouteMiddleware(async (to) => {
