@@ -58,10 +58,13 @@ export const usePlaylistStore = defineStore('PlaylistStore', () => {
         listenCounter: 0,
         updatedAt: new Date().getTime()
       }
-      console.log(playlist)
       const created = await createResource<Playlist>('playlists', playlist, id)
       if (created) {
         setOne(created)
+        const userPlaylists = userStore.auth.playlists ? [...userStore.auth.playlists, id] : [id]
+        await userStore.updateUser(userStore.auth.id, {
+          playlists: userPlaylists
+        })
         return created
       }
     }

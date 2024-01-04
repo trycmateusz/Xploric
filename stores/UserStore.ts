@@ -1,5 +1,6 @@
 import type { User } from '~/types/User'
 import { fetchOne } from '~/services/fetch'
+import { updateResource } from '~/services/save'
 
 export const useUserStore = defineStore('UserStore', () => {
   const users = ref<User[]>([])
@@ -18,6 +19,21 @@ export const useUserStore = defineStore('UserStore', () => {
       }
     }
   }
+  const updateUser = async (id: string, data: Partial<User>): Promise<User | undefined> => {
+    const updatedData = await updateResource<User>('users', id, data)
+    if (updatedData) {
+      const userIndex = users.value.findIndex(playlist => playlist.id === id)
+      if (userIndex !== -1) {
+        const user = users.value[userIndex]
+        const updatedUser = {
+          ...user,
+          ...updatedData
+        }
+        users.value.splice(userIndex, 1, updatedUser)
+        return updatedUser
+      }
+    }
+  }
   const getUser = computed(() => {
     return (userId: string) => {
       return users.value.find(user => user.id === userId)
@@ -28,6 +44,7 @@ export const useUserStore = defineStore('UserStore', () => {
     auth,
     setAuth,
     fetchUser,
+    updateUser,
     getUser
   }
 })

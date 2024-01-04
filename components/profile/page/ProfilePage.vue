@@ -23,8 +23,7 @@
       </h2>
       <PlaylistList :for-saving="false" :playlists="usersPlaylists" />
       <nuxt-link
-        v-if="ownProfile && usersPlaylists.length > 0"
-        to="/playlist/create"
+        :to="{ path:'/playlist/create', query: { redirect: route.path } }"
         class="inline-block mx-auto mt-10 text-center text-light-blue-lighter text-xl main-transition"
       >
         create a new playlist
@@ -58,6 +57,7 @@
 <script setup lang="ts">
 import type { User } from '~/types/User'
 const playlistStore = usePlaylistStore()
+const route = useRoute()
 const props = defineProps<{
   ownProfile: boolean
   user: User

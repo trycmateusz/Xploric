@@ -12,7 +12,7 @@
         class="w-full rounded-xl aspect-square object-cover xs:w-[7rem] "
       >
       <img
-        v-show="!coverLoaded"
+        v-show="!coverLoaded || !playlist.coverImgUrl"
         class="w-full xs:w-[7rem]"
         src="~/assets/img/playlist-placeholder.svg"
         alt=""

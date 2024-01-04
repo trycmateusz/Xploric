@@ -20,8 +20,7 @@
             @save="saveToPlaylist"
           />
           <div class="mt-10 mb-4 text-lg text-white-main text-center">
-            or
-            <nuxt-link class="main-transition text-light-blue-lighter" :to="{ path:'/playlist/create', query: { saving: currentAudioStore.current?.id } }">
+            <nuxt-link class="main-transition text-light-blue-lighter" :to="{ path:'/playlist/create', query: { saving: currentAudioStore.current?.id, redirect: route.path } }">
               add to a new one
             </nuxt-link>
           </div>
@@ -43,6 +42,7 @@ definePageMeta({
   layout: 'without-current-player',
   middleware: ['access-token']
 })
+const route = useRoute()
 const songStore = useSongStore()
 const playlistStore = usePlaylistStore()
 const userStore = useUserStore()

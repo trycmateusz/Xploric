@@ -5,7 +5,7 @@ export const convertToDate = (timestamp: number): string => {
   const year = date.getFullYear()
   const hours = date.getHours()
   const minutes = date.getMinutes()
-  return `${day}.${month}.${year} ${hours}:${minutes}`
+  return `${day}.${month}.${year} ${hours}:${minutes < 10 ? '0' + minutes : minutes}`
 }
 
 export const getDurationSeconds = (duration: number): number => {

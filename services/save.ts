@@ -16,10 +16,10 @@ export const updateResource = async <Resource>(collection: string, id: string, r
 export const createResource = async <Resource>(collection: string, resource: Resource, id: string): Promise<Resource | undefined> => {
   const runtimeConfig = useRuntimeConfig()
   try {
-    const data = await $fetch<Resource>(`${runtimeConfig.public.baseApiUrl}/${collection}.json`, {
+    const data = await $fetch<Resource>(`${runtimeConfig.public.baseApiUrl}/${collection}/${id}.json`, {
       method: 'put',
       body: JSON.stringify({
-        [id]: { ...resource }
+        ...resource
       })
     })
     if (data) {

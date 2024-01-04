@@ -12,7 +12,7 @@
           >
           <img
             v-else
-            class="w-full border-black-lighter object-cover object-center"
+            class="w-full p-4 border-black-lighter object-cover object-center"
             src="~/assets/img/playlist-placeholder.svg"
             alt="Playlist placeholder image"
           >
