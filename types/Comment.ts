@@ -7,7 +7,7 @@ export interface Comment {
   isResponse: boolean
   ratedBy: CommentRatedBy
   rating: number
-  responses: string[] | null
+  responses?: string[]
   text: string
   timestamp: number
   userId: string

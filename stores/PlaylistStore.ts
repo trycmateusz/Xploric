@@ -7,6 +7,7 @@ import { updateResource, createResource } from '~/services/save'
 export const usePlaylistStore = defineStore('PlaylistStore', () => {
   const playlists = ref<Playlist[]>([])
   const userStore = useUserStore()
+  const { uploadImageToBucketAndReturnUrl } = useBucketUpload()
   const setOne = (fetchedPlaylist: Playlist) => {
     const isSet = playlists.value.find(playlist => playlist.id === fetchedPlaylist.id)
     if (!isSet) {
@@ -31,35 +32,56 @@ export const usePlaylistStore = defineStore('PlaylistStore', () => {
       fetchedPlaylists.forEach(fetchedPlaylist => setOne(fetchedPlaylist))
     }
   }
-  const updatePlaylist = async (id: string, data: Partial<Playlist>): Promise<Playlist | undefined> => {
+  const updatePlaylistCover = async (cover: File, id: string): Promise<string | undefined> => {
+    const uploadedImageUrl = await uploadImageToBucketAndReturnUrl(cover, 'playlists', id)
+    const updatedData = await updateResource<Playlist>('playlists', id, { coverImgUrl: uploadedImageUrl })
+    if (updatedData?.coverImgUrl) {
+      return updatedData.coverImgUrl
+    }
+  }
+  const updatePlaylist = async (id: string, data: Partial<Playlist>, cover?: File): Promise<Playlist | undefined> => {
     const updatedData = await updateResource<Playlist>('playlists', id, data)
     if (updatedData) {
       const playlistIndex = playlists.value.findIndex(playlist => playlist.id === id)
       if (playlistIndex !== -1) {
         const playlist = playlists.value[playlistIndex]
-        const updatedPlaylist = {
-          ...playlist,
-          ...updatedData
+        let coverImgUrl: string | undefined
+        if (cover) {
+          coverImgUrl = await updatePlaylistCover(cover, playlist.id)
         }
-        playlists.value.splice(playlistIndex, 1, updatedPlaylist)
-        return updatedPlaylist
+        if (coverImgUrl) {
+          return Object.assign(playlist, {
+            ...playlist,
+            ...updatedData,
+            coverImgUrl
+          })
+        } else {
+          return Object.assign(playlist, {
+            ...playlist,
+            ...updatedData
+          })
+        }
       }
     }
   }
-  const createPlaylist = async (data: PlaylistForm): Promise<Playlist | undefined> => {
+  const createPlaylist = async (data: PlaylistForm, cover?: File): Promise<Playlist | undefined> => {
     if (userStore.auth) {
       const id = crypto.randomUUID()
       const playlist: Playlist = {
         ...data,
         id,
-        songs: [],
-        comments: [],
         userId: userStore.auth.id,
         listenCounter: 0,
         updatedAt: new Date().getTime()
       }
       const created = await createResource<Playlist>('playlists', playlist, id)
       if (created) {
+        if (cover) {
+          const coverImgUrl = await updatePlaylistCover(cover, created.id)
+          if (coverImgUrl) {
+            created.coverImgUrl = coverImgUrl
+          }
+        }
         setOne(created)
         const userPlaylists = userStore.auth.playlists ? [...userStore.auth.playlists, id] : [id]
         await userStore.updateUser(userStore.auth.id, {

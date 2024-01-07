@@ -7,7 +7,7 @@ export const useUserStore = defineStore('UserStore', () => {
   const auth = ref<User | null>(null)
   const setAuth = (user: User) => {
     if (!auth.value || auth.value.id !== user.id) {
-      auth.value = { ...user }
+      auth.value = user
     }
   }
   const fetchUser = async (id: string) => {
@@ -25,12 +25,10 @@ export const useUserStore = defineStore('UserStore', () => {
       const userIndex = users.value.findIndex(playlist => playlist.id === id)
       if (userIndex !== -1) {
         const user = users.value[userIndex]
-        const updatedUser = {
+        return Object.assign(user, {
           ...user,
           ...updatedData
-        }
-        users.value.splice(userIndex, 1, updatedUser)
-        return updatedUser
+        })
       }
     }
   }

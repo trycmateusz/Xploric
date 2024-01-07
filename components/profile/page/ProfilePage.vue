@@ -29,10 +29,10 @@
         create a new playlist
       </nuxt-link>
       <div class="flex flex-col gap-5 mt-10">
-        <AppButton
+        <AppLink
           :text="favouriteSongsText"
           styling="primary"
-          @click="() => console.log('your favourite songs')"
+          to="/my-profile/favourites"
         />
         <div
           v-if="ownProfile"

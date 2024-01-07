@@ -3,7 +3,11 @@
     <TheNavigationBack />
     <main class="bg-black-main text-white-main">
       <form class="wrapper flex flex-col gap-4 p-4" @submit.prevent="createPlaylist">
-        <PlaylistEditImage :cover-img-url="formData.coverImgUrl" @set-cover-url="(imgUrl: string) => formData.coverImgUrl = imgUrl" />
+        <PlaylistEditImage
+          :cover-img-url="coverLocal"
+          @set-cover-url="(imgUrl: string) => coverLocal = imgUrl"
+          @set-image-file="(file: File) => cover = file"
+        />
         <AppInputWithLabel
           v-model:modelValue="formData.title"
           type="text"
@@ -41,10 +45,11 @@ const route = useRoute()
 const songSaved = route.query.saving?.toString()
 const redirect = route.query.redirect?.toString()
 const formData = ref<PlaylistForm>({
-  coverImgUrl: null,
   title: '',
   description: ''
 })
+const coverLocal = ref<string | null>(null)
+const cover = ref<File | undefined>(undefined)
 const goBack = () => {
   if (songSaved) {
     if (redirect) {
@@ -55,7 +60,7 @@ const goBack = () => {
   }
 }
 const createPlaylist = async () => {
-  const created = await playlistStore.createPlaylist(formData.value)
+  const created = await playlistStore.createPlaylist(formData.value, cover.value)
   if (created) {
     if (songSaved) {
       const playlistSongs = created.songs ? [...created.songs, songSaved] : [songSaved]
@@ -63,11 +68,11 @@ const createPlaylist = async () => {
         songs: playlistSongs
       })
     }
-    if (redirect) {
-      router.push(redirect)
-    } else {
-      router.push('/')
-    }
+    // if (redirect) {
+    //   router.push(redirect)
+    // } else {
+    //   router.push('/')
+    // }
   }
 }
 </script>

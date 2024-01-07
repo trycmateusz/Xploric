@@ -1,16 +1,17 @@
 <template>
-  <li class="flex flex-col gap-4 p-4 bg-black-lighter rounded-xl xs:flex-row">
+  <li class="flex flex-col gap-4 p-4 bg-black-lighter rounded-xl xs:flex-row xs:max-w-full overflow-hidden">
     <img
       v-if="coverLoaded"
       :src="song.album.images[0].url"
       :alt="`${song.name}'s cover`"
       class="rounded-lg xs:w-[7rem]"
     >
-    <div class="xs:flex xs:flex-col xs:justify-between xs:mr-4">
-      <span class="block text-lg leading-none">
+    <div class="relative xs:flex xs:flex-col xs:justify-between xs:w-[Calc(50%_-_1rem)]">
+      <div class="absolute w-2 h-full pointer-events-none right-0 top-0 bg-gradient-to-r from-transparent to-black-lighter" />
+      <span class="block text-lg leading-none overflow-hidden">
         {{ song.name }}
       </span>
-      <span class="block text-gray-main">
+      <span class="block text-gray-main overflow-hidden">
         {{ song.artists[0].name }}
       </span>
     </div>

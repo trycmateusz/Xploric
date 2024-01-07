@@ -14,13 +14,17 @@ defineProps<{
 }>()
 const emit = defineEmits<{
   (e: 'set-cover-url', imgUrl: string): void
+  (e: 'set-image-file', file: File): void
 }>()
 const checkFileIfImage = (e: Event) => {
   const input = e.target as HTMLInputElement
-  if (!input.files[0].type.startsWith('image')) {
-    return
+  if (input.files) {
+    if (!input.files[0].type.startsWith('image')) {
+      return
+    }
+    emit('set-cover-url', URL.createObjectURL(input.files[0]))
+    emit('set-image-file', input.files[0])
   }
-  emit('set-cover-url', URL.createObjectURL(input.files[0]))
 }
 </script>
 

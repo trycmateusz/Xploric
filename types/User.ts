@@ -8,9 +8,9 @@ export type UserPrivacyOption = UserPrivacyOptionsTuple[number]
 export interface User {
   id: string
   username: string
-  playlists: string[] | null
-  favourites: string[] | null
-  profileBgUrl: string | null
+  playlists?: string[]
+  favourites?: string[]
+  profileBgUrl?: string
   public: UserPrivacyOption
   inReviews: UserPrivacyOption
 }

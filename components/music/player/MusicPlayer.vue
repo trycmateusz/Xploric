@@ -70,9 +70,9 @@
         <button @click="songStore.fetchRandomSong(true)">
           <img class="h-full" src="~/assets/img/x.svg" alt="Skip current song">
         </button>
-        <button class="relative aspect-square" @click="isFavourited = !isFavourited">
+        <button class="relative aspect-square" @click="setFavourited">
           <transition name="opacity">
-            <img v-if="isFavourited" class="absolute top-0 h-full" src="~/assets/img/heart.svg" alt="Unfavourite current song">
+            <img v-if="favourited" class="absolute top-0 h-full" src="~/assets/img/heart.svg" alt="Unfavourite current song">
             <img v-else class="absolute top-0 h-full" src="~/assets/img/heart-empty.svg" alt="Unfavourite current song">
           </transition>
         </button>
@@ -106,6 +106,7 @@ import debounce from 'lodash/debounce'
 import type { SpotifyApiSong } from '~/types/Spotify'
 const songStore = useSongStore()
 const currentAudioStore = useCurrentAudioStore()
+const userStore = useUserStore()
 const props = defineProps<{
   song: SpotifyApiSong
   fromPlaylist: boolean
@@ -117,7 +118,7 @@ const emit = defineEmits<{
 }>()
 const rotateMultiplier = 15
 const audioRerenderKey = ref(0)
-const isFavourited = ref(false)
+const favourited = ref<string | false>(false)
 const isCoverHeld = ref(false)
 const musicPlayer = ref<HTMLDivElement | undefined>(undefined)
 const cover = ref<HTMLImageElement | undefined>(undefined)
@@ -149,6 +150,13 @@ const distanceTransform = computed(() => {
     return ''
   }
 })
+const setFavourited = () => {
+  if (favourited.value) {
+    favourited.value = false
+  } else {
+    favourited.value = props.song.id
+  }
+}
 const followTouch = (e: PointerEvent) => {
   if (isCoverHeld.value) {
     xPointerPosition.value = e.clientX
@@ -174,6 +182,13 @@ const stopFollowingTouch = () => {
 }
 watch(props, () => {
   audioRerenderKey.value++
+  if (favourited.value && userStore.auth) {
+    const userFavourites = userStore.auth.favourites ? [...userStore.auth.favourites, props.song.id] : [props.song.id]
+    userStore.updateUser(userStore.auth.id, {
+      favourites: userFavourites
+    })
+  }
+  favourited.value = false
 })
 </script>
 

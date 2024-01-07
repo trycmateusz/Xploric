@@ -6,6 +6,7 @@ import { getRandomIndex } from '~/helpers'
 
 export const useSongStore = defineStore('SongStore', () => {
   const currentAudioStore = useCurrentAudioStore()
+  const userStore = useUserStore()
   const songs = ref<SpotifyApiSong[]>([])
   const lastTenListenedTo = ref<string[]>([])
   const getPlaylistsSongs = computed(() => {
@@ -20,6 +21,11 @@ export const useSongStore = defineStore('SongStore', () => {
   })
   const getTenLatest = computed(() => {
     return songs.value.filter(song => lastTenListenedTo.value.includes(song.id))
+  })
+  const getUsersFavourites = computed(() => {
+    if (userStore.auth && userStore.auth.favourites) {
+      return songs.value.filter(song => userStore.auth?.favourites?.includes(song.id))
+    }
   })
   const setOneIfNotSetAlready = (fetchedSong: SpotifyApiSong, setToCurrent: boolean) => {
     const isSet = songs.value.find(song => song.id === fetchedSong.id)
@@ -82,6 +88,7 @@ export const useSongStore = defineStore('SongStore', () => {
     getPlaylistsSongs,
     getSong,
     getTenLatest,
+    getUsersFavourites,
     pushToLastTenLatest,
     fetchRandomSong,
     fetchOneSong,
