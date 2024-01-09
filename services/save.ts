@@ -1,7 +1,8 @@
 export const updateResource = async <Resource>(collection: string, id: string, resourceData: Partial<Resource>): Promise<Partial<Resource> | undefined> => {
   const runtimeConfig = useRuntimeConfig()
   try {
-    const data = await $fetch<Partial<Resource>>(`${runtimeConfig.public.baseApiUrl}/${collection}/${id}.json`, {
+    const url = `${runtimeConfig.public.baseApiUrl}/${collection}/${id}.json`
+    const data = await $fetch<Partial<Resource>>(url, {
       method: 'patch',
       body: JSON.stringify(resourceData)
     })
@@ -16,7 +17,8 @@ export const updateResource = async <Resource>(collection: string, id: string, r
 export const createResource = async <Resource>(collection: string, resource: Resource, id: string): Promise<Resource | undefined> => {
   const runtimeConfig = useRuntimeConfig()
   try {
-    const data = await $fetch<Resource>(`${runtimeConfig.public.baseApiUrl}/${collection}/${id}.json`, {
+    const url = `${runtimeConfig.public.baseApiUrl}/${collection}/${id}.json`
+    const data = await $fetch<Resource>(url, {
       method: 'put',
       body: JSON.stringify({
         ...resource

@@ -10,13 +10,12 @@
 <script setup lang="ts">
 const props = defineProps<{
   vote: 'upvote' | 'downvote'
-  chosen: boolean
   username: string
   text: string
 }>()
 const { getAbsolutePath } = useImages()
 const imgSrc = computed(() => {
-  if (props.chosen) {
+  if (props.vote) {
     return getAbsolutePath(`~/assets/img/${props.vote}-filled.svg`)
   } else {
     return getAbsolutePath(`~/assets/img/${props.vote}-border.svg`)

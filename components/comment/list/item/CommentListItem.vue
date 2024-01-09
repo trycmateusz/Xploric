@@ -1,6 +1,6 @@
 <template>
   <li class="flex flex-col w-full gap-4 items-end">
-    <span class="block p-4 bg-black-lighter rounded-xl w-fit">
+    <span class="block p-4 bg-black-lighter rounded-tl-xl rounded-tr-xl rounded-bl-xl rouded-br-none break-words w-fit max-w-full">
       {{ comment.text }}
     </span>
     <div class="flex flex-col gap-4 justify-end text-sm items-end sm:flex-row sm:gap-8 sm:items-center">
@@ -13,7 +13,6 @@
           :username="user.username"
           :text="comment.text"
           vote="upvote"
-          :chosen="isUpvoted"
         />
         <span class="rating">
           {{ comment.rating }}
@@ -23,7 +22,6 @@
           :username="user.username"
           :text="comment.text"
           vote="downvote"
-          :chosen="isDownvoted"
         />
       </div>
       <div
@@ -35,7 +33,7 @@
         </button>
         <button
           class="h-[1.5em] main-transition"
-          @click="commentStore.closeAllRepliesButOne(comment)"
+          @click="emit('toggle-reply', comment.id)"
         >
           <img
             class="h-full"
@@ -56,9 +54,11 @@
       :comments="commentStore.getResponses(comment.responses)"
     />
     <CommentListItemResponse
-      v-if="user && comment.replyOpen"
+      v-if="user && replyOpen"
+      :comment-id="comment.id"
+      :playlist-id="comment.playlistId"
       :username="user.username"
-      @close="commentStore.closeOneReply(comment)"
+      @reply="(text) => replyToComment(text)"
     />
   </li>
 </template>
@@ -67,6 +67,11 @@
 import type { Comment } from '~/types/Comment'
 const props = defineProps<{
   comment: Comment
+  replyOpen: boolean
+}>()
+const emit = defineEmits<{
+  (e: 'toggle-reply', id: string): void
+  (e: 'close-reply'): boolean
 }>()
 const userStore = useUserStore()
 const commentStore = useCommentStore()
@@ -76,22 +81,17 @@ const isRatingNegative = computed(() => {
 const user = computed(() => {
   return userStore.getUser(props.comment.userId)
 })
-const isUpvoted = computed(() => {
-  if (userStore.auth && props.comment.ratedBy) {
-    if (userStore.auth.id in props.comment.ratedBy) {
-      return props.comment.ratedBy[userStore.auth.id] === 1
-    }
+const replyToComment = async (text: string) => {
+  let replied: Comment | undefined
+  if (props.comment.responseTo) {
+    replied = await commentStore.createResponse(text, props.comment.responseTo, props.comment.playlistId)
+  } else {
+    replied = await commentStore.createResponse(text, props.comment.id, props.comment.playlistId)
   }
-  return false
-})
-const isDownvoted = computed(() => {
-  if (userStore.auth && props.comment.ratedBy) {
-    if (userStore.auth.id in props.comment.ratedBy) {
-      return props.comment.ratedBy[userStore.auth.id] === -1
-    }
+  if (replied) {
+    emit('close-reply')
   }
-  return false
-})
+}
 </script>
 
 <style lang="scss">

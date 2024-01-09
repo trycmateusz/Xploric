@@ -5,8 +5,8 @@
       <form class="wrapper flex flex-col gap-4 p-4" @submit.prevent="createPlaylist">
         <PlaylistEditImage
           :cover-img-url="coverLocal"
-          @set-cover-url="(imgUrl: string) => coverLocal = imgUrl"
-          @set-image-file="(file: File) => cover = file"
+          @set-cover-url="(url) => coverLocal = url"
+          @set-image-file="(file) => cover = file"
         />
         <AppInputWithLabel
           v-model:modelValue="formData.title"
@@ -48,7 +48,7 @@ const formData = ref<PlaylistForm>({
   title: '',
   description: ''
 })
-const coverLocal = ref<string | null>(null)
+const coverLocal = ref<string | undefined>(undefined)
 const cover = ref<File | undefined>(undefined)
 const goBack = () => {
   if (songSaved) {
@@ -68,11 +68,11 @@ const createPlaylist = async () => {
         songs: playlistSongs
       })
     }
-    // if (redirect) {
-    //   router.push(redirect)
-    // } else {
-    //   router.push('/')
-    // }
+    if (redirect) {
+      router.push(redirect)
+    } else {
+      router.push('/')
+    }
   }
 }
 </script>

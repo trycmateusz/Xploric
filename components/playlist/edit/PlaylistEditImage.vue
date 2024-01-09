@@ -10,10 +10,10 @@
 
 <script setup lang="ts">
 defineProps<{
-  coverImgUrl: string | null
+  coverImgUrl: string | undefined
 }>()
 const emit = defineEmits<{
-  (e: 'set-cover-url', imgUrl: string): void
+  (e: 'set-cover-url', url: string): void
   (e: 'set-image-file', file: File): void
 }>()
 const checkFileIfImage = (e: Event) => {

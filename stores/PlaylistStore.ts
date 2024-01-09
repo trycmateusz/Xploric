@@ -3,6 +3,7 @@ import type { Playlist, PlaylistForm } from '~/types/Playlist'
 import type { User } from '~/types/User'
 import { fetchCollection, fetchOne, fetchMany } from '~/services/fetch'
 import { updateResource, createResource } from '~/services/save'
+import { deleteResource } from '~/services/delete'
 
 export const usePlaylistStore = defineStore('PlaylistStore', () => {
   const playlists = ref<Playlist[]>([])
@@ -91,6 +92,16 @@ export const usePlaylistStore = defineStore('PlaylistStore', () => {
       }
     }
   }
+  const deletePlaylist = async (id: string): Promise<null | undefined> => {
+    const deleted = await deleteResource('playlists', id)
+    if (deleted === null) {
+      const playlistIndex = playlists.value.findIndex(playlist => playlist.id === id)
+      if (playlistIndex !== -1) {
+        playlists.value.splice(playlistIndex, 1)
+        return null
+      }
+    }
+  }
   const getPlaylist = computed(() => {
     return (id: string) => {
       return playlists.value.find(playlist => playlist.id === id)
@@ -121,6 +132,7 @@ export const usePlaylistStore = defineStore('PlaylistStore', () => {
     fetchManyPlaylists,
     updatePlaylist,
     createPlaylist,
+    deletePlaylist,
     getPlaylist,
     getPlaylistLengthText,
     getUsersPlaylists

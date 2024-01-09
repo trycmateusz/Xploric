@@ -41,7 +41,7 @@
           />
           <div class="mr-[2rem] sm:mr-[2.5rem]">
             <h1 class="text-2xl ">
-              {{ playlist.title }}
+              {{ title }}
             </h1>
             <nuxt-link v-if="user" :to="`/user/${user.id}`" class="text-light-blue-lighter main-transition">
               {{ user.username }}
@@ -61,7 +61,7 @@
         Last updated at {{ convertToDate(playlist.updatedAt) }}
       </span>
       <span class="block mt-8 mb-8 text-lg">
-        {{ playlist.description }}
+        {{ description }}
       </span>
       <SongList
         :songs="songStore.getPlaylistsSongs(playlist)"
@@ -83,9 +83,10 @@
       <h2 class="block text-2xl mt-8 mb-4">
         Write a comment!
       </h2>
-      <form class="flex flex-col" @submit.prevent>
+      <form class="flex flex-col" @submit.prevent="createComment">
         <textarea
           id="comment"
+          v-model="comment"
           name="comment"
           class="bg-black-lighter text-white-main min-h-[10rem] rounded-xl p-4 resize-none overflow-y-auto main-transition"
         />
@@ -101,6 +102,7 @@
 
 <script setup lang="ts">
 import { convertToDate } from '~/helpers/time'
+import { copyToClipboard } from '~/helpers/clipboard'
 import type { AppOptionLink, AppOptionButton } from '~/types/App'
 definePageMeta({
   middleware: ['access-token']
@@ -110,12 +112,28 @@ const userStore = useUserStore()
 const songStore = useSongStore()
 const commentStore = useCommentStore()
 const route = useRoute()
+const router = useRouter()
 const playlistId = route.params.id.toString()
 const playlistOptionsTogglerId = 'playlist-options-toggler'
 const coverLoaded = ref(false)
 const playlistOptionsOpen = ref(false)
+const comment = ref('')
 const playlist = computed(() => {
   return playlistStore.getPlaylist(playlistId)
+})
+const description = computed(() => {
+  if (playlist.value && playlist.value.description.length > 0) {
+    return playlist.value.description
+  } else {
+    return 'No description provided.'
+  }
+})
+const title = computed(() => {
+  if (playlist.value && playlist.value.title.length > 0) {
+    return playlist.value.title
+  } else {
+    return 'Untitled'
+  }
 })
 const user = computed(() => {
   if (playlist.value) {
@@ -126,7 +144,7 @@ const defaultOptions: (AppOptionLink | AppOptionButton)[] = [
   {
     text: 'Copy link',
     id: Math.random().toString(),
-    onClick: () => console.log('share')
+    onClick: () => copyToClipboard(window.location.href)
   }
 ]
 const userOptions: (AppOptionLink | AppOptionButton)[] = [
@@ -134,12 +152,7 @@ const userOptions: (AppOptionLink | AppOptionButton)[] = [
     text: 'Remove',
     id: Math.random().toString(),
     destructive: true,
-    onClick: () => console.log('remove')
-  },
-  {
-    text: 'Move',
-    id: Math.random().toString(),
-    onClick: () => console.log('move')
+    onClick: () => deletePlaylist()
   },
   {
     text: 'Disable Comments',
@@ -160,6 +173,16 @@ if (playlist.value) {
   if (playlist.value.songs) {
     await songStore.fetchManySongs(playlist.value.songs)
   }
+}
+const deletePlaylist = async () => {
+  const deleted = await playlistStore.deletePlaylist(playlistId)
+  if (deleted === null) {
+    router.push('/my-profile')
+  }
+}
+const createComment = async () => {
+  await commentStore.createComment(comment.value, playlistId, false)
+  comment.value = ''
 }
 onMounted(() => {
   coverLoaded.value = true

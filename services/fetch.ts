@@ -1,9 +1,9 @@
-export const fetchCollection = async <Resource>(resourcePlural: string): Promise<Resource[] | undefined> => {
+export const fetchCollection = async <Resource>(collection: string): Promise<Resource[] | undefined> => {
   const runtimeConfig = useRuntimeConfig()
-  const url = `${runtimeConfig.public.baseApiUrl}/${resourcePlural}.json`
+  const url = `${runtimeConfig.public.baseApiUrl}/${collection}.json`
   const { data, error } = await useFetch<Resource>(url)
   if (error.value) {
-    console.log(`Error while fetching: ${resourcePlural}`, error.value)
+    console.log(`Error while fetching: ${collection}`, error.value)
     return undefined
   }
   if (data.value) {
@@ -12,12 +12,12 @@ export const fetchCollection = async <Resource>(resourcePlural: string): Promise
   }
 }
 
-export const fetchOne = async<Resource>(resourcePlural: string, id: string): Promise<Resource | undefined> => {
+export const fetchOne = async<Resource>(collection: string, id: string): Promise<Resource | undefined> => {
   const runtimeConfig = useRuntimeConfig()
-  const url = `${runtimeConfig.public.baseApiUrl}/${resourcePlural}/${id}.json`
+  const url = `${runtimeConfig.public.baseApiUrl}/${collection}/${id}.json`
   const { data, error } = await useFetch<Resource>(url)
   if (error.value) {
-    console.log(`Error while fetching a resource from: ${resourcePlural}`, error.value)
+    console.log(`Error while fetching a resource from: ${collection}`, error.value)
     return undefined
   }
   if (data.value) {
@@ -25,10 +25,10 @@ export const fetchOne = async<Resource>(resourcePlural: string, id: string): Pro
   }
 }
 
-export const fetchMany = async<Resource>(resourcePlural: string, ids: string[]): Promise<Resource[] | undefined> => {
+export const fetchMany = async<Resource>(collection: string, ids: string[]): Promise<Resource[] | undefined> => {
   const runtimeConfig = useRuntimeConfig()
   const getUrl = (id: string) => {
-    return `${runtimeConfig.public.baseApiUrl}/${resourcePlural}/${id}.json`
+    return `${runtimeConfig.public.baseApiUrl}/${collection}/${id}.json`
   }
   const fetches = ids.map(id => async (): Promise<Resource> => {
     return await $fetch<Resource>(getUrl(id))
@@ -38,16 +38,16 @@ export const fetchMany = async<Resource>(resourcePlural: string, ids: string[]):
   if (resources && resources.length > 0) {
     return resources
   } else {
-    console.log(`Error while fetching many ${resourcePlural}.`)
+    console.log(`Error while fetching many ${collection}.`)
   }
 }
 
-export const fetchOnCondition = async <Resource>(resourcePlural: string, key: string, value: string): Promise<Resource[] | undefined> => {
+export const fetchOnCondition = async <Resource>(collection: string, key: string, value: string): Promise<Resource[] | undefined> => {
   const runtimeConfig = useRuntimeConfig()
-  const url = `${runtimeConfig.public.baseApiUrl}/${resourcePlural}.json?orderBy="${key}"&equalTo="${value}"`
+  const url = `${runtimeConfig.public.baseApiUrl}/${collection}.json?orderBy="${key}"&equalTo="${value}"`
   const { data, error } = await useFetch<Resource>(url)
   if (error.value) {
-    console.log(`Error while fetching: ${resourcePlural}`, error.value)
+    console.log(`Error while fetching: ${collection}`, error.value)
     return undefined
   }
   if (data.value) {

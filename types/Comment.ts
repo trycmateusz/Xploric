@@ -1,16 +1,10 @@
-export interface CommentRatedBy {
-  [userId: string]: 1 | -1
-}
-
 export interface Comment {
   id: string
-  isResponse: boolean
-  ratedBy: CommentRatedBy
+  responseTo?: string
   rating: number
   responses?: string[]
   text: string
-  timestamp: number
+  createdAt: number
   userId: string
   playlistId: string
-  replyOpen: boolean
 }

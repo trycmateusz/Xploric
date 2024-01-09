@@ -1,9 +1,9 @@
 <template>
-  <form class="w-1/2 flex flex-col" @submit.prevent="emit('close')">
+  <form class="w-1/2 flex flex-col" @submit.prevent="emit('reply', text)">
     <textarea
       id="comment"
       ref="textarea"
-      v-model="message"
+      v-model="text"
       name="comment"
       class="bg-black-lighter text-white-main min-h-[10rem] rounded-xl p-4 resize-none overflow-y-auto main-transition"
     />
@@ -17,13 +17,16 @@
 
 <script setup lang="ts">
 const props = defineProps<{
+  commentId: string
+  playlistId: string
   username: string
 }>()
 const emit = defineEmits<{
-  (e: 'close'): void
+  (e: 'reply', text: string): void
 }>()
 const textarea = ref<HTMLTextAreaElement | undefined>(undefined)
-const message = ref(`@${props.username}`)
+const text = ref(`@${props.username} `)
+
 onMounted(() => {
   if (textarea.value) {
     textarea.value.focus()

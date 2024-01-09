@@ -53,7 +53,7 @@
           v-if="userStore.auth"
           :link="{
             text: 'My Playlists',
-            to: '/'
+            to: '/my-profile'
           }"
           :anchor-tabindex="linksExpanded ? '0' : '-1'"
         />
