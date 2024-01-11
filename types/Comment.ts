@@ -8,3 +8,5 @@ export interface Comment {
   userId: string
   playlistId: string
 }
+
+export type CommentRatingOptions = -1 | 0 | 1

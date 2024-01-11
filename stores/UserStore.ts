@@ -22,7 +22,7 @@ export const useUserStore = defineStore('UserStore', () => {
   const updateUser = async (id: string, data: Partial<User>): Promise<User | undefined> => {
     const updatedData = await updateResource<User>('users', id, data)
     if (updatedData) {
-      const userIndex = users.value.findIndex(playlist => playlist.id === id)
+      const userIndex = users.value.findIndex(comment => comment.id === id)
       if (userIndex !== -1) {
         const user = users.value[userIndex]
         return Object.assign(user, {
@@ -37,12 +37,26 @@ export const useUserStore = defineStore('UserStore', () => {
       return users.value.find(user => user.id === userId)
     }
   })
+  const getAuthCommentRating = computed(() => {
+    return (commentId: string) => {
+      if (auth.value) {
+        if (auth.value.downvotes?.includes(commentId)) {
+          return -1
+        }
+        if (auth.value.upvotes?.includes(commentId)) {
+          return 1
+        }
+      }
+      return 0
+    }
+  })
   return {
     users,
     auth,
     setAuth,
     fetchUser,
     updateUser,
-    getUser
+    getUser,
+    getAuthCommentRating
   }
 })

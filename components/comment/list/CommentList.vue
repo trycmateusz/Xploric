@@ -4,7 +4,7 @@
     class="flex flex-col w-full gap-8 items-end"
   >
     <CommentListItem
-      v-for="comment in commentsSorted"
+      v-for="comment in comments"
       :key="comment.id"
       :comment="comment"
       :reply-open="openedReplyId === comment.id"
@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 import type { Comment } from '~/types/Comment'
-const props = defineProps<{
+defineProps<{
   comments: Comment[]
 }>()
 const openedReplyId = ref('')
@@ -30,9 +30,6 @@ const toggleReply = (id: string) => {
     openedReplyId.value = ''
   }
 }
-const commentsSorted = computed(() => {
-  return [...props.comments].sort((a, b) => a.createdAt - b.createdAt)
-})
 </script>
 
 <style scoped>

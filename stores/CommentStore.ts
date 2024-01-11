@@ -1,5 +1,6 @@
 import cloneDeep from 'lodash/cloneDeep'
 import type { Comment } from '~/types/Comment'
+import type { UserRatings } from '~/types/User'
 import { fetchMany } from '~/services/fetch'
 import { createResource, updateResource } from '~/services/save'
 
@@ -7,6 +8,28 @@ export const useCommentStore = defineStore('CommentStore', () => {
   const userStore = useUserStore()
   const playlistStore = usePlaylistStore()
   const comments = ref<Comment[]>([])
+  const commentRatingsToUpdate = ref<UserRatings>({ // initial wartosc musi byc brana od auth usera
+    downvotes: [],
+    upvotes: []
+  })
+  const toggleCommentDownvote = (commentId: string) => {
+    if (commentRatingsToUpdate.value.upvotes?.includes(commentId)) {
+      const index = commentRatingsToUpdate.value.upvotes.findIndex(id => id === commentId)
+      commentRatingsToUpdate.value.upvotes.splice(index, 1)
+    }
+    if (!commentRatingsToUpdate.value.downvotes?.includes(commentId)) {
+      commentRatingsToUpdate.value.downvotes?.push(commentId)
+    }
+  }
+  const toggleCommentUpvote = (commentId: string) => {
+    if (commentRatingsToUpdate.value.downvotes?.includes(commentId)) {
+      const index = commentRatingsToUpdate.value.downvotes.findIndex(id => id === commentId)
+      commentRatingsToUpdate.value.downvotes.splice(index, 1)
+    }
+    if (!commentRatingsToUpdate.value.upvotes?.includes(commentId)) {
+      commentRatingsToUpdate.value.upvotes?.push(commentId)
+    }
+  }
   const setOne = (fetchedComment: Comment) => {
     const isSet = comments.value.find(comment => comment.id === fetchedComment.id)
     if (!isSet) {
@@ -24,9 +47,9 @@ export const useCommentStore = defineStore('CommentStore', () => {
     if (updatedData) {
       const commentIndex = comments.value.findIndex(comment => comment.id === id)
       if (commentIndex !== -1) {
-        const playlist = comments.value[commentIndex]
-        return Object.assign(playlist, {
-          ...playlist,
+        const comment = comments.value[commentIndex]
+        return Object.assign(comment, {
+          ...comment,
           ...updatedData
         })
       }
@@ -91,9 +114,13 @@ export const useCommentStore = defineStore('CommentStore', () => {
   })
   return {
     comments,
+    commentRatingsToUpdate,
+    toggleCommentDownvote,
+    toggleCommentUpvote,
     fetchManyComments,
     createComment,
     createResponse,
+    updateComment,
     getPlaylistsComments,
     getResponses
   }

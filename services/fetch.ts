@@ -34,7 +34,7 @@ export const fetchMany = async<Resource>(collection: string, ids: string[]): Pro
     return await $fetch<Resource>(getUrl(id))
   })
   // map below is required to unwrap resources from objects. flat() doesn't work unfortunately, but assigning the resource to it's index in an object works well
-  const resources = (await Promise.all(fetches.map(fetch => fetch())))
+  const resources = (await Promise.all(fetches.map(fetch => fetch()))).filter(resource => resource)
   if (resources && resources.length > 0) {
     return resources
   } else {

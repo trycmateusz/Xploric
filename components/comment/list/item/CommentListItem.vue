@@ -8,20 +8,12 @@
         :data-rating-negative="isRatingNegative"
         class="rating-box flex gap-4 items-center"
       >
-        <CommentListItemVote
+        <CommentListItemRating
           v-if="user"
-          :username="user.username"
-          :text="comment.text"
-          vote="upvote"
-        />
-        <span class="rating">
-          {{ comment.rating }}
-        </span>
-        <CommentListItemVote
-          v-if="user"
-          :username="user.username"
-          :text="comment.text"
-          vote="downvote"
+          :username="user?.username"
+          :rating="rating"
+          :rated="authRatingValue"
+          @toggle-rating="toggleRating"
         />
       </div>
       <div
@@ -64,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Comment } from '~/types/Comment'
+import type { Comment, CommentRatingOptions } from '~/types/Comment'
 const props = defineProps<{
   comment: Comment
   replyOpen: boolean
@@ -75,8 +67,10 @@ const emit = defineEmits<{
 }>()
 const userStore = useUserStore()
 const commentStore = useCommentStore()
+const rating = ref(props.comment.rating)
+const authRatingValue = ref<CommentRatingOptions>(userStore.getAuthCommentRating(props.comment.id))
 const isRatingNegative = computed(() => {
-  return props.comment.rating < 0
+  return rating.value < 0
 })
 const user = computed(() => {
   return userStore.getUser(props.comment.userId)
@@ -92,6 +86,36 @@ const replyToComment = async (text: string) => {
     emit('close-reply')
   }
 }
+const toggleRating = (newRating: -1 | 1) => {
+  if (newRating === -1) {
+    commentStore.toggleCommentDownvote(props.comment.id)
+  } else if (newRating === 1) {
+    commentStore.toggleCommentUpvote(props.comment.id)
+  }
+  if (newRating === authRatingValue.value) {
+    authRatingValue.value = 0
+  } else {
+    authRatingValue.value = newRating
+  }
+}
+watch(authRatingValue, (newRating, oldRating) => {
+  if (oldRating === -1) {
+    rating.value += newRating + 1
+  } else if (oldRating === 1) {
+    rating.value += newRating - 1
+  } else {
+    rating.value += newRating
+  }
+})
+onUnmounted(async () => {
+  if (userStore.auth) {
+    if (authRatingValue.value !== userStore.getAuthCommentRating(props.comment.id)) {
+      await commentStore.updateComment(props.comment.id, {
+        rating: rating.value
+      })
+    }
+  }
+})
 </script>
 
 <style lang="scss">
@@ -116,4 +140,3 @@ $black-svg-to-red-main: invert(16%) sepia(38%) saturate(7469%) hue-rotate(351deg
   }
 }
 </style>
-~/stores/types/Comment
