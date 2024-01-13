@@ -59,13 +59,14 @@ import type { AppOptionLink, AppOptionButton } from '~/types/App'
 const props = defineProps<{
   song: SpotifyApiSong
   playlistUserId?: string
+  playlistId?: string
 }>()
 const userStore = useUserStore()
+const playlistStore = usePlaylistStore()
 const optionsTogglerId = `song-${props.song.id}-options-toggler`
 const optionsId = `song-${props.song.id}-options`
 const optionsOpen = ref(false)
 const coverLoaded = ref(false)
-// @ts-ignore
 const defaultOptions: (AppOptionButton | AppOptionLink)[] = [
   {
     text: 'Copy link',
@@ -77,7 +78,7 @@ const userOptions: (AppOptionButton | AppOptionLink)[] = [
   {
     text: 'Remove',
     id: Math.random().toString(),
-    onClick: () => console.log('remove'),
+    onClick: () => removeSongFromPlaylist(),
     destructive: true
   },
   {
@@ -86,6 +87,17 @@ const userOptions: (AppOptionButton | AppOptionLink)[] = [
     onClick: () => console.log('move')
   }
 ]
+const removeSongFromPlaylist = async () => {
+  if (props.playlistId) {
+    const playlist = playlistStore.getPlaylist(props.playlistId)
+    if (playlist) {
+      const playlistSongs = playlist?.songs ? [...playlist.songs] : []
+      await playlistStore.updatePlaylist(props.playlistId, {
+        songs: playlistSongs.filter(id => id !== props.song.id)
+      })
+    }
+  }
+}
 onMounted(() => {
   coverLoaded.value = true
 })

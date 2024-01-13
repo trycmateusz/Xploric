@@ -66,6 +66,7 @@
       <SongList
         :songs="songStore.getPlaylistsSongs(playlist)"
         :playlist-user-id="playlist.userId"
+        :playlist-id="playlist.id"
       />
       <nuxt-link
         class="w-max mt-4 mb-8 mx-auto text-light-blue-lighter text-center main-transition"
@@ -105,7 +106,7 @@ import { convertToDate } from '~/helpers/time'
 import { copyToClipboard } from '~/helpers/clipboard'
 import type { AppOptionLink, AppOptionButton } from '~/types/App'
 definePageMeta({
-  middleware: ['access-token']
+  middleware: ['code-verifier']
 })
 const playlistStore = usePlaylistStore()
 const userStore = useUserStore()
@@ -181,11 +182,25 @@ const deletePlaylist = async () => {
   }
 }
 const createComment = async () => {
-  await commentStore.createComment(comment.value, playlistId, false)
+  await commentStore.createComment(comment.value, playlistId, undefined)
   comment.value = ''
 }
 onMounted(() => {
   coverLoaded.value = true
+})
+onUnmounted(() => {
+  if (userStore.auth) {
+    if
+    ((!userStore.auth.downvotes && commentStore.commentRatingsToUpdate.downvotes.length > 0) ||
+    (!userStore.auth.upvotes && commentStore.commentRatingsToUpdate.upvotes.length > 0) ||
+    (userStore.auth.upvotes && userStore.auth.upvotes.length !== commentStore.commentRatingsToUpdate.upvotes.length) ||
+    (userStore.auth.downvotes && userStore.auth.downvotes.length !== commentStore.commentRatingsToUpdate.downvotes.length)) {
+      userStore.updateUser(userStore.auth.id, {
+        downvotes: commentStore.commentRatingsToUpdate.downvotes,
+        upvotes: commentStore.commentRatingsToUpdate.upvotes
+      })
+    }
+  }
 })
 </script>
 

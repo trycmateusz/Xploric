@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 definePageMeta({
-  middleware: ['auth', 'access-token']
+  middleware: ['auth', 'code-verifier']
 })
 const songStore = useSongStore()
 const userStore = useUserStore()

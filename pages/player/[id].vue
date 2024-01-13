@@ -17,7 +17,7 @@
 <script setup lang="ts">
 definePageMeta({
   layout: 'without-current-player',
-  middleware: ['access-token']
+  middleware: ['code-verifier']
 })
 const songStore = useSongStore()
 const currentAudioStore = useCurrentAudioStore()

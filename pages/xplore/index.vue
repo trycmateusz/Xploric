@@ -40,7 +40,7 @@
 import type { Playlist } from '~/types/Playlist'
 definePageMeta({
   layout: 'without-current-player',
-  middleware: ['access-token']
+  middleware: ['code-verifier']
 })
 const route = useRoute()
 const songStore = useSongStore()

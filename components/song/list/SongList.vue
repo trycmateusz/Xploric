@@ -5,6 +5,7 @@
       :key="song.id"
       :song="song"
       :playlist-user-id="playlistUserId"
+      :playlist-id="playlistId"
     />
   </ul>
   <span
@@ -20,6 +21,7 @@ import type { SpotifyApiSong } from '~/types/Spotify'
 defineProps<{
   songs: SpotifyApiSong[]
   playlistUserId?: string
+  playlistId?: string
 }>()
 </script>
 

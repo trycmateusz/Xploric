@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 const props = defineProps<{
-  bgUrl: string | null
+  bgUrl: string | undefined
 }>()
 const bgLoaded = ref(false)
 const bgImageValue = computed(() => {

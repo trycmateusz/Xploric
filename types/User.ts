@@ -5,10 +5,11 @@ type UserPrivacyOptionsTuple = typeof userPrivacyOptionsAsReadonly
 
 export type UserPrivacyOption = UserPrivacyOptionsTuple[number]
 
-export interface UserRatings {
-  downvotes?: string[]
-  upvotes?: string[]
+export interface UserRatingsNonNullable {
+  downvotes: string[]
+  upvotes: string[]
 }
+export interface UserRatings extends Partial<UserRatingsNonNullable> {}
 export interface User extends UserRatings {
   id: string
   username: string

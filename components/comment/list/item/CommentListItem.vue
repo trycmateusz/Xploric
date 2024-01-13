@@ -20,7 +20,11 @@
         v-if="user"
         class="flex-shrink flex items-center gap-2"
       >
-        <button v-if="userStore.auth?.id === comment.userId" class="main-transition">
+        <button
+          v-if="userStore.auth?.id === comment.userId"
+          class="main-transition"
+          @click="commentStore.deleteComment(props.comment.id, props.comment.responseTo)"
+        >
           <img src="~/assets/img/bin.svg" alt="Remove comment">
         </button>
         <button

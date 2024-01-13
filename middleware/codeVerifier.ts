@@ -24,6 +24,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
       }
       const authUrl = new URL('https://accounts.spotify.com/authorize')
       authUrl.search = new URLSearchParams(redirectParams).toString()
+      console.log(codeVerifier)
       const userAccepted = confirm('This website use\'s Spotify\'s Api to fetch songs, albums, artists etc. Do you understand?')
       if (userAccepted) {
         document.cookie = `redirect=${to.path}`

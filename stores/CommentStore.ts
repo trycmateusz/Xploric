@@ -1,16 +1,17 @@
 import cloneDeep from 'lodash/cloneDeep'
 import type { Comment } from '~/types/Comment'
-import type { UserRatings } from '~/types/User'
-import { fetchMany } from '~/services/fetch'
+import type { UserRatingsNonNullable } from '~/types/User'
+import { fetchOne, fetchMany } from '~/services/fetch'
 import { createResource, updateResource } from '~/services/save'
+import { deleteResource, deleteMany } from '~/services/delete'
 
 export const useCommentStore = defineStore('CommentStore', () => {
   const userStore = useUserStore()
   const playlistStore = usePlaylistStore()
   const comments = ref<Comment[]>([])
-  const commentRatingsToUpdate = ref<UserRatings>({ // initial wartosc musi byc brana od auth usera
-    downvotes: [],
-    upvotes: []
+  const commentRatingsToUpdate = ref<UserRatingsNonNullable>({ // initial wartosc musi byc brana od auth usera
+    downvotes: userStore.auth?.downvotes ? [...userStore.auth.downvotes] : [],
+    upvotes: userStore.auth?.upvotes ? [...userStore.auth.upvotes] : []
   })
   const toggleCommentDownvote = (commentId: string) => {
     if (commentRatingsToUpdate.value.upvotes?.includes(commentId)) {
@@ -19,6 +20,9 @@ export const useCommentStore = defineStore('CommentStore', () => {
     }
     if (!commentRatingsToUpdate.value.downvotes?.includes(commentId)) {
       commentRatingsToUpdate.value.downvotes?.push(commentId)
+    } else {
+      const index = commentRatingsToUpdate.value.downvotes.findIndex(id => id === commentId)
+      commentRatingsToUpdate.value.downvotes?.splice(index, 1)
     }
   }
   const toggleCommentUpvote = (commentId: string) => {
@@ -28,6 +32,9 @@ export const useCommentStore = defineStore('CommentStore', () => {
     }
     if (!commentRatingsToUpdate.value.upvotes?.includes(commentId)) {
       commentRatingsToUpdate.value.upvotes?.push(commentId)
+    } else {
+      const index = commentRatingsToUpdate.value.upvotes.findIndex(id => id === commentId)
+      commentRatingsToUpdate.value.upvotes?.splice(index, 1)
     }
   }
   const setOne = (fetchedComment: Comment) => {
@@ -84,7 +91,7 @@ export const useCommentStore = defineStore('CommentStore', () => {
     }
   }
   const createResponse = async (text: string, commentId: string, playlistId: string): Promise<Comment | undefined> => {
-    const comment = getComment.value(commentId)
+    const comment = await fetchOne<Comment>('comments', commentId)
     if (userStore.auth && comment) {
       const created = await createComment(text, playlistId, comment.id)
       if (created) {
@@ -94,6 +101,37 @@ export const useCommentStore = defineStore('CommentStore', () => {
           responses: commentResponses
         })
         return created
+      }
+    }
+  }
+  const deleteComment = async (id: string, responseTo?: string): Promise<null | undefined> => {
+    const comment = comments.value.find(comment => comment.id === id)
+    const deleted = await deleteResource('comments', id)
+    if (deleted === null) {
+      if (comment) {
+        if (comment.responses) {
+          await deleteMany('comments', comment.responses)
+        }
+        const playlist = playlistStore.getPlaylist(comment.playlistId)
+        if (playlist?.comments) {
+          await playlistStore.updatePlaylist(comment.playlistId, {
+            comments: playlist.comments.filter(commentId => commentId !== comment.id)
+          })
+        }
+      }
+      if (responseTo) {
+        const parentComment = comments.value.find(comment => comment.id === responseTo)
+        if (parentComment) {
+          const parentResponses = parentComment.responses ? [...parentComment.responses] : []
+          await updateComment(parentComment.id, {
+            responses: parentResponses.filter(responseId => responseId !== id)
+          })
+        }
+      }
+      const commentIndex = comments.value.findIndex(comment => comment.id === id)
+      if (commentIndex !== -1) {
+        comments.value.splice(commentIndex, 1)
+        return null
       }
     }
   }
@@ -121,7 +159,9 @@ export const useCommentStore = defineStore('CommentStore', () => {
     createComment,
     createResponse,
     updateComment,
+    deleteComment,
     getPlaylistsComments,
-    getResponses
+    getResponses,
+    getComment
   }
 })

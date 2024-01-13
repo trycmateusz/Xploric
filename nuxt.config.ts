@@ -25,6 +25,12 @@ export default defineNuxtConfig({
     '/my-profile/edit': {
       ssr: false
     },
+    '/my-profile/latest': {
+      ssr: false
+    },
+    '/my-profile/favourites': {
+      ssr: false
+    },
     '/xplore': {
       ssr: false
     },
