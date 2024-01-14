@@ -32,6 +32,13 @@
         class="mt-auto ml-auto"
         @click="emit('save')"
       />
+      <AppButton
+        v-else-if="forMoving"
+        text="Move"
+        styling="primary"
+        class="mt-auto ml-auto"
+        @click="emit('move')"
+      />
       <AppLink
         v-else
         :to="`playlist/${playlist.id}`"
@@ -48,10 +55,12 @@ import type { Playlist } from '~/types/Playlist'
 const playlistStore = usePlaylistStore()
 defineProps<{
   playlist: Playlist
-  forSaving: boolean
+  forSaving?: boolean
+  forMoving?: boolean
 }>()
 const emit = defineEmits<{
   (e: 'save'): void
+  (e: 'move'): void
 }>()
 const coverLoaded = ref(false)
 onMounted(() => {

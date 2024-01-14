@@ -5,7 +5,9 @@
       :key="playlist.id"
       :playlist="playlist"
       :for-saving="forSaving"
+      :for-moving="forMoving"
       @save="emit('save', playlist)"
+      @move="emit('move-song-to', playlist)"
     />
   </ul>
   <span v-else class="flex flex-col text-lg text-gray-main">
@@ -17,10 +19,12 @@
 import type { Playlist } from '~/types/Playlist'
 defineProps<{
   playlists: Playlist[]
-  forSaving: boolean
+  forSaving?: boolean
+  forMoving?: boolean
 }>()
 const emit = defineEmits<{
   (e: 'save', playlist: Playlist): void
+  (e: 'move-song-to', playlist: Playlist): void
 }>()
 </script>
 

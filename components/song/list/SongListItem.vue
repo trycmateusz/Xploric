@@ -54,6 +54,7 @@
 </template>
 
 <script setup lang="ts">
+import { copyToClipboard } from '~/helpers/clipboard'
 import type { SpotifyApiSong } from '~/types/Spotify'
 import type { AppOptionLink, AppOptionButton } from '~/types/App'
 const props = defineProps<{
@@ -61,8 +62,11 @@ const props = defineProps<{
   playlistUserId?: string
   playlistId?: string
 }>()
+const emit = defineEmits<{
+  (e: 'remove'): void
+  (e: 'move'): void
+}>()
 const userStore = useUserStore()
-const playlistStore = usePlaylistStore()
 const optionsTogglerId = `song-${props.song.id}-options-toggler`
 const optionsId = `song-${props.song.id}-options`
 const optionsOpen = ref(false)
@@ -71,33 +75,22 @@ const defaultOptions: (AppOptionButton | AppOptionLink)[] = [
   {
     text: 'Copy link',
     id: Math.random().toString(),
-    onClick: () => console.log('Copy link')
+    onClick: () => copyToClipboard(window.location.href)
   }
 ]
 const userOptions: (AppOptionButton | AppOptionLink)[] = [
   {
     text: 'Remove',
     id: Math.random().toString(),
-    onClick: () => removeSongFromPlaylist(),
+    onClick: () => emit('remove'),
     destructive: true
   },
   {
     text: 'Move',
     id: Math.random().toString(),
-    onClick: () => console.log('move')
+    onClick: () => emit('move')
   }
 ]
-const removeSongFromPlaylist = async () => {
-  if (props.playlistId) {
-    const playlist = playlistStore.getPlaylist(props.playlistId)
-    if (playlist) {
-      const playlistSongs = playlist?.songs ? [...playlist.songs] : []
-      await playlistStore.updatePlaylist(props.playlistId, {
-        songs: playlistSongs.filter(id => id !== props.song.id)
-      })
-    }
-  }
-}
 onMounted(() => {
   coverLoaded.value = true
 })

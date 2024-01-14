@@ -67,6 +67,8 @@
         :songs="songStore.getPlaylistsSongs(playlist)"
         :playlist-user-id="playlist.userId"
         :playlist-id="playlist.id"
+        @remove-song="removeSongFromPlaylist"
+        @move-song="(song: SpotifyApiSong) => movedSong = song"
       />
       <nuxt-link
         class="w-max mt-4 mb-8 mx-auto text-light-blue-lighter text-center main-transition"
@@ -98,13 +100,35 @@
         />
       </form>
     </main>
+    <teleport to="body">
+      <div
+        v-if="movedSong && userStore.auth && otherPlaylistsFetched"
+        class="fixed top-[var(--nav-height)] w-full min-h-[Calc(100svh_-_var(--nav-height))] bg-black-main z-40 overflow-y-auto"
+      >
+        <div class="wrapper flex flex-col p-4 gap-4">
+          <PlaylistList
+            :for-moving="true"
+            :playlists="playlistStore.getUsersPlaylists(userStore.auth).filter(playlist => playlist.id !== playlistId)"
+            @move-song-to="moveSongTo"
+          />
+          <AppButton
+            text="Cancel"
+            styling="secondary"
+            class="ml-auto"
+            @click="movedSong = undefined"
+          />
+        </div>
+      </div>
+    </teleport>
   </div>
 </template>
 
 <script setup lang="ts">
 import { convertToDate } from '~/helpers/time'
 import { copyToClipboard } from '~/helpers/clipboard'
+import type { Playlist } from '~/types/Playlist'
 import type { AppOptionLink, AppOptionButton } from '~/types/App'
+import type { SpotifyApiSong } from '~/types/Spotify'
 definePageMeta({
   middleware: ['code-verifier']
 })
@@ -114,10 +138,13 @@ const songStore = useSongStore()
 const commentStore = useCommentStore()
 const route = useRoute()
 const router = useRouter()
+const { makeBodyFixed, removeFixedFromBody } = useFixedBody()
 const playlistId = route.params.id.toString()
 const playlistOptionsTogglerId = 'playlist-options-toggler'
 const coverLoaded = ref(false)
+const otherPlaylistsFetched = ref(false)
 const playlistOptionsOpen = ref(false)
+const movedSong = ref<SpotifyApiSong | undefined>(undefined)
 const comment = ref('')
 const playlist = computed(() => {
   return playlistStore.getPlaylist(playlistId)
@@ -185,6 +212,27 @@ const createComment = async () => {
   await commentStore.createComment(comment.value, playlistId, undefined)
   comment.value = ''
 }
+const removeSongFromPlaylist = async (song: SpotifyApiSong) => {
+  if (playlist.value) {
+    const playlistSongs = playlist.value?.songs ? [...playlist.value.songs] : []
+    await playlistStore.updatePlaylist(playlist.value.id, {
+      songs: playlistSongs.filter(id => id !== song.id)
+    })
+  }
+}
+const moveSongTo = async (otherPlaylist: Playlist) => {
+  if (playlist.value && movedSong.value) {
+    const movedToUpdated = await playlistStore.updatePlaylist(otherPlaylist.id, {
+      songs: otherPlaylist.songs ? [...otherPlaylist.songs, movedSong.value.id] : [movedSong.value.id]
+    })
+    if (movedToUpdated) {
+      await playlistStore.updatePlaylist(playlist.value.id, {
+        songs: playlist.value.songs ? [...playlist.value.songs].filter(id => id !== movedSong.value?.id) : []
+      })
+    }
+    movedSong.value = undefined
+  }
+}
 onMounted(() => {
   coverLoaded.value = true
 })
@@ -199,6 +247,19 @@ onUnmounted(() => {
         downvotes: commentStore.commentRatingsToUpdate.downvotes,
         upvotes: commentStore.commentRatingsToUpdate.upvotes
       })
+    }
+  }
+})
+watch(movedSong, async () => {
+  if (movedSong.value) {
+    makeBodyFixed()
+  } else {
+    removeFixedFromBody()
+  }
+  if (userStore.auth?.playlists && movedSong.value && !otherPlaylistsFetched.value) {
+    const fetched = await playlistStore.fetchManyPlaylists(userStore.auth.playlists)
+    if (fetched) {
+      otherPlaylistsFetched.value = true
     }
   }
 })

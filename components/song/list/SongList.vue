@@ -6,6 +6,8 @@
       :song="song"
       :playlist-user-id="playlistUserId"
       :playlist-id="playlistId"
+      @move="emit('move-song', song)"
+      @remove="emit('remove-song', song)"
     />
   </ul>
   <span
@@ -22,6 +24,10 @@ defineProps<{
   songs: SpotifyApiSong[]
   playlistUserId?: string
   playlistId?: string
+}>()
+const emit = defineEmits<{
+  (e: 'move-song', song: SpotifyApiSong): void
+  (e: 'remove-song', song: SpotifyApiSong): void
 }>()
 </script>
 

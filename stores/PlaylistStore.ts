@@ -27,10 +27,11 @@ export const usePlaylistStore = defineStore('PlaylistStore', () => {
       setOne(fetchedPlaylist)
     }
   }
-  const fetchManyPlaylists = async (ids: string[]) => {
+  const fetchManyPlaylists = async (ids: string[]): Promise<Playlist[] | undefined> => {
     const fetchedPlaylists = await fetchMany<Playlist>('playlists', ids)
     if (fetchedPlaylists) {
       fetchedPlaylists.forEach(fetchedPlaylist => setOne(fetchedPlaylist))
+      return fetchedPlaylists
     }
   }
   const updatePlaylistCover = async (cover: File, id: string): Promise<string | undefined> => {

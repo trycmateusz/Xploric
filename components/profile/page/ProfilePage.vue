@@ -21,7 +21,7 @@
       <h2 class="text-xl mb-4">
         {{ playlistHeading }}
       </h2>
-      <PlaylistList :for-saving="false" :playlists="usersPlaylists" />
+      <PlaylistList :playlists="usersPlaylists" />
       <nuxt-link
         :to="{ path:'/playlist/create', query: { redirect: route.path } }"
         class="inline-block mx-auto mt-10 text-center text-light-blue-lighter text-xl main-transition"
