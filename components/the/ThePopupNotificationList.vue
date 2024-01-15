@@ -33,7 +33,7 @@ const { notifications, removeNotification } = usePopupNotifications()
 .list-move,
 .list-enter-active,
 .list-leave-active {
-  transition: opacity .3s;
+  transition: opacity .3s, transform .3s;
 }
 .list-leave-active {
   position: absolute;
