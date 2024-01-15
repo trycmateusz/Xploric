@@ -1,5 +1,5 @@
 <template>
-  <li class="flex flex-col gap-4 p-4 bg-black-lighter rounded-xl xs:flex-row xs:max-w-full overflow-hidden">
+  <li class="flex flex-col gap-4 p-4 bg-black-lighter rounded-xl xs:flex-row xs:max-w-full">
     <img
       v-if="coverLoaded"
       :src="song.album.images[0].url"
@@ -42,7 +42,7 @@
 
       <nuxt-link
         class="w-[2rem] main-transition"
-        :to="`/player/${song.id}`"
+        :to="{ path: `/player/${song.id}`, query: playlistId ? { fromPlaylist: playlistId } : {} }"
       >
         <img
           src="~/assets/img/play-circle.svg"
@@ -54,7 +54,7 @@
 </template>
 
 <script setup lang="ts">
-import { copyToClipboard } from '~/helpers/clipboard'
+import { copyLink } from '~/helpers/clipboard'
 import type { SpotifyApiSong } from '~/types/Spotify'
 import type { AppOptionLink, AppOptionButton } from '~/types/App'
 const props = defineProps<{
@@ -75,7 +75,7 @@ const defaultOptions: (AppOptionButton | AppOptionLink)[] = [
   {
     text: 'Copy link',
     id: Math.random().toString(),
-    onClick: () => copyToClipboard(window.location.href)
+    onClick: () => copyLink()
   }
 ]
 const userOptions: (AppOptionButton | AppOptionLink)[] = [

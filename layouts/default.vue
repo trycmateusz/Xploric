@@ -1,6 +1,7 @@
 <template>
   <div class="min-h-[100svh] bg-black-main">
     <TheNavigation />
+    <ThePopupNotificationList />
     <slot />
     <TheCurrentPlayer
       v-if="currentAudioStore.current"

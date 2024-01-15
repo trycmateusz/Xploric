@@ -3,7 +3,7 @@
     <li
       v-for="option in options"
       :key="option.id"
-      class="bg-black-main border-b border-black-lighter text-center last:border-b-0 "
+      class="bg-black-main border-b border-black-lighter text-center last:border-b-0"
       :class="{ 'text-red-main': option.destructive }"
     >
       <nuxt-link
@@ -15,7 +15,7 @@
       </nuxt-link>
       <button
         v-if="'onClick' in option"
-        class="w-full p-4 main-transition focus:-outline-offset-4"
+        class="block w-full min-w-max p-4 main-transition focus:-outline-offset-4"
         @click="handleOnClick(option)"
       >
         {{ option.text }}

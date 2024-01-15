@@ -23,7 +23,6 @@ export default defineNuxtRouteMiddleware(async () => {
           code_verifier: codeVerifier
         })
       })
-      document.cookie = `codeVerifier=;expires=${new Date().getTime()};Max-Age=0`
       if (error.value) {
         console.log('Error when fetching access token', error.value)
         return abortNavigation()
@@ -31,10 +30,11 @@ export default defineNuxtRouteMiddleware(async () => {
       if (data.value) {
         console.log(data.value)
         const expires = new Date(Date.now() + (+data.value.expires_in * 1000))
-        document.cookie = `access_token=${data.value.access_token}; Max-Age=${expires}`
+        document.cookie = `access_token=${data.value.access_token}; expires=${expires}; Max-Age=${expires}`
         const redirectPath = getCookieValue('redirect')
         if (redirectPath) {
           document.cookie = `redirect=;expires=${new Date().getTime()};Max-Age=0`
+          document.cookie = `codeVerifier=;expires=${new Date().getTime()};Max-Age=0`
           return navigateTo(redirectPath)
         }
       }

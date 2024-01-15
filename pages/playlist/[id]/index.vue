@@ -125,7 +125,7 @@
 
 <script setup lang="ts">
 import { convertToDate } from '~/helpers/time'
-import { copyToClipboard } from '~/helpers/clipboard'
+import { copyLink } from '~/helpers/clipboard'
 import type { Playlist } from '~/types/Playlist'
 import type { AppOptionLink, AppOptionButton } from '~/types/App'
 import type { SpotifyApiSong } from '~/types/Spotify'
@@ -138,6 +138,7 @@ const songStore = useSongStore()
 const commentStore = useCommentStore()
 const route = useRoute()
 const router = useRouter()
+const { addNotification } = usePopupNotifications()
 const { makeBodyFixed, removeFixedFromBody } = useFixedBody()
 const playlistId = route.params.id.toString()
 const playlistOptionsTogglerId = 'playlist-options-toggler'
@@ -172,7 +173,7 @@ const defaultOptions: (AppOptionLink | AppOptionButton)[] = [
   {
     text: 'Copy link',
     id: Math.random().toString(),
-    onClick: () => copyToClipboard(window.location.href)
+    onClick: () => copyLink()
   }
 ]
 const userOptions: (AppOptionLink | AppOptionButton)[] = [
@@ -215,9 +216,12 @@ const createComment = async () => {
 const removeSongFromPlaylist = async (song: SpotifyApiSong) => {
   if (playlist.value) {
     const playlistSongs = playlist.value?.songs ? [...playlist.value.songs] : []
-    await playlistStore.updatePlaylist(playlist.value.id, {
+    const updated = await playlistStore.updatePlaylist(playlist.value.id, {
       songs: playlistSongs.filter(id => id !== song.id)
     })
+    if (updated) {
+      addNotification('Song removed')
+    }
   }
 }
 const moveSongTo = async (otherPlaylist: Playlist) => {
@@ -226,9 +230,12 @@ const moveSongTo = async (otherPlaylist: Playlist) => {
       songs: otherPlaylist.songs ? [...otherPlaylist.songs, movedSong.value.id] : [movedSong.value.id]
     })
     if (movedToUpdated) {
-      await playlistStore.updatePlaylist(playlist.value.id, {
+      const updated = await playlistStore.updatePlaylist(playlist.value.id, {
         songs: playlist.value.songs ? [...playlist.value.songs].filter(id => id !== movedSong.value?.id) : []
       })
+      if (updated) {
+        addNotification('Song moved')
+      }
     }
     movedSong.value = undefined
   }
