@@ -35,6 +35,8 @@ const mainMenuLinks: MainMenuLink[] = [
     colorClass: 'text-tomato-main'
   }
 ]
+const runtimeConfig = useRuntimeConfig()
+console.log(runtimeConfig.public.spotifyClientId)
 </script>
 
 <style scoped>
