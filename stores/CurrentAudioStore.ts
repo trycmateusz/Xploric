@@ -4,6 +4,7 @@ import { getDurationMinutesAndSecondsInProperFormatFromSeconds } from '~/helpers
 
 export const useCurrentAudioStore = defineStore('CurrentAudioStore', () => {
   const songStore = useSongStore()
+  const playlistStore = usePlaylistStore()
   const ignoredAtFirst = ref(false)
   const maxProgressValue = 500
   const maxDurationInMs = 30000
@@ -47,18 +48,36 @@ export const useCurrentAudioStore = defineStore('CurrentAudioStore', () => {
   const setCurrentTime = (time: number) => {
     currentAudioTime.value = time
   }
-  const setCurrentAudio = (tag: HTMLAudioElement) => {
-    if (currentAudio.value && currentAudio.value.id === tag.id) {
-      return
-    }
-    currentAudio.value = tag.cloneNode(true) as HTMLAudioElement
-    currentAudio.value.volume = volume.value
-    currentAudio.value.addEventListener('timeupdate', () => {
-      if (currentAudio.value) {
-        setCurrentTime(currentAudio.value.currentTime)
+  const setCurrentAudio = (tag: HTMLAudioElement, playNextAfterEnd: boolean) => {
+    if (!currentAudio.value || currentAudio.value.id !== tag.id) {
+      currentAudio.value = tag.cloneNode(true) as HTMLAudioElement
+      currentAudio.value.volume = volume.value
+      currentAudio.value.addEventListener('timeupdate', () => {
+        if (currentAudio.value) {
+          setCurrentTime(currentAudio.value.currentTime)
+        }
+      })
+      if (playNextAfterEnd) {
+        currentAudio.value.addEventListener('ended', () => {
+          endCurrent()
+          playAnotherSongFromPlaylist('next')
+        })
+      } else {
+        currentAudio.value.addEventListener('ended', endCurrent)
       }
-    })
-    currentAudio.value.addEventListener('ended', endCurrent)
+    }
+  }
+  const createAudioTag = (id: string, src: string, songName: string): HTMLAudioElement => {
+    const tag = document.createElement('audio')
+    tag.setAttribute('id', id)
+    tag.setAttribute('src', src)
+    tag.setAttribute('controls', '')
+    tag.setAttribute('preload', 'metadata')
+    const downloadAnchor = document.createElement('a')
+    downloadAnchor.setAttribute('href', src)
+    downloadAnchor.textContent = `Download ${songName}`
+    tag.append(downloadAnchor)
+    return tag
   }
   const setCurrentAudioTime = (time: number) => {
     if (currentAudio.value) {
@@ -103,20 +122,35 @@ export const useCurrentAudioStore = defineStore('CurrentAudioStore', () => {
       }
     }
   }
-  const playPreviousSongOrRewindToBeginning = (isFromPlaylist: boolean) => {
-    if (currentAudio.value) {
-      if (!isFromPlaylist || (isFromPlaylist && currentAudio.value.currentTime < 5)) {
-        currentAudio.value.currentTime = 0
-      } else {
-        console.log('play previous')
+  const playAnotherSongFromPlaylist = async (order: 'next' | 'previous') => {
+    if (current.value) {
+      const playlist = playlistStore.playlists.find(playlist => playlist.songs?.includes(current.value!.id))
+      if (playlist?.songs) {
+        const index = playlist.songs.findIndex(id => id === current.value!.id)
+        let songIndex: number
+        if (order === 'next') {
+          if (index === playlist.songs.length - 1) {
+            songIndex = 0
+          } else {
+            songIndex = index + 1
+          }
+        } else if (index === 0) {
+          songIndex = playlist.songs.length - 1
+        } else {
+          songIndex = index - 1
+        }
+        const song = await songStore.fetchOneSong(playlist.songs[songIndex])
+        if (song) {
+          const tag = createAudioTag(song.id, song.preview_url!, song.name)
+          setCurrent(song)
+          await nextTick()
+          setCurrentAudio(tag, true)
+        }
       }
     }
   }
-  const playNextSong = () => {
-    console.log('play next')
-  }
   watch(current, () => {
-    pauseCurrent()
+    endCurrent()
     currentPlaying.value = false
     currentAudio.value = undefined
     currentAudioTime.value = 0
@@ -145,12 +179,12 @@ export const useCurrentAudioStore = defineStore('CurrentAudioStore', () => {
     setCurrentTime,
     setCurrentAudio,
     setCurrentAudioTime,
+    createAudioTag,
     pauseCurrent,
     playCurrent,
     endCurrent,
+    playAnotherSongFromPlaylist,
     goForwardFiveSeconds,
-    goBackFiveSeconds,
-    playPreviousSongOrRewindToBeginning,
-    playNextSong
+    goBackFiveSeconds
   }
 })

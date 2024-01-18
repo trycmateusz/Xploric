@@ -55,10 +55,11 @@ export const useSongStore = defineStore('SongStore', () => {
       setOneIfNotSetAlready(randomSong, setToCurrent)
     }
   }
-  const fetchOneSong = async (songId: string) => {
+  const fetchOneSong = async (songId: string): Promise<SpotifyApiSong | undefined> => {
     const fetchedSong = await fetchOne<SpotifyApiSong>('tracks', songId)
     if (fetchedSong) {
       setOneIfNotSetAlready(fetchedSong, true)
+      return fetchedSong
     }
   }
   const fetchManySongs = async (songIds: string[]) => {

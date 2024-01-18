@@ -42,7 +42,7 @@
 
       <nuxt-link
         class="w-[2rem] main-transition"
-        :to="{ path: `/player/${song.id}`, query: playlistId ? { fromPlaylist: playlistId } : {} }"
+        :to="{ path: `/player/${song.id}`, query: { fromPlaylist: playlistId } }"
       >
         <img
           src="~/assets/img/play-circle.svg"

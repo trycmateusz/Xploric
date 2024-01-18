@@ -40,7 +40,7 @@
 import type { Playlist } from '~/types/Playlist'
 definePageMeta({
   layout: 'without-current-player',
-  middleware: ['code-verifier']
+  middleware: ['spotify-auth']
 })
 const route = useRoute()
 const songStore = useSongStore()

@@ -130,7 +130,7 @@ import type { Playlist } from '~/types/Playlist'
 import type { AppOptionLink, AppOptionButton } from '~/types/App'
 import type { SpotifyApiSong } from '~/types/Spotify'
 definePageMeta({
-  middleware: ['code-verifier']
+  middleware: ['spotify-auth']
 })
 const playlistStore = usePlaylistStore()
 const userStore = useUserStore()

@@ -9,7 +9,7 @@
         <div
           class="flex flex-grow flex-col justify-between"
         >
-          <nuxt-link :to="`/player/${current.id}`" class="flex flex-col main-transition">
+          <nuxt-link :to="{ path: `/player/${current.id}` }" class="flex flex-col main-transition">
             <span class="text-lg leading-none">
               {{ current.name }}
             </span>
@@ -21,20 +21,37 @@
             <MusicPlayerControls
               :from-playlist="true"
               :without-play="true"
+              @play-next="currentAudioStore.playAnotherSongFromPlaylist('next')"
+              @play-previous="playPreviousSongOrRewindToBeginning"
             />
           </div>
         </div>
       </div>
       <MusicPlayerProgress :on-whole-wrapper="true" />
+      <MusicPlayerAudio
+        v-if="current.preview_url"
+        class="hidden"
+        :song-id="current.id"
+        :song-name="current.name"
+        :preview-url="current.preview_url"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { SpotifyApiSong } from '~/types/Spotify'
+const currentAudioStore = useCurrentAudioStore()
 defineProps<{
   current: SpotifyApiSong
 }>()
+const playPreviousSongOrRewindToBeginning = () => {
+  if (currentAudioStore.currentAudioTime > 5) {
+    currentAudioStore.setCurrentAudioTime(0)
+  } else {
+    currentAudioStore.playAnotherSongFromPlaylist('previous')
+  }
+}
 </script>
 
 <style scoped>

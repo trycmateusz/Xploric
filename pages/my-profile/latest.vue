@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 definePageMeta({
-  middleware: ['code-verifier']
+  middleware: ['spotify-auth']
 })
 const songStore = useSongStore()
 </script>

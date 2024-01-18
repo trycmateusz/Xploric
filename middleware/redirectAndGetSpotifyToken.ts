@@ -28,7 +28,6 @@ export default defineNuxtRouteMiddleware(async () => {
         return abortNavigation()
       }
       if (data.value) {
-        console.log(data.value)
         const expires = new Date(Date.now() + (+data.value.expires_in * 1000))
         document.cookie = `access_token=${data.value.access_token}; expires=${expires}; Max-Age=${expires}`
         const redirectPath = getCookieValue('redirect')

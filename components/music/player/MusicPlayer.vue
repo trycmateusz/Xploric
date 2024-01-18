@@ -55,7 +55,7 @@
         :song-id="song.id"
         :preview-url="song.preview_url"
         :song-name="song.name"
-        @set-audio="(tag) => currentAudioStore.setCurrentAudio(tag)"
+        @set-audio="(tag) => currentAudioStore.setCurrentAudio(tag, false)"
         @audio-data-loaded="emit('audio-data-loaded')"
       />
       <MusicPlayerDuration />
@@ -63,6 +63,8 @@
       <MusicPlayerControls
         :from-playlist="fromPlaylist"
         :without-play="false"
+        @play-next="emit('play-next')"
+        @play-previous="emit('play-previous')"
       />
     </div>
     <div v-if="!fromPlaylist" class="flex justify-between mt-8">
@@ -115,6 +117,8 @@ const emit = defineEmits<{
   (e: 'save-song'): void
   (e: 'set-audio', tag: HTMLAudioElement): void
   (e: 'audio-data-loaded'): void
+  (e: 'play-next'): void
+  (e: 'play-previous'): void
 }>()
 const rotateMultiplier = 15
 const audioRerenderKey = ref(0)
