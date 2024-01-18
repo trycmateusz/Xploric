@@ -84,6 +84,11 @@ export const useCurrentAudioStore = defineStore('CurrentAudioStore', () => {
       currentAudio.value.currentTime = time
     }
   }
+  const setCurrentAudioToPlayNextAfterEnd = () => {
+    currentAudio.value?.addEventListener('ended', () => {
+      playAnotherSongFromPlaylist('next')
+    })
+  }
   const playCurrent = () => {
     if (currentAudio.value) {
       currentAudio.value.play()
@@ -179,6 +184,7 @@ export const useCurrentAudioStore = defineStore('CurrentAudioStore', () => {
     setCurrentTime,
     setCurrentAudio,
     setCurrentAudioTime,
+    setCurrentAudioToPlayNextAfterEnd,
     createAudioTag,
     pauseCurrent,
     playCurrent,

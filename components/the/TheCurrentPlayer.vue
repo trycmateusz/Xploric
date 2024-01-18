@@ -52,6 +52,9 @@ const playPreviousSongOrRewindToBeginning = () => {
     currentAudioStore.playAnotherSongFromPlaylist('previous')
   }
 }
+onMounted(() => {
+  currentAudioStore.setCurrentAudioToPlayNextAfterEnd()
+})
 </script>
 
 <style scoped>
