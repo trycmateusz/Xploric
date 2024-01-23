@@ -1,6 +1,5 @@
 <template>
   <main>
-    <TheNavigationBack />
     <div class="wrapper">
       <MusicPlayer
         v-if="song"
@@ -20,7 +19,7 @@
 import type { Playlist } from '~/types/Playlist'
 definePageMeta({
   layout: 'without-current-player',
-  middleware: ['spotify-auth']
+  middleware: ['spotify-auth', 'auth']
 })
 const songStore = useSongStore()
 const currentAudioStore = useCurrentAudioStore()
@@ -40,7 +39,7 @@ let playlist: Playlist | undefined
 if (fromPlaylist) {
   playlist = await playlistStore.fetchPlaylist(fromPlaylist)
   if (playlist) {
-    await playlistStore.updatePlaylist(playlist.id, {
+    playlistStore.updatePlaylist(playlist.id, {
       listenCounter: playlist.listenCounter += 1
     })
   }

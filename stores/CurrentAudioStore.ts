@@ -31,6 +31,9 @@ export const useCurrentAudioStore = defineStore('CurrentAudioStore', () => {
       return Math.floor(currentAudioTime.value / (current.value.duration_ms / 1000) * maxProgressValue)
     }
   })
+  const setVolume = (value: number) => {
+    volume.value = value
+  }
   const setCurrent = (song: SpotifyApiSong | null) => {
     if (song) {
       const maxDuration = song.duration_ms > maxDurationInMs ? maxDurationInMs : song.duration_ms
@@ -170,9 +173,16 @@ export const useCurrentAudioStore = defineStore('CurrentAudioStore', () => {
       ignoredAtFirst.value = true
     }
   })
+  watch(volume, () => {
+    document.cookie = `volume=${volume.value}`
+    if(currentAudio.value){
+      currentAudio.value.volume = volume.value
+    }
+  })
   return {
     maxProgressValue,
     current,
+    volume,
     currentPlaying,
     currentAudio,
     currentAudioTime,
@@ -180,6 +190,7 @@ export const useCurrentAudioStore = defineStore('CurrentAudioStore', () => {
     getCurrentProgress,
     getCurrentFullDurationText,
     getCurrentListenedDurationText,
+    setVolume,
     setCurrent,
     setCurrentTime,
     setCurrentAudio,

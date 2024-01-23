@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 definePageMeta({
-  middleware: ['redirect-and-get-spotify-token']
+  middleware: ['auth', 'redirect-and-get-spotify-token']
 })
 </script>
 

@@ -4,6 +4,7 @@
       v-if="currentAudioStore.current"
       :song="currentAudioStore.current"
       :from-playlist="false"
+      :without-next="true"
       class="min-h-[Calc(100svh_-_var(--nav-height))]"
       @save-song="isBeingSaved = true"
       @audio-data-loaded="currentAudioStore.currentAudioLoaded = true"
@@ -40,7 +41,7 @@
 import type { Playlist } from '~/types/Playlist'
 definePageMeta({
   layout: 'without-current-player',
-  middleware: ['spotify-auth']
+  middleware: ['spotify-auth', 'auth']
 })
 const route = useRoute()
 const songStore = useSongStore()

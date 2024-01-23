@@ -1,6 +1,7 @@
 <template>
   <div class="min-h-[100svh] bg-black-main">
     <TheNavigation />
+    <TheSubnavigation />
     <ThePopupNotificationList />
     <slot />
     <TheCurrentPlayer
@@ -13,8 +14,6 @@
 <script setup lang="ts">
 const userStore = useUserStore()
 const currentAudioStore = useCurrentAudioStore()
-await userStore.fetchUser('0')
-userStore.setAuth(userStore.users[0])
 </script>
 
 <style scoped>

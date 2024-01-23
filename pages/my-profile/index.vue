@@ -9,6 +9,9 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  middleware: ['auth']
+})
 const playlistStore = usePlaylistStore()
 const userStore = useUserStore()
 await playlistStore.fetchPlaylists()

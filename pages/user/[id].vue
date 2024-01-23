@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
 definePageMeta({
-  middleware: ['own-profile']
+  middleware: ['auth', 'own-profile']
 })
 const userStore = useUserStore()
 const route = useRoute()

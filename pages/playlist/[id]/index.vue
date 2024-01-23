@@ -1,6 +1,5 @@
 <template>
   <div>
-    <TheNavigationBack />
     <main v-if="playlist" class="flex flex-col wrapper p-4 text-white-main">
       <div class="grid grid-cols-1 gap-4 xs:grid-cols-2">
         <div class="bg-black-lighter rounded-2xl aspect-square overflow-hidden">
@@ -130,7 +129,7 @@ import type { Playlist } from '~/types/Playlist'
 import type { AppOptionLink, AppOptionButton } from '~/types/App'
 import type { SpotifyApiSong } from '~/types/Spotify'
 definePageMeta({
-  middleware: ['spotify-auth']
+  middleware: ['spotify-auth', 'auth']
 })
 const playlistStore = usePlaylistStore()
 const userStore = useUserStore()

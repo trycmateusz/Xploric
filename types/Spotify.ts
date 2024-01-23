@@ -6,12 +6,14 @@ export interface SpotifyApiSongAlbum {
   id: string
   images: SpotiyfyApiSongAlbumCover[]
   name: string
+  uri: string
   album_type: 'single' | string
 }
 
 export interface SpotifyApiSongArtist {
   id: string
   name: string
+  uri: string
 }
 
 export interface SpotifyApiSong {

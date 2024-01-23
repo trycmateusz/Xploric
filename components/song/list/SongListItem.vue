@@ -11,9 +11,12 @@
       <span class="block text-lg leading-none overflow-hidden">
         {{ song.name }}
       </span>
-      <span class="block text-gray-main overflow-hidden">
+      <nuxt-link 
+        :to="song.artists[0].uri" 
+        class="block text-gray-main overflow-hidden main-transition"
+      >
         {{ song.artists[0].name }}
-      </span>
+      </nuxt-link>
     </div>
     <div class="flex gap-4 justify-between xs:flex-col xs:ml-auto">
       <div class="relative">

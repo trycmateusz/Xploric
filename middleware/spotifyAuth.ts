@@ -4,7 +4,7 @@ import { getCookie } from '~/helpers/cookie'
 export default defineNuxtRouteMiddleware(async (to) => {
   const runtimeConfig = useRuntimeConfig()
   const { redirectUri } = useRedirectUri()
-  const accessTokenCookie = getCookie('access_token')
+  const accessTokenCookie = getCookie('spotify_access_token')
   if (!accessTokenCookie) {
     const urlParams = new URLSearchParams(window.location.search)
     const responseError = urlParams.get('error')

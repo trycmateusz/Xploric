@@ -10,7 +10,7 @@
     <button @click="currentAudioStore.goForwardFiveSeconds()">
       <img src="~/assets/img/forward-5-seconds.svg" alt="Go forward 5 seconds">
     </button>
-    <button @click="playNextSong">
+    <button v-if="!withoutNext" @click="playNextSong">
       <img src="~/assets/img/next-song.svg" alt="Play next song on the playlist">
     </button>
   </div>
@@ -21,6 +21,7 @@ const currentAudioStore = useCurrentAudioStore()
 const props = defineProps<{
   fromPlaylist: boolean
   withoutPlay: boolean
+  withoutNext?: boolean
 }>()
 const emit = defineEmits<{
   (e: 'play-next'): void

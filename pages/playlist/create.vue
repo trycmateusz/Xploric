@@ -1,6 +1,5 @@
 <template>
   <div>
-    <TheNavigationBack />
     <main class="bg-black-main text-white-main">
       <form class="wrapper flex flex-col gap-4 p-4" @submit.prevent="createPlaylist">
         <PlaylistEditImage
@@ -39,6 +38,9 @@
 
 <script setup lang="ts">
 import type { PlaylistForm } from '~/types/Playlist'
+definePageMeta({
+  middleware: ['auth']
+})
 const playlistStore = usePlaylistStore()
 const router = useRouter()
 const route = useRoute()

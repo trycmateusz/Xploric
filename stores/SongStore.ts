@@ -80,8 +80,11 @@ export const useSongStore = defineStore('SongStore', () => {
       } else {
         lastTenListenedTo.value.shift()
       }
+      lastTenListenedTo.value.push(songId)
     }
-    lastTenListenedTo.value.push(songId)
+    else if (isSetIndex === -1) {
+      lastTenListenedTo.value.push(songId)
+    }
   }
   return {
     songs,

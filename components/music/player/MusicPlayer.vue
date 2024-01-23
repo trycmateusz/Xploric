@@ -8,22 +8,28 @@
       <span class="text-2xl">
         {{ song.name }}
       </span>
-      <span class="flex gap-2 items-center text-lg text-gray-main">
+      <nuxt-link 
+        target="_blank" 
+        :to="song.artists[0].uri" 
+        class="flex gap-2 items-center text-lg text-gray-main main-transition"
+      >
         <img src="~/assets/img/artist.svg" alt="">
         <span>
           {{ song.artists[0].name }}
         </span>
-      </span>
-      <span
+      </nuxt-link>
+      <nuxt-link
         v-if="song.album.album_type !== 'single'"
-        class="flex gap-2 items-center text-lg"
+        :to="song.album.uri"
+        target="_blank"
+        class="flex gap-2 items-center text-lg main-transition"
         :class="{ 'opacity-70': song.album.album_type === 'single' }"
       >
         <img src="~/assets/img/album-light.svg" class="h-[1em]" alt="">
         <span>
           {{ song.album.name }}
         </span>
-      </span>
+      </nuxt-link>
     </div>
     <div class="relative ml-auto mr-auto mt-8 max-w-[400px] aspect-square">
       <img
@@ -43,11 +49,14 @@
           }
         }"
       >
-      <img
-        class="absolute top-1/2 left-1/2 max-w-none h-[130%] opacity-25 aspect-square blur-[50px] -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+      <div class="absolute top-1/2 left-1/2 max-w-none h-[120%] aspect-square opacity-20 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+        <img
+        class="blur-lg"
         :src="song.album.images[0].url"
         alt=""
-      >
+        >
+      </div>
+    
     </div>
     <div v-if="song.preview_url" class="mt-8">
       <MusicPlayerAudio
@@ -63,6 +72,7 @@
       <MusicPlayerControls
         :from-playlist="fromPlaylist"
         :without-play="false"
+        :without-next="withoutNext"
         @play-next="emit('play-next')"
         @play-previous="emit('play-previous')"
       />
@@ -112,6 +122,7 @@ const userStore = useUserStore()
 const props = defineProps<{
   song: SpotifyApiSong
   fromPlaylist: boolean
+  withoutNext?: boolean
 }>()
 const emit = defineEmits<{
   (e: 'save-song'): void

@@ -112,11 +112,11 @@ const userLinks = computed<Link[]>(() => {
   } else {
     return [
       {
-        to: '/',
+        to: '/login',
         text: 'Login'
       },
       {
-        to: '/',
+        to: '/register',
         text: 'Register'
       }
     ]
