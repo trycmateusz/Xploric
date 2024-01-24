@@ -137,7 +137,7 @@ const songStore = useSongStore()
 const commentStore = useCommentStore()
 const route = useRoute()
 const router = useRouter()
-const { addNotification } = usePopupNotifications()
+const { addToast } = useToasts()
 const { makeBodyFixed, removeFixedFromBody } = useFixedBody()
 const playlistId = route.params.id.toString()
 const playlistOptionsTogglerId = 'playlist-options-toggler'
@@ -219,7 +219,7 @@ const removeSongFromPlaylist = async (song: SpotifyApiSong) => {
       songs: playlistSongs.filter(id => id !== song.id)
     })
     if (updated) {
-      addNotification('Song removed')
+      addToast('Song removed')
     }
   }
 }
@@ -233,7 +233,7 @@ const moveSongTo = async (otherPlaylist: Playlist) => {
         songs: playlist.value.songs ? [...playlist.value.songs].filter(id => id !== movedSong.value?.id) : []
       })
       if (updated) {
-        addNotification('Song moved')
+        addToast('Song moved')
       }
     }
     movedSong.value = undefined

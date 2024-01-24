@@ -2,7 +2,7 @@
   <div class="min-h-[100svh] bg-black-main">
     <TheNavigation />
     <TheSubnavigation />
-    <ThePopupNotificationList />
+    <TheToastList />
     <slot />
     <TheCurrentPlayer
       v-if="currentAudioStore.current"

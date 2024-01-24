@@ -5,7 +5,7 @@ const uploadImageToBucketAndReturnUrl = async (file: File, collection: string, n
   const runtimeConfig = useRuntimeConfig()
   const headers = getHeaderWithAuthorization()
   headers.append('Content-Type', file.type)
-  const url = `https://firebasestorage.googleapis.com/v0/b/${runtimeConfig.public.apiStorageId}.appspot.com/o/${collection}%2F${name}.${file.type.split('/')[1]}?alt=media`
+  const url = `https://firebasestorage.googleapis.com/v0/b/${runtimeConfig.public.apiId}.appspot.com/o/${collection}%2F${name}.${file.type.split('/')[1]}?alt=media`
   const { data, error } = await useFetch<BucketUploadResponse>(url, {
     method: 'post',
     headers,

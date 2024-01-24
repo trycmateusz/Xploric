@@ -5,19 +5,19 @@
     >
       <transition-group name="list">
         <li
-          v-for="notification in notifications"
-          :key="notification.id"
+          v-for="toast in toasts"
+          :key="toast.id"
           class="relative rounded-md bg-black-darker border border-black-lighter text-center text-white px-12 py-4 pointer-events-auto"
         >
           <button
-            aria-label="Remove notification"
+            aria-label="Remove toast"
             class="absolute top-0 right-0 px-2 py-1 leading-none text-gray-main"
-            @click="removeNotification(notification.id)"
+            @click="removeToast(toast.id)"
           >
             x
           </button>
           <span>
-            {{ notification.message }}
+            {{ toast.message }}
           </span>
         </li>
       </transition-group>
@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-const { notifications, removeNotification } = usePopupNotifications()
+const { toasts, removeToast } = useToasts()
 </script>
 
 <style scoped>

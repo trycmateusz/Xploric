@@ -7,7 +7,7 @@ export default defineNuxtConfig({
     public: {
       baseApiUrl: process.env.BASE_API_URL,
       baseStorageUrl: process.env.BASE_STORAGE_URL,
-      apiStorageId: process.env.API_STORAGE_ID,
+      apiId: process.env.API_ID,
       spotifyClientId: process.env.SPOTIFY_CLIENT_ID,
       spotifyBaseUrl: process.env.SPOTIFY_BASE_URL
     }

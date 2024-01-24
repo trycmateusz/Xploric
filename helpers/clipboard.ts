@@ -8,9 +8,9 @@ export const copyToClipboard = async (text: string): Promise<string | undefined>
 }
 
 export const copyLink = async () => {
-  const { addNotification } = usePopupNotifications()
+  const { addToast } = useToasts()
   const copied = await copyToClipboard(window.location.href)
   if (copied) {
-    addNotification('Link copied')
+    addToast('Link copied')
   }
 }

@@ -27,6 +27,7 @@ module.exports = {
     sourceType: 'module'
   },
   rules: {
+    'no-console': 'warn',
     'vue/multi-word-component-names': 0,
     semi: ['error', 'never'],
     quotes: ['error', 'single'],
