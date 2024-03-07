@@ -98,29 +98,29 @@ const links: Link[] = [
 ]
 
 const userLinks = computed<Link[]>(() => {
-  if (userStore.auth) {
-    return [
-      {
-        to: '/my-profile',
-        text: 'My Account'
-      },
-      {
-        to: '/',
-        text: 'Logout'
-      }
-    ]
-  } else {
-    return [
-      {
-        to: '/login',
-        text: 'Login'
-      },
-      {
-        to: '/register',
-        text: 'Register'
-      }
-    ]
-  }
+  // if (userStore.auth) {
+  return [
+    {
+      to: '/my-profile',
+      text: 'My Account'
+    },
+    {
+      to: '/',
+      text: 'Logout'
+    }
+  ]
+  // } else {
+  //   return [
+  //     {
+  //       to: '/login',
+  //       text: 'Login'
+  //     },
+  //     {
+  //       to: '/register',
+  //       text: 'Register'
+  //     }
+  //   ]
+  // }
 })
 const burgerAriaControls = 'main-navigation-links'
 const userAriaControls = 'main-navigation-user-links'
