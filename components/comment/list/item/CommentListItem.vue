@@ -79,6 +79,7 @@ const isRatingNegative = computed(() => {
 const user = computed(() => {
   return userStore.getUser(props.comment.userId)
 })
+console.log(user.value)
 const replyToComment = async (text: string) => {
   let replied: Comment | undefined
   if (props.comment.responseTo) {

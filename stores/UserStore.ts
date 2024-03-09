@@ -3,8 +3,22 @@ import { fetchOne } from '~/services/fetch'
 import { updateResource } from '~/services/save'
 
 export const useUserStore = defineStore('UserStore', () => {
-  const users = ref<User[]>([])
-  const auth = ref<User | null>(null)
+  const users = ref<User[]>([
+    {
+      id: '0',
+      username: 'tester-testowy',
+      public: 'Always',
+      inReviews: 'Always'
+    }
+  ])
+  const auth = ref<User | null>(
+    {
+      id: '0',
+      username: 'tester-testowy',
+      public: 'Always',
+      inReviews: 'Always'
+    }
+  )
   const setAuth = (user: User) => {
     if (!auth.value || auth.value.id !== user.id) {
       auth.value = user
