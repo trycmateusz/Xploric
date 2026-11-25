@@ -28,12 +28,12 @@ export default defineNuxtRouteMiddleware(async () => {
         return abortNavigation()
       }
       if (data.value) {
-        const expires = new Date(Date.now() + (+data.value.expires_in * 1000))
-        document.cookie = `spotify_access_token=${data.value.access_token}; expires=${expires}; Max-Age=${expires}`
+        const expiresIn = Number(data.value.expires_in);
+        document.cookie = `spotify_access_token=${encodeURIComponent(data.value.access_token)}; Max-Age=${expiresIn}; path=/; SameSite=Lax`;
         const redirectPath = getCookieValue('redirect')
         if (redirectPath) {
-          document.cookie = `redirect=;expires=${new Date().getTime()};Max-Age=0`
-          document.cookie = `codeVerifier=;expires=${new Date().getTime()};Max-Age=0`
+          document.cookie = "redirect=; Max-Age=0; path=/";
+          document.cookie = "codeVerifier=; Max-Age=0; path=/";
           return navigateTo(redirectPath)
         }
       }

@@ -33,7 +33,7 @@ const props = defineProps<{
   name: string
   label: string
   error?: string
-  attrs: Object
+  attrs?: Object
   autocomplete: string
   modelValue: ModelValue
 }>()
