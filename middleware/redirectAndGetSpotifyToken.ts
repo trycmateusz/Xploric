@@ -29,7 +29,7 @@ export default defineNuxtRouteMiddleware(async () => {
       }
       if (data.value) {
         const expiresIn = Number(data.value.expires_in);
-        document.cookie = `spotify_access_token=${encodeURIComponent(data.value.access_token)}; Max-Age=${expiresIn}; path=/; SameSite=Lax`;
+        document.cookie = `spotify_access_token=${encodeURIComponent(data.value.access_token)}; Max-Age=${expiresIn}; path=/;`;
         const redirectPath = getCookieValue('redirect')
         if (redirectPath) {
           document.cookie = "redirect=; Max-Age=0; path=/";
