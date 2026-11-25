@@ -3,6 +3,10 @@
 A streaming service clone, for saving music that you can discover when fetching random songs from Spotify API.
 The design is original and all the code is written by me.
 
+## IMPORTANT!
+
+Spotify API changed on feburary 2026 and no longer supports preview_urls, so for now the project is dead!
+
 ## Functionality
 
 Here's a list of all the different things you can do on this site:
